@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="MJCompiler" basedir=".">
+<project name="MJCompiler" default="lexerGen" basedir=".">
 
 	<target name="lexerGen">
-		<java jar="lib/JFlex.jar">
-	    	<arg value="-h"/>
+		<java jar="lib/JFlex.jar" fork="true">
+	    	<arg value="-d"/>
+	    	<arg value="./src/rs/ac/bg/etf/pp1"/>
+	    	<arg value="spec/mjlexer.flex"/>
 		</java>
 	</target>
 		

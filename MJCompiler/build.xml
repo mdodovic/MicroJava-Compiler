@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="MJCompiler" default="lexerGen" basedir=".">
 
-	<target name="lexerGen">
+	
+	<target name="delete">
+		<delete>
+			<fileset dir="src/rs/ac/bg/etf/pp1">
+				<exclude name="sym.java"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="lexerGen" depends="delete">
 		<java jar="lib/JFlex.jar" fork="true">
 	    	<arg value="-d"/>
 	    	<arg value="./src/rs/ac/bg/etf/pp1"/>

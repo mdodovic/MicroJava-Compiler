@@ -6,7 +6,8 @@ public class sym {
 	public static final int PROG = 1;
 	public static final int PRINT = 2;
 	public static final int RETURN = 3;
-	
+	public static final int CONST = 301;
+
 	// Identifiers
 	public static final int IDENT = 4;
 	

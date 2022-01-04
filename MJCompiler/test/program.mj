@@ -4,5 +4,6 @@ program MJProgram
 	void main() {
 		int z;
 		#
+		const int t;
 	}
 }

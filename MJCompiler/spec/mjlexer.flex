@@ -31,16 +31,22 @@ import java_cup.runtime.Symbol;
 
 %%
 
+// White characters
 " " 	{ }
 "\b" 	{ }
 "\t" 	{ }
 "\r\n" 	{ }
 "\f" 	{ }
 
+// Keywords
+
 "program"   { return new_symbol(sym.PROG, yytext()); }
+"const"		{ return new_symbol(sym.CONST, yytext()); }
 "print" 	{ return new_symbol(sym.PRINT, yytext()); }
 "return" 	{ return new_symbol(sym.RETURN, yytext()); }
 "void" 		{ return new_symbol(sym.VOID, yytext()); }
+
+
 "+" 		{ return new_symbol(sym.PLUS, yytext()); }
 "=" 		{ return new_symbol(sym.EQUAL, yytext()); }
 ";" 		{ return new_symbol(sym.SEMI, yytext()); }

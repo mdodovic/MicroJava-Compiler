@@ -97,7 +97,7 @@ Statement ::= (Assignment) Designator:dest EQUAL Expr:e SEMI
 			  |
 			  (ReturnExpr) RETURN Expr:t SEMI
 			  |
-			  (ReturnNoExpr) RETURN SEMI
+			  (ReturnNoExpr) RETURN SEMI;
 				
 
 Expr ::= (AddExpt) Expr:te Addop Term:t

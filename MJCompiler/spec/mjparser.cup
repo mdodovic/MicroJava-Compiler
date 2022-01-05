@@ -93,6 +93,9 @@ StatementList ::= (Statements) StatementList Statement
 
 Statement ::= (Assignment) Designator:dest EQUAL Expr:e SEMI
 			  |
+			  error SEMI:l
+			  {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :}
+			  |
 			  (PrintStmt) PRINT LPAREN Expr RPAREN SEMI
 			  |
 			  (ReturnExpr) RETURN Expr:t SEMI

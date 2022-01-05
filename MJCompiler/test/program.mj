@@ -5,7 +5,7 @@ program MJProgram
 		
 		print(1);
 		
-		x = y + 5;
+		x = y + 5 + ;
 		
 		print(2);
 	}

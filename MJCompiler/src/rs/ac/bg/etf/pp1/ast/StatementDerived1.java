@@ -5,27 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Addop implements SyntaxNode {
+public class StatementDerived1 extends Statement {
 
-    private SyntaxNode parent;
-    private int line;
-    public Addop () {
-    }
-
-    public SyntaxNode getParent() {
-        return parent;
-    }
-
-    public void setParent(SyntaxNode parent) {
-        this.parent=parent;
-    }
-
-    public int getLine() {
-        return line;
-    }
-
-    public void setLine(int line) {
-        this.line=line;
+    public StatementDerived1 () {
     }
 
     public void accept(Visitor visitor) {
@@ -46,10 +28,10 @@ public class Addop implements SyntaxNode {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Addop(\n");
+        buffer.append("StatementDerived1(\n");
 
         buffer.append(tab);
-        buffer.append(") [Addop]");
+        buffer.append(") [StatementDerived1]");
         return buffer.toString();
     }
 }

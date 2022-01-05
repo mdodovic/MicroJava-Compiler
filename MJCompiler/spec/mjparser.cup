@@ -48,11 +48,11 @@ terminal String IDENT;
 terminal Integer NUMBER;
 
 
-nonterminal Program, VarDeclList, MethodDeclList, VarDecl, Type;
+nonterminal Program, VarDeclList, MethodDeclList, VarDecl, Type, MethodDecl;
 nonterminal FormPars, StatementList, FormalParamList, FormalParamDecl, Statement;
 nonterminal Designator, Expr;
 nonterminal Term, Addop, Factor;
-nonterminal Designator, ActualPars, ActualParamList;
+nonterminal ActualPars, ActualParamList;
 
 
 Program ::= (Program) PROG IDENT VarDeclList LBRACE MethodDeclList RBRACE;

@@ -43,7 +43,10 @@ scan with {:
 :}
 
 
-terminal PROG, IDENT, LBRACE, RBRACE, SEMI, LPAREN, RPAREN EQUAL, PRINT, RETURN, NUMBER, PLUS;
+terminal PROG, LBRACE, RBRACE, SEMI, LPAREN, RPAREN EQUAL, PRINT, RETURN, PLUS;
+terminal String IDENT;
+terminal Integer NUMBER;
+
 
 nonterminal Program, VarDeclList, MethodDeclList, VarDecl, Type;
 nonterminal FormPars, StatementList, FormalParamList, FormalParamDecl, Statement;

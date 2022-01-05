@@ -18,8 +18,9 @@ public class RuleVisitor extends VisitorAdaptor{
 	}
 	
 	@Override
-	public void visit(VarDeclarations VarDeclarations) {
+	public void visit(VarDecl VarDecl) {
 		varDeclCount++;
+		log.info("Prepoznata deklaracija!");
 	}
 	
 }

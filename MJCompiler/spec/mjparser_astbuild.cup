@@ -46,7 +46,7 @@ scan with {:
 terminal PROG, LBRACE, RBRACE, SEMI, LPAREN, RPAREN, EQUAL, PRINT, RETURN, PLUS, COMMA, VOID, CONST;
 terminal String IDENT;
 terminal Integer NUMBER;
-
+terminal IF, ELSE;
 
 nonterminal Program Program;
 nonterminal VarDeclList VarDeclList;
@@ -66,6 +66,8 @@ nonterminal Addop Addop;
 nonterminal Factor Factor;
 nonterminal ActualPars ActualPars;
 nonterminal ActualParamList ActualParamList;
+nonterminal Matched Matched;
+nonterminal Unmatched Unmatched;
 
 
 Program ::= (Program) PROG IDENT:I1 VarDeclList:V2 LBRACE MethodDeclList:M3 RBRACE {: RESULT=new Program(I1, V2, M3); RESULT.setLine(I1left); :};
@@ -104,18 +106,30 @@ StatementList ::= (Statements) StatementList:S1 Statement:S2 {: RESULT=new State
 				(NoStmt) {: RESULT=new NoStmt(); :} /* epsilon */
 				;
 
-Statement ::= (Assignment) Designator:dest EQUAL Expr:e SEMI {: RESULT=new Assignment(dest, e); RESULT.setLine(destleft); :}
+Statement ::= (MatchedStmt) Matched:M1 {: RESULT=new MatchedStmt(M1); RESULT.setLine(M1left); :}
 			  |
-			  error SEMI:l
-			  {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :} {: RESULT=new StatementDerived1(); :}
+			  (UnmatchedStmt) Unmatched:U1 {: RESULT=new UnmatchedStmt(U1); RESULT.setLine(U1left); :}
+  			  ;
+
+Unmatched ::= (IfStatement) IF Expr:E1 Statement:S2 {: RESULT=new IfStatement(E1, S2); RESULT.setLine(E1left); :}
+			  |
+			  (UnmatchedIfElse) IF Expr:E1 Matched:M2 ELSE Unmatched:U3 {: RESULT=new UnmatchedIfElse(E1, M2, U3); RESULT.setLine(E1left); :}
+			  ;
+
+Matched ::= (Assignment) Designator:dest EQUAL Expr:e SEMI {: RESULT=new Assignment(dest, e); RESULT.setLine(destleft); :}
+			  |
+			  (ErrorStmt) error SEMI:l
+			  {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :} {: RESULT=new ErrorStmt(); :}
 			  |
 			  (PrintStmt) PRINT LPAREN Expr:E1 RPAREN SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
 			  |
 			  (ReturnExpr) RETURN Expr:t SEMI {: RESULT=new ReturnExpr(t); RESULT.setLine(tleft); :}
 			  |
-			  (ReturnNoExpr) RETURN SEMI {: RESULT=new ReturnNoExpr(); :};
+			  (ReturnNoExpr) RETURN SEMI {: RESULT=new ReturnNoExpr(); :}
+			  |
+			  (MatchedStatement) IF Expr:E1 Matched:M2 ELSE Matched:M3 {: RESULT=new MatchedStatement(E1, M2, M3); RESULT.setLine(E1left); :}
+			  ;
 				
-
 Expr ::= (AddExpt) Expr:te Addop:A1 Term:t {: RESULT=new AddExpt(te, A1, t); RESULT.setLine(teleft); :}
 		|
 		(TermExpr) Term:t {: RESULT=new TermExpr(t); RESULT.setLine(tleft); :}

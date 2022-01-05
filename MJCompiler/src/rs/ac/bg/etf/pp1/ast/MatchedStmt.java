@@ -5,21 +5,21 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class TermExpr extends Expr {
+public class MatchedStmt extends Statement {
 
-    private Term Term;
+    private Matched Matched;
 
-    public TermExpr (Term Term) {
-        this.Term=Term;
-        if(Term!=null) Term.setParent(this);
+    public MatchedStmt (Matched Matched) {
+        this.Matched=Matched;
+        if(Matched!=null) Matched.setParent(this);
     }
 
-    public Term getTerm() {
-        return Term;
+    public Matched getMatched() {
+        return Matched;
     }
 
-    public void setTerm(Term Term) {
-        this.Term=Term;
+    public void setMatched(Matched Matched) {
+        this.Matched=Matched;
     }
 
     public void accept(Visitor visitor) {
@@ -27,32 +27,32 @@ public class TermExpr extends Expr {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Term!=null) Term.accept(visitor);
+        if(Matched!=null) Matched.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Term!=null) Term.traverseTopDown(visitor);
+        if(Matched!=null) Matched.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Term!=null) Term.traverseBottomUp(visitor);
+        if(Matched!=null) Matched.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("TermExpr(\n");
+        buffer.append("MatchedStmt(\n");
 
-        if(Term!=null)
-            buffer.append(Term.toString("  "+tab));
+        if(Matched!=null)
+            buffer.append(Matched.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [TermExpr]");
+        buffer.append(") [MatchedStmt]");
         return buffer.toString();
     }
 }

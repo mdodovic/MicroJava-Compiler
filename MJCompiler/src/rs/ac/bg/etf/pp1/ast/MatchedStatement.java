@@ -5,19 +5,19 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class AddExpt extends Expr {
+public class MatchedStatement extends Matched {
 
     private Expr Expr;
-    private Addop Addop;
-    private Term Term;
+    private Matched Matched;
+    private Matched Matched1;
 
-    public AddExpt (Expr Expr, Addop Addop, Term Term) {
+    public MatchedStatement (Expr Expr, Matched Matched, Matched Matched1) {
         this.Expr=Expr;
         if(Expr!=null) Expr.setParent(this);
-        this.Addop=Addop;
-        if(Addop!=null) Addop.setParent(this);
-        this.Term=Term;
-        if(Term!=null) Term.setParent(this);
+        this.Matched=Matched;
+        if(Matched!=null) Matched.setParent(this);
+        this.Matched1=Matched1;
+        if(Matched1!=null) Matched1.setParent(this);
     }
 
     public Expr getExpr() {
@@ -28,20 +28,20 @@ public class AddExpt extends Expr {
         this.Expr=Expr;
     }
 
-    public Addop getAddop() {
-        return Addop;
+    public Matched getMatched() {
+        return Matched;
     }
 
-    public void setAddop(Addop Addop) {
-        this.Addop=Addop;
+    public void setMatched(Matched Matched) {
+        this.Matched=Matched;
     }
 
-    public Term getTerm() {
-        return Term;
+    public Matched getMatched1() {
+        return Matched1;
     }
 
-    public void setTerm(Term Term) {
-        this.Term=Term;
+    public void setMatched1(Matched Matched1) {
+        this.Matched1=Matched1;
     }
 
     public void accept(Visitor visitor) {
@@ -50,28 +50,28 @@ public class AddExpt extends Expr {
 
     public void childrenAccept(Visitor visitor) {
         if(Expr!=null) Expr.accept(visitor);
-        if(Addop!=null) Addop.accept(visitor);
-        if(Term!=null) Term.accept(visitor);
+        if(Matched!=null) Matched.accept(visitor);
+        if(Matched1!=null) Matched1.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(Expr!=null) Expr.traverseTopDown(visitor);
-        if(Addop!=null) Addop.traverseTopDown(visitor);
-        if(Term!=null) Term.traverseTopDown(visitor);
+        if(Matched!=null) Matched.traverseTopDown(visitor);
+        if(Matched1!=null) Matched1.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(Expr!=null) Expr.traverseBottomUp(visitor);
-        if(Addop!=null) Addop.traverseBottomUp(visitor);
-        if(Term!=null) Term.traverseBottomUp(visitor);
+        if(Matched!=null) Matched.traverseBottomUp(visitor);
+        if(Matched1!=null) Matched1.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("AddExpt(\n");
+        buffer.append("MatchedStatement(\n");
 
         if(Expr!=null)
             buffer.append(Expr.toString("  "+tab));
@@ -79,20 +79,20 @@ public class AddExpt extends Expr {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(Addop!=null)
-            buffer.append(Addop.toString("  "+tab));
+        if(Matched!=null)
+            buffer.append(Matched.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(Term!=null)
-            buffer.append(Term.toString("  "+tab));
+        if(Matched1!=null)
+            buffer.append(Matched1.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [AddExpt]");
+        buffer.append(") [MatchedStatement]");
         return buffer.toString();
     }
 }

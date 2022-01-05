@@ -5,24 +5,16 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ActualParams extends ActualParamList {
+public class IfStatement extends Unmatched {
 
-    private ActualParamList ActualParamList;
     private Expr Expr;
+    private Statement Statement;
 
-    public ActualParams (ActualParamList ActualParamList, Expr Expr) {
-        this.ActualParamList=ActualParamList;
-        if(ActualParamList!=null) ActualParamList.setParent(this);
+    public IfStatement (Expr Expr, Statement Statement) {
         this.Expr=Expr;
         if(Expr!=null) Expr.setParent(this);
-    }
-
-    public ActualParamList getActualParamList() {
-        return ActualParamList;
-    }
-
-    public void setActualParamList(ActualParamList ActualParamList) {
-        this.ActualParamList=ActualParamList;
+        this.Statement=Statement;
+        if(Statement!=null) Statement.setParent(this);
     }
 
     public Expr getExpr() {
@@ -33,37 +25,39 @@ public class ActualParams extends ActualParamList {
         this.Expr=Expr;
     }
 
+    public Statement getStatement() {
+        return Statement;
+    }
+
+    public void setStatement(Statement Statement) {
+        this.Statement=Statement;
+    }
+
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(ActualParamList!=null) ActualParamList.accept(visitor);
         if(Expr!=null) Expr.accept(visitor);
+        if(Statement!=null) Statement.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(ActualParamList!=null) ActualParamList.traverseTopDown(visitor);
         if(Expr!=null) Expr.traverseTopDown(visitor);
+        if(Statement!=null) Statement.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(ActualParamList!=null) ActualParamList.traverseBottomUp(visitor);
         if(Expr!=null) Expr.traverseBottomUp(visitor);
+        if(Statement!=null) Statement.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ActualParams(\n");
-
-        if(ActualParamList!=null)
-            buffer.append(ActualParamList.toString("  "+tab));
-        else
-            buffer.append(tab+"  null");
-        buffer.append("\n");
+        buffer.append("IfStatement(\n");
 
         if(Expr!=null)
             buffer.append(Expr.toString("  "+tab));
@@ -71,8 +65,14 @@ public class ActualParams extends ActualParamList {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
+        if(Statement!=null)
+            buffer.append(Statement.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
         buffer.append(tab);
-        buffer.append(") [ActualParams]");
+        buffer.append(") [IfStatement]");
         return buffer.toString();
     }
 }

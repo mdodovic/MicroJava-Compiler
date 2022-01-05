@@ -100,7 +100,7 @@ Statement ::= (Assignment) Designator:dest EQUAL Expr:e SEMI
 			  (ReturnNoExpr) RETURN SEMI
 				
 
-Expr := (AddExpt) Expr:te Addop Term:t
+Expr ::= (AddExpt) Expr:te Addop Term:t
 		|
 		(TermExpr) Term:t
 		;						

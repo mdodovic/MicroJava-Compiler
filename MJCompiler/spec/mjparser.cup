@@ -10,8 +10,6 @@ parser code {:
 
 	Logger log = Logger.getLogger(getClass());
    
-    // slede redefinisani metodi za prijavu gresaka radi izmene teksta poruke
-     
     public void report_fatal_error(String message, Object info) throws java.lang.Exception {
       done_parsing();
       report_error(message, info);
@@ -42,11 +40,25 @@ scan with {:
 	return s;
 :}
 
+/* Terminals */
 
 terminal PROG, LBRACE, RBRACE, SEMI, LPAREN, RPAREN, EQUAL, PRINT, RETURN, PLUS, COMMA, VOID, CONST;
 terminal String IDENT;
 terminal Integer NUMBER;
 terminal IF, ELSE;
+
+/* added for lexer test */ 
+terminal COLON, ASSIGNMENT, MINUS, MULTIPLY, DIVIDE, MODUO, EXTENDS, POINT;
+terminal AND, OR;
+terminal INC, DEC;
+terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET, LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET, LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET;
+terminal CLASS, CONTINUE, THIS, SUPER, GOTO, RECORD;
+terminal CHAR_CONST, BOOL_CONST;
+terminal NOT_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, DO, WHILE;
+terminal INT, BOOL, CHAR;
+terminal BREAK, READ, NEW, ENUM;
+
+/* NonTerminals */
 
 nonterminal Program, VarDeclList, MethodDeclList, VarDecl, Type, MethodDecl;
 nonterminal FormPars, StatementList, FormalParamList, FormalParamDecl, Statement;

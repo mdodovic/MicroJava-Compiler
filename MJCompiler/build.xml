@@ -24,13 +24,18 @@
 			<arg value="-destdir"/>
 			<arg value="src/rs/ac/bg/etf/pp1"/>
 			<arg value="-ast"/>
-			<arg value="rs.ac.bg.etf.pp1.ast"/>
+			<arg value="src.rs.ac.bg.etf.pp1.ast"/>
 			<arg value="-parser"/>
 			<arg value="MJParser"/>
 			<arg value="-buildtree"/>
 			<arg value="spec/mjparser.cup"/>
 		</java>
 	</target>	
+	
+	<target name="repackage" depends="parserGen">
+		<!-- Replaces all of the references to the old package name in files in the "src" directory -->
+		<replace dir="src" value="rs.ac.bg.etf.pp1.ast" token="src.rs.ac.bg.etf.pp1.ast" summary="true"/>
+	</target>
 	
 	<target name="compile" depends="lexerGen">
 		<javac srcdir="src/rs/ac/bg/etf/pp1" includeantruntime="false">

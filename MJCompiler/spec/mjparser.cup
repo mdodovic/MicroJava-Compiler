@@ -43,7 +43,7 @@ scan with {:
 :}
 
 
-terminal PROG, LBRACE, RBRACE, SEMI, LPAREN, RPAREN, EQUAL, PRINT, RETURN, PLUS;
+terminal PROG, LBRACE, RBRACE, SEMI, LPAREN, RPAREN, EQUAL, PRINT, RETURN, PLUS, COMMA;
 terminal String IDENT;
 terminal Integer NUMBER;
 

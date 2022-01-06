@@ -17,6 +17,8 @@ public class SemanticPass extends VisitorAdaptor {
 	
 	boolean errorDetected = false;
 	
+	int nVars;
+	
 	Logger log = Logger.getLogger(getClass());
 	
 	public void report_error(String message, SyntaxNode info) {
@@ -55,6 +57,7 @@ public class SemanticPass extends VisitorAdaptor {
     
     @Override
     public void visit(Program program) {
+    	nVars = Tab.currentScope.getnVars();
     	Tab.chainLocalSymbols(program.getProgName().obj);
     	Tab.closeScope();
     }

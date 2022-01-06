@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import rs.ac.bg.etf.pp1.ast.*;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
+import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class SemanticPass extends VisitorAdaptor {
 
@@ -12,6 +13,7 @@ public class SemanticPass extends VisitorAdaptor {
 	int varDeclCount = 0;
 	
 	Obj currentMethod = null;
+	boolean returnFound = false;
 	
 	Logger log = Logger.getLogger(getClass());
 	
@@ -81,8 +83,15 @@ public class SemanticPass extends VisitorAdaptor {
 
     @Override
     public void visit(MethodDecl methodDecl) {
+    	if(!returnFound && currentMethod.getType() != Tab.noType) {
+			report_error("Semanticka greska na liniji " + methodDecl.getLine() + ": funkcija " + currentMethod.getName() + " nema return iskaz!", null);    		
+    	}
+    	
     	Tab.chainLocalSymbols(currentMethod);
     	Tab.closeScope();
+
+    	returnFound = false;
+    	
     	currentMethod = null;
     }
     
@@ -108,5 +117,48 @@ public class SemanticPass extends VisitorAdaptor {
     	}
     	
     }
-	
+    
+    @Override
+    public void visit(Term term) {
+    	term.struct = term.getFactor().struct;
+    }
+    
+    @Override
+    public void visit(TermExpr termExpr) {
+    	termExpr.struct = termExpr.getTerm().struct;
+    }
+    
+    @Override
+    public void visit(AddExpt addExpt) {
+    	Struct te = addExpt.getExpr().struct;
+    	Struct t = addExpt.getTerm().struct;
+    		
+    	if(te.equals(t) && te == Tab.intType){
+    		addExpt.struct = te;
+    	}else{
+			report_error("Greska na liniji "+ addExpt.getLine()+" : nekompatibilni tipovi u izrazu za sabiranje.", null);
+			addExpt.struct = Tab.noType;
+    	}
+    }
+
+    @Override
+    public void visit(Const cnst){
+    	cnst.struct = Tab.intType;
+    }
+    
+    @Override
+    public void visit(Var var){
+    	var.struct = var.getDesignator().obj.getType();
+    }
+
+    @Override
+    public void visit(ReturnExpr returnExpr){
+    	returnFound = true;
+    	Struct currMethType = currentMethod.getType();
+    	if(!currMethType.compatibleWith(returnExpr.getExpr().struct)){
+			report_error("Greska na liniji " + returnExpr.getLine() + " : " + "tip izraza u return naredbi ne slaze se sa tipom povratne vrednosti funkcije " + currentMethod.getName(), null);
+    	}
+    }
+
+    
 }

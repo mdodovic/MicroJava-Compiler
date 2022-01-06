@@ -48,11 +48,9 @@ terminal String IDENT;
 terminal Integer NUMBER;
 terminal IF, ELSE;
 
-nonterminal Program Program;
 nonterminal VarDeclList VarDeclList;
 nonterminal MethodDeclList MethodDeclList;
 nonterminal VarDecl VarDecl;
-nonterminal Type Type;
 nonterminal MethodDecl MethodDecl;
 nonterminal FormPars FormPars;
 nonterminal StatementList StatementList;
@@ -69,8 +67,12 @@ nonterminal ActualParamList ActualParamList;
 nonterminal Matched Matched;
 nonterminal Unmatched Unmatched;
 
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
 
-Program ::= (Program) PROG IDENT:I1 VarDeclList:V2 LBRACE MethodDeclList:M3 RBRACE {: RESULT=new Program(I1, V2, M3); RESULT.setLine(I1left); :};
+Program ::= (Program) PROG ProgName:p VarDeclList:V1 LBRACE MethodDeclList:M2 RBRACE {: RESULT=new Program(p, V1, M2); RESULT.setLine(pleft); :};
+
+ProgName ::= (ProgName) IDENT:progName {: RESULT=new ProgName(progName); RESULT.setLine(progNameleft); :};
 
 VarDeclList ::= (VarDeclarations) VarDeclList:V1 VarDecl:V2 {: RESULT=new VarDeclarations(V1, V2); RESULT.setLine(V1left); :}
 				|

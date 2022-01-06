@@ -5,23 +5,24 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Term implements SyntaxNode {
+public class ProgName implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    private Factor Factor;
+    public rs.etf.pp1.symboltable.concepts.Obj obj = null;
 
-    public Term (Factor Factor) {
-        this.Factor=Factor;
-        if(Factor!=null) Factor.setParent(this);
+    private String progName;
+
+    public ProgName (String progName) {
+        this.progName=progName;
     }
 
-    public Factor getFactor() {
-        return Factor;
+    public String getProgName() {
+        return progName;
     }
 
-    public void setFactor(Factor Factor) {
-        this.Factor=Factor;
+    public void setProgName(String progName) {
+        this.progName=progName;
     }
 
     public SyntaxNode getParent() {
@@ -45,32 +46,26 @@ public class Term implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Factor!=null) Factor.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Factor!=null) Factor.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Factor!=null) Factor.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Term(\n");
+        buffer.append("ProgName(\n");
 
-        if(Factor!=null)
-            buffer.append(Factor.toString("  "+tab));
-        else
-            buffer.append(tab+"  null");
+        buffer.append(" "+tab+progName);
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [Term]");
+        buffer.append(") [ProgName]");
         return buffer.toString();
     }
 }

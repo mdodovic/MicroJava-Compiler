@@ -16,6 +16,8 @@ program MJProgram
 		print(2);
 
 		k();
+		
+		return 0;
 	}
 	
 }

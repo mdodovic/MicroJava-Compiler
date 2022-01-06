@@ -168,6 +168,8 @@ public class SemanticPass extends VisitorAdaptor {
     		report_error("Greska na liniji " + assignment.getLine() + " : " + " nekompatibilni tipovi u dodeli vrednosti! ", null);    	
     }
 
-    
+    public boolean passed(){
+    	return !errorDetected;
+    }
     
 }

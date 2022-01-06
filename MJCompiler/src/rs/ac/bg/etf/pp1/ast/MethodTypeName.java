@@ -5,17 +5,19 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class VarDecl implements SyntaxNode {
+public class MethodTypeName implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    private Type Type;
-    private String varName;
+    public rs.etf.pp1.symboltable.concepts.Obj obj = null;
 
-    public VarDecl (Type Type, String varName) {
+    private Type Type;
+    private String methName;
+
+    public MethodTypeName (Type Type, String methName) {
         this.Type=Type;
         if(Type!=null) Type.setParent(this);
-        this.varName=varName;
+        this.methName=methName;
     }
 
     public Type getType() {
@@ -26,12 +28,12 @@ public class VarDecl implements SyntaxNode {
         this.Type=Type;
     }
 
-    public String getVarName() {
-        return varName;
+    public String getMethName() {
+        return methName;
     }
 
-    public void setVarName(String varName) {
-        this.varName=varName;
+    public void setMethName(String methName) {
+        this.methName=methName;
     }
 
     public SyntaxNode getParent() {
@@ -71,7 +73,7 @@ public class VarDecl implements SyntaxNode {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("VarDecl(\n");
+        buffer.append("MethodTypeName(\n");
 
         if(Type!=null)
             buffer.append(Type.toString("  "+tab));
@@ -79,11 +81,11 @@ public class VarDecl implements SyntaxNode {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        buffer.append(" "+tab+varName);
+        buffer.append(" "+tab+methName);
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [VarDecl]");
+        buffer.append(") [MethodTypeName]");
         return buffer.toString();
     }
 }

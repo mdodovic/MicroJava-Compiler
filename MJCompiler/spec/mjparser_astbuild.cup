@@ -51,7 +51,6 @@ terminal IF, ELSE;
 nonterminal VarDeclList VarDeclList;
 nonterminal MethodDeclList MethodDeclList;
 nonterminal VarDecl VarDecl;
-nonterminal MethodDecl MethodDecl;
 nonterminal FormPars FormPars;
 nonterminal StatementList StatementList;
 nonterminal FormalParamList FormalParamList;
@@ -69,6 +68,8 @@ nonterminal Unmatched Unmatched;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl, MethodTypeName;
 
 Program ::= (Program) PROG ProgName:p VarDeclList:V1 LBRACE MethodDeclList:M2 RBRACE {: RESULT=new Program(p, V1, M2); RESULT.setLine(pleft); :};
 
@@ -88,10 +89,12 @@ MethodDeclList ::= (MethodDeclarations) MethodDeclList:M1 MethodDecl:M2 {: RESUL
 				(NoMethodDecl) {: RESULT=new NoMethodDecl(); :} /* epsilon */
 				;
 
-MethodDecl ::= (MethodDecl) Type:retType IDENT:methName 
-				LPAREN FormPars:F1 RPAREN VarDeclList:V2 
-				LBRACE StatementList:S3 RBRACE {: RESULT=new MethodDecl(retType, methName, F1, V2, S3); RESULT.setLine(retTypeleft); :}
+MethodDecl ::= (MethodDecl) MethodTypeName:M1 
+				LPAREN FormPars:F2 RPAREN VarDeclList:V3 
+				LBRACE StatementList:S4 RBRACE {: RESULT=new MethodDecl(M1, F2, V3, S4); RESULT.setLine(M1left); :}
 				;
+
+MethodTypeName ::= (MethodTypeName) Type:retType IDENT:methName {: RESULT=new MethodTypeName(retType, methName); RESULT.setLine(retTypeleft); :};
 
 FormPars ::= (FormParams) FormalParamList:F1 {: RESULT=new FormParams(F1); RESULT.setLine(F1left); :}
 			|

@@ -11,6 +11,8 @@ public class SemanticPass extends VisitorAdaptor {
 	int printCallCount = 0;
 	int varDeclCount = 0;
 	
+	Obj currentMethod = null;
+	
 	Logger log = Logger.getLogger(getClass());
 	
 	public void report_error(String message, SyntaxNode info) {
@@ -67,6 +69,21 @@ public class SemanticPass extends VisitorAdaptor {
         		type.struct = Tab.noType;
     		}
     	}
+    }
+    
+    @Override
+    public void visit(MethodTypeName methodTypeName) {    	
+    	currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethName(), methodTypeName.getType().struct);
+    	methodTypeName.obj = currentMethod;
+    	Tab.openScope();
+		report_info("Obradjuje se funkcija " + methodTypeName.getMethName(), methodTypeName);
+    }
+
+    @Override
+    public void visit(MethodDecl methodDecl) {
+    	Tab.chainLocalSymbols(currentMethod);
+    	Tab.closeScope();
+    	currentMethod = null;
     }
     
 }

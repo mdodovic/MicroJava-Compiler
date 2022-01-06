@@ -133,8 +133,10 @@ Matched ::= (Assignment) Designator:dest EQUAL Expr:e SEMI {: RESULT=new Assignm
 			  (ReturnNoExpr) RETURN SEMI {: RESULT=new ReturnNoExpr(); :}
 			  |
 			  (MatchedStatement) IF Expr:E1 Matched:M2 ELSE Matched:M3 {: RESULT=new MatchedStatement(E1, M2, M3); RESULT.setLine(E1left); :}
-			  ;
-				
+              |
+			  (ProcCall) Designator:func LPAREN ActualPars:A1 RPAREN SEMI {: RESULT=new ProcCall(func, A1); RESULT.setLine(funcleft); :}
+			  ;				
+
 Expr ::= (AddExpt) Expr:te Addop:A1 Term:t {: RESULT=new AddExpt(te, A1, t); RESULT.setLine(teleft); :}
 		|
 		(TermExpr) Term:t {: RESULT=new TermExpr(t); RESULT.setLine(tleft); :}

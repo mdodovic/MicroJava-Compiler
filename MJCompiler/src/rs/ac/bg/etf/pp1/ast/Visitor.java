@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 6/0/2022 20:57:12
+// 6/0/2022 21:3:21
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -32,6 +32,7 @@ public interface Visitor {
     public void visit(Term Term);
     public void visit(TermExpr TermExpr);
     public void visit(AddExpt AddExpt);
+    public void visit(ProcCall ProcCall);
     public void visit(MatchedStatement MatchedStatement);
     public void visit(ReturnNoExpr ReturnNoExpr);
     public void visit(ReturnExpr ReturnExpr);

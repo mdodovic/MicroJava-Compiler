@@ -50,7 +50,7 @@ terminal IF, ELSE;
 
 nonterminal VarDeclList, MethodDeclList, VarDecl;
 nonterminal FormPars, StatementList, FormalParamList, FormalParamDecl, Statement;
-nonterminal Designator, Expr;
+nonterminal Expr;
 nonterminal Term, Addop, Factor;
 nonterminal ActualPars, ActualParamList;
 nonterminal Matched, Unmatched;
@@ -59,6 +59,8 @@ nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl, MethodTypeName;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
 
 Program ::= (Program) PROG ProgName:p VarDeclList LBRACE MethodDeclList RBRACE;
 

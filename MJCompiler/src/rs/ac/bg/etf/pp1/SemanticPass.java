@@ -86,4 +86,14 @@ public class SemanticPass extends VisitorAdaptor {
     	currentMethod = null;
     }
     
+    @Override
+    public void visit(Designator designator) {
+    	Obj obj = Tab.find(designator.getName());
+    	if(obj == Tab.noObj){
+			report_error("Greska na liniji " + designator.getLine() + " : ime " + designator.getName() + " nije deklarisano! ", null);
+    	}
+    	designator.obj = obj;
+
+    }
+    
 }

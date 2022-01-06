@@ -56,7 +56,6 @@ nonterminal StatementList StatementList;
 nonterminal FormalParamList FormalParamList;
 nonterminal FormalParamDecl FormalParamDecl;
 nonterminal Statement Statement;
-nonterminal Designator Designator;
 nonterminal Expr Expr;
 nonterminal Term Term;
 nonterminal Addop Addop;
@@ -70,6 +69,8 @@ nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl, MethodTypeName;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
 
 Program ::= (Program) PROG ProgName:p VarDeclList:V1 LBRACE MethodDeclList:M2 RBRACE {: RESULT=new Program(p, V1, M2); RESULT.setLine(pleft); :};
 

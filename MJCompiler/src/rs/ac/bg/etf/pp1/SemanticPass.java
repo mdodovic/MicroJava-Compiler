@@ -15,10 +15,12 @@ public class SemanticPass extends VisitorAdaptor {
 	Obj currentMethod = null;
 	boolean returnFound = false;
 	
+	boolean errorDetected = false;
+	
 	Logger log = Logger.getLogger(getClass());
 	
 	public void report_error(String message, SyntaxNode info) {
-		// errorDetected = true;
+		errorDetected = true;
 		StringBuilder msg = new StringBuilder(message);
 		int line = (info == null) ? 0: info.getLine();
 		if (line != 0)
@@ -159,6 +161,13 @@ public class SemanticPass extends VisitorAdaptor {
 			report_error("Greska na liniji " + returnExpr.getLine() + " : " + "tip izraza u return naredbi ne slaze se sa tipom povratne vrednosti funkcije " + currentMethod.getName(), null);
     	}
     }
+    
+    @Override
+    public void visit(Assignment assignment) {
+    	if(!assignment.getExpr().struct.assignableTo(assignment.getDesignator().obj.getType()))
+    		report_error("Greska na liniji " + assignment.getLine() + " : " + " nekompatibilni tipovi u dodeli vrednosti! ", null);    	
+    }
 
+    
     
 }

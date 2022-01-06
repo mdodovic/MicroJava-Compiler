@@ -96,4 +96,17 @@ public class SemanticPass extends VisitorAdaptor {
 
     }
     
+    @Override
+    public void visit(FuncCall funcCall) {
+    	Obj func = funcCall.getDesignator().obj;
+    	if(Obj.Meth == func.getKind()){
+			report_info("Pronadjen poziv funkcije " + func.getName() + " na liniji " + funcCall.getLine(), null);
+			funcCall.struct = func.getType();
+    	}else{
+			report_error("Greska na liniji " + funcCall.getLine() + " : ime " + func.getName() + " nije funkcija!", null);
+			funcCall.struct = Tab.noType;
+    	}
+    	
+    }
+	
 }

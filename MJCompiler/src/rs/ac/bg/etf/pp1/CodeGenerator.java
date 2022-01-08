@@ -101,5 +101,21 @@ public class CodeGenerator extends VisitorAdaptor{
 
 	}
 	
+	@Override
+	public void visit(ProcCall procCall) {
+		Obj functionObj = procCall.getDesignator().obj;
+		int offset = functionObj.getAdr() - Code.pc;
+
+		Code.put(Code.call);
+		Code.put2(offset);
+		
+		if(procCall.getDesignator().obj.getType() != Tab.noType){
+			// If method is not void, but it is called alone
+			// Its returned value will be on estack so it should be removed
+			Code.put(Code.pop);
+		}
+
+	}
+	
 	
 }

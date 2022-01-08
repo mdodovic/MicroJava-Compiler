@@ -51,10 +51,27 @@ scan with {:
 :}
 
 
-terminal PROG, LBRACE, RBRACE, SEMI, LPAREN, RPAREN, EQUAL, PRINT, RETURN, PLUS, COMMA, VOID, CONST;
+terminal PROG, SEMI, PRINT, RETURN, PLUS, COMMA, VOID, CONST;
 terminal String IDENT;
 terminal Integer NUMBER;
 terminal IF, ELSE;
+
+terminal READ;
+terminal GOTO, DO, WHILE;
+terminal INC, DEC, MINUS, MULTIPLY, DIVIDE, MODUO;
+terminal AND, OR;
+terminal COLON, ASSIGNMENT, EXTENDS, NEW;
+terminal ENUM, RECORD;
+terminal CLASS, SUPER, THIS, POINT;
+
+terminal BREAK, CONTINUE;
+terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
+terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET;
+terminal LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET;
+terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; 
+
+terminal CHAR_CONST, BOOL_CONST;
+
 
 nonterminal VarDeclList, MethodDeclList, VarDecl;
 nonterminal FormPars, StatementList, FormalParamList, FormalParamDecl, Statement;
@@ -71,7 +88,7 @@ nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Term, Factor, Expr;
 
-Program ::= (Program) PROG ProgName:p VarDeclList LBRACE MethodDeclList RBRACE;
+Program ::= (Program) PROG ProgName:p VarDeclList LEFT_CURLY_BRACKET MethodDeclList RIGHT_CURLY_BRACKET;
 
 ProgName ::= (ProgName) IDENT:progName;
 
@@ -90,8 +107,8 @@ MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
 				;
 
 MethodDecl ::= (MethodDecl) MethodTypeName 
-				LPAREN FormPars RPAREN VarDeclList 
-				LBRACE StatementList RBRACE
+				LEFT_ROUND_BRACKET FormPars RIGHT_ROUND_BRACKET VarDeclList 
+				LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET
 				;
 
 MethodTypeName ::= (MethodTypeName) Type:retType IDENT:methName;
@@ -121,12 +138,12 @@ Unmatched ::= (IfStatement) IF Expr Statement
 			  (UnmatchedIfElse) IF Expr Matched ELSE Unmatched
 			  ;
 
-Matched ::= (Assignment) Designator:dest EQUAL Expr:e SEMI
+Matched ::= (Assignment) Designator:dest ASSIGNMENT Expr:e SEMI
 			  |
 			  (ErrorStmt) error SEMI:l
 			  {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :}
 			  |
-			  (PrintStmt) PRINT LPAREN Expr RPAREN SEMI
+			  (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr RIGHT_ROUND_BRACKET SEMI
 			  |
 			  (ReturnExpr) RETURN Expr:t SEMI
 			  |
@@ -134,7 +151,7 @@ Matched ::= (Assignment) Designator:dest EQUAL Expr:e SEMI
 			  |
 			  (MatchedStatement) IF Expr Matched ELSE Matched
               |
-			  (ProcCall) Designator:func LPAREN ActualPars RPAREN SEMI
+			  (ProcCall) Designator:func LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET SEMI
 			  ;				
 
 Expr ::= (AddExpt) Expr:te Addop Term:t
@@ -148,7 +165,7 @@ Factor ::= (Const) NUMBER
 		|
 		(Var) Designator:d
 		|
-		(FuncCall) Designator:func LPAREN ActualPars RPAREN
+		(FuncCall) Designator:func LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET
 		;
 		
 ActualPars ::= (Actuals) ActualParamList

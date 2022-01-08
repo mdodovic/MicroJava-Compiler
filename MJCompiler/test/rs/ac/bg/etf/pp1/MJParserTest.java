@@ -26,9 +26,9 @@ public class MJParserTest {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		// syntaxAnalysis();
+		syntaxAnalysis();
 		// semanticAnalysis();
-		codeGenerator();
+		// codeGenerator();
 	}
 	
 	private static void syntaxAnalysis() throws Exception {

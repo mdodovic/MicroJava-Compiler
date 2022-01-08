@@ -51,10 +51,27 @@ scan with {:
 :}
 
 
-terminal PROG, LBRACE, RBRACE, SEMI, LPAREN, RPAREN, EQUAL, PRINT, RETURN, PLUS, COMMA, VOID, CONST;
+terminal PROG, SEMI, PRINT, RETURN, PLUS, COMMA, VOID, CONST;
 terminal String IDENT;
 terminal Integer NUMBER;
 terminal IF, ELSE;
+
+terminal READ;
+terminal GOTO, DO, WHILE;
+terminal INC, DEC, MINUS, MULTIPLY, DIVIDE, MODUO;
+terminal AND, OR;
+terminal COLON, ASSIGNMENT, EXTENDS, NEW;
+terminal ENUM, RECORD;
+terminal CLASS, SUPER, THIS, POINT;
+
+terminal BREAK, CONTINUE;
+terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
+terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET;
+terminal LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET;
+terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; 
+
+terminal CHAR_CONST, BOOL_CONST;
+
 
 nonterminal VarDeclList VarDeclList;
 nonterminal MethodDeclList MethodDeclList;
@@ -79,7 +96,7 @@ nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Term, Factor, Expr;
 
-Program ::= (Program) PROG ProgName:p VarDeclList:V1 LBRACE MethodDeclList:M2 RBRACE {: RESULT=new Program(p, V1, M2); RESULT.setLine(pleft); :};
+Program ::= (Program) PROG ProgName:p VarDeclList:V1 LEFT_CURLY_BRACKET MethodDeclList:M2 RIGHT_CURLY_BRACKET {: RESULT=new Program(p, V1, M2); RESULT.setLine(pleft); :};
 
 ProgName ::= (ProgName) IDENT:progName {: RESULT=new ProgName(progName); RESULT.setLine(progNameleft); :};
 
@@ -98,8 +115,8 @@ MethodDeclList ::= (MethodDeclarations) MethodDeclList:M1 MethodDecl:M2 {: RESUL
 				;
 
 MethodDecl ::= (MethodDecl) MethodTypeName:M1 
-				LPAREN FormPars:F2 RPAREN VarDeclList:V3 
-				LBRACE StatementList:S4 RBRACE {: RESULT=new MethodDecl(M1, F2, V3, S4); RESULT.setLine(M1left); :}
+				LEFT_ROUND_BRACKET FormPars:F2 RIGHT_ROUND_BRACKET VarDeclList:V3 
+				LEFT_CURLY_BRACKET StatementList:S4 RIGHT_CURLY_BRACKET {: RESULT=new MethodDecl(M1, F2, V3, S4); RESULT.setLine(M1left); :}
 				;
 
 MethodTypeName ::= (MethodTypeName) Type:retType IDENT:methName {: RESULT=new MethodTypeName(retType, methName); RESULT.setLine(retTypeleft); :};
@@ -129,12 +146,12 @@ Unmatched ::= (IfStatement) IF Expr:E1 Statement:S2 {: RESULT=new IfStatement(E1
 			  (UnmatchedIfElse) IF Expr:E1 Matched:M2 ELSE Unmatched:U3 {: RESULT=new UnmatchedIfElse(E1, M2, U3); RESULT.setLine(E1left); :}
 			  ;
 
-Matched ::= (Assignment) Designator:dest EQUAL Expr:e SEMI {: RESULT=new Assignment(dest, e); RESULT.setLine(destleft); :}
+Matched ::= (Assignment) Designator:dest ASSIGNMENT Expr:e SEMI {: RESULT=new Assignment(dest, e); RESULT.setLine(destleft); :}
 			  |
 			  (ErrorStmt) error SEMI:l
 			  {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :} {: RESULT=new ErrorStmt(); :}
 			  |
-			  (PrintStmt) PRINT LPAREN Expr:E1 RPAREN SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
+			  (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr:E1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
 			  |
 			  (ReturnExpr) RETURN Expr:t SEMI {: RESULT=new ReturnExpr(t); RESULT.setLine(tleft); :}
 			  |
@@ -142,7 +159,7 @@ Matched ::= (Assignment) Designator:dest EQUAL Expr:e SEMI {: RESULT=new Assignm
 			  |
 			  (MatchedStatement) IF Expr:E1 Matched:M2 ELSE Matched:M3 {: RESULT=new MatchedStatement(E1, M2, M3); RESULT.setLine(E1left); :}
               |
-			  (ProcCall) Designator:func LPAREN ActualPars:A1 RPAREN SEMI {: RESULT=new ProcCall(func, A1); RESULT.setLine(funcleft); :}
+			  (ProcCall) Designator:func LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new ProcCall(func, A1); RESULT.setLine(funcleft); :}
 			  ;				
 
 Expr ::= (AddExpt) Expr:te Addop:A1 Term:t {: RESULT=new AddExpt(te, A1, t); RESULT.setLine(teleft); :}
@@ -156,7 +173,7 @@ Factor ::= (Const) NUMBER:N1 {: RESULT=new Const(N1); RESULT.setLine(N1left); :}
 		|
 		(Var) Designator:d {: RESULT=new Var(d); RESULT.setLine(dleft); :}
 		|
-		(FuncCall) Designator:func LPAREN ActualPars:A1 RPAREN {: RESULT=new FuncCall(func, A1); RESULT.setLine(funcleft); :}
+		(FuncCall) Designator:func LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET {: RESULT=new FuncCall(func, A1); RESULT.setLine(funcleft); :}
 		;
 		
 ActualPars ::= (Actuals) ActualParamList:A1 {: RESULT=new Actuals(A1); RESULT.setLine(A1left); :}

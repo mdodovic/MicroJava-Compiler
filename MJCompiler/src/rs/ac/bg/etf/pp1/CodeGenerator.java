@@ -2,6 +2,7 @@ package rs.ac.bg.etf.pp1;
 
 import rs.ac.bg.etf.pp1.CounterVisitor.FormParamCounter;
 import rs.ac.bg.etf.pp1.CounterVisitor.VarCounter;
+import rs.ac.bg.etf.pp1.ast.Assignment;
 import rs.ac.bg.etf.pp1.ast.Const;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
@@ -69,6 +70,11 @@ public class CodeGenerator extends VisitorAdaptor{
 		
 		Code.put(Code.exit);
 		Code.put(Code.return_);
+	}
+	
+	@Override
+	public void visit(Assignment assignment) {
+		Code.store(assignment.getDesignator().obj);
 	}
 	
 }

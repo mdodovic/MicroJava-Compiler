@@ -46,7 +46,11 @@ public class SemanticPass extends VisitorAdaptor {
 	}
 	
     public void visit(PrintStmt print) {
-		printCallCount++;
+    	
+    	if(print.getExpr().struct != Tab.intType && print.getExpr().struct != Tab.charType) 
+    		report_error ("Semanticka greska na liniji " + print.getLine() + ": Operand instrukcije PRINT mora biti char ili int tipa", null);
+    	
+    	printCallCount++;			
 	}
     
     @Override

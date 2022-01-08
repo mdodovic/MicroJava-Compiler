@@ -91,5 +91,15 @@ public class CodeGenerator extends VisitorAdaptor{
 		}
 	}
 
+	@Override
+	public void visit(FuncCall funcCall) {
+		Obj functionObj = funcCall.getDesignator().obj;
+		int offset = functionObj.getAdr() - Code.pc;
+
+		Code.put(Code.call);
+		Code.put2(offset);
+
+	}
+	
 	
 }

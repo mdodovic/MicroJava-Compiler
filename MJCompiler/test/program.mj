@@ -4,6 +4,10 @@ program MJProgram
 
 	int k () int c; {
 		c = 2;
+	
+		// print(0);
+		
+
 		return c+2;
 	}
 
@@ -13,8 +17,13 @@ program MJProgram
 		
 		print(1);
 		
+		y = 4 + 9 + k();
 		print(x);
+
+		k();
 		
+		print(y);
+				
 		return 0;
 
 	}

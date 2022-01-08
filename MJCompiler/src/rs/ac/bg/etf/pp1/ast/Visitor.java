@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 8/0/2022 19:12:51
+// 8/0/2022 19:56:20
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,10 +9,12 @@ public interface Visitor {
 
     public void visit(Factor Factor);
     public void visit(ActualParamList ActualParamList);
+    public void visit(AllDeclarationsList AllDeclarationsList);
     public void visit(Expr Expr);
     public void visit(FormalParamList FormalParamList);
     public void visit(FormPars FormPars);
     public void visit(VarDeclList VarDeclList);
+    public void visit(ConstantDeclaration ConstantDeclaration);
     public void visit(Unmatched Unmatched);
     public void visit(FormalParamDecl FormalParamDecl);
     public void visit(MethodDeclList MethodDeclList);
@@ -55,7 +57,11 @@ public interface Visitor {
     public void visit(MethodDeclarations MethodDeclarations);
     public void visit(Type Type);
     public void visit(VarDecl VarDecl);
-    public void visit(NoVarDecl NoVarDecl);
+    public void visit(NoVarDeclOLD NoVarDeclOLD);
+    public void visit(VarDeclarationsOLD VarDeclarationsOLD);
+    public void visit(ConstDecl ConstDecl);
+    public void visit(NoDeclarations NoDeclarations);
+    public void visit(ConstDeclarations ConstDeclarations);
     public void visit(VarDeclarations VarDeclarations);
     public void visit(ProgName ProgName);
     public void visit(Program Program);

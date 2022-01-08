@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ErrorStmt extends Matched {
+public class ConstDecl extends ConstantDeclaration {
 
-    public ErrorStmt () {
+    public ConstDecl () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class ErrorStmt extends Matched {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ErrorStmt(\n");
+        buffer.append("ConstDecl(\n");
 
         buffer.append(tab);
-        buffer.append(") [ErrorStmt]");
+        buffer.append(") [ConstDecl]");
         return buffer.toString();
     }
 }

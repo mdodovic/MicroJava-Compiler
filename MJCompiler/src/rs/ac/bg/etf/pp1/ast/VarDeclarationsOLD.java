@@ -5,24 +5,24 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class VarDeclarations extends AllDeclarationsList {
+public class VarDeclarationsOLD extends VarDeclList {
 
-    private AllDeclarationsList AllDeclarationsList;
+    private VarDeclList VarDeclList;
     private VarDecl VarDecl;
 
-    public VarDeclarations (AllDeclarationsList AllDeclarationsList, VarDecl VarDecl) {
-        this.AllDeclarationsList=AllDeclarationsList;
-        if(AllDeclarationsList!=null) AllDeclarationsList.setParent(this);
+    public VarDeclarationsOLD (VarDeclList VarDeclList, VarDecl VarDecl) {
+        this.VarDeclList=VarDeclList;
+        if(VarDeclList!=null) VarDeclList.setParent(this);
         this.VarDecl=VarDecl;
         if(VarDecl!=null) VarDecl.setParent(this);
     }
 
-    public AllDeclarationsList getAllDeclarationsList() {
-        return AllDeclarationsList;
+    public VarDeclList getVarDeclList() {
+        return VarDeclList;
     }
 
-    public void setAllDeclarationsList(AllDeclarationsList AllDeclarationsList) {
-        this.AllDeclarationsList=AllDeclarationsList;
+    public void setVarDeclList(VarDeclList VarDeclList) {
+        this.VarDeclList=VarDeclList;
     }
 
     public VarDecl getVarDecl() {
@@ -38,18 +38,18 @@ public class VarDeclarations extends AllDeclarationsList {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(AllDeclarationsList!=null) AllDeclarationsList.accept(visitor);
+        if(VarDeclList!=null) VarDeclList.accept(visitor);
         if(VarDecl!=null) VarDecl.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(AllDeclarationsList!=null) AllDeclarationsList.traverseTopDown(visitor);
+        if(VarDeclList!=null) VarDeclList.traverseTopDown(visitor);
         if(VarDecl!=null) VarDecl.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(AllDeclarationsList!=null) AllDeclarationsList.traverseBottomUp(visitor);
+        if(VarDeclList!=null) VarDeclList.traverseBottomUp(visitor);
         if(VarDecl!=null) VarDecl.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -57,10 +57,10 @@ public class VarDeclarations extends AllDeclarationsList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("VarDeclarations(\n");
+        buffer.append("VarDeclarationsOLD(\n");
 
-        if(AllDeclarationsList!=null)
-            buffer.append(AllDeclarationsList.toString("  "+tab));
+        if(VarDeclList!=null)
+            buffer.append(VarDeclList.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
@@ -72,7 +72,7 @@ public class VarDeclarations extends AllDeclarationsList {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [VarDeclarations]");
+        buffer.append(") [VarDeclarationsOLD]");
         return buffer.toString();
     }
 }

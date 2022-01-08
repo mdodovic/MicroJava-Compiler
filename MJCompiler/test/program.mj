@@ -1,5 +1,6 @@
 program MJProgram
 	int x; int y;
+	const //int pi = 3, e = 2;
 {
 
 	int k () int c; {

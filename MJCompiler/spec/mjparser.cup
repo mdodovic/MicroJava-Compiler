@@ -50,10 +50,12 @@ scan with {:
 	return s;
 :}
 
+/* terminals */
 
 terminal PROG; /* "program" */ 
+terminal CONST; /* "const" */
 
-terminal SEMI, PRINT, RETURN, PLUS, COMMA, VOID, CONST;
+terminal SEMI, PRINT, RETURN, PLUS, COMMA, VOID;
 terminal String IDENT;
 terminal Integer NUMBER;
 terminal IF, ELSE;
@@ -89,21 +91,35 @@ nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Term, Factor, Expr;
 
+/* NON terminals */
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program; /* Program = "program" ProgName (...) part, fetch program name and save to progName */
+nonterminal AllDeclarationsList; /* this will collect all constants, (global) variables, classes and records declarations */
+nonterminal ConstantDeclaration; /* "const" (...) this will collect all ConstDecls */
 
 
-Program ::= (Program) PROG ProgName:p VarDeclList LEFT_CURLY_BRACKET MethodDeclList RIGHT_CURLY_BRACKET;
+Program ::= (Program) PROG ProgName:p AllDeclarationsList LEFT_CURLY_BRACKET MethodDeclList RIGHT_CURLY_BRACKET;
 
 ProgName ::= (ProgName) IDENT:progName;
 
-VarDeclList ::= (VarDeclarations) VarDeclList VarDecl
+AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList VarDecl
+						|
+						(ConstDeclarations) AllDeclarationsList ConstantDeclaration
+						|
+						(NoDeclarations) /* epsilon */
+						;
+
+ConstantDeclaration ::= (ConstDecl) CONST;
+
+VarDeclList ::= (VarDeclarationsOLD) VarDeclList VarDecl
 				|
-				(NoVarDecl) /* epsilon */
+				(NoVarDeclOLD) /* epsilon */
 				;
 
 VarDecl ::= (VarDecl) Type:varType IDENT:varName SEMI;
 
 Type ::= (Type) IDENT:typeName;
+
+
 
 MethodDeclList ::= (MethodDeclarations) MethodDeclList MethodDecl
 				|

@@ -26,6 +26,14 @@ public class CodeGenerator extends VisitorAdaptor{
 		}
 	}
 	
+	@Override
+	public void visit(Const cnst) {
+		Obj con = Tab.insert(Obj.Con, "$", cnst.struct);
+		con.setLevel(0);
+		con.setAdr(cnst.getN1());
+		
+		Code.load(con);
+	}
 	
 	
 }

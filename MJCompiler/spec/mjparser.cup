@@ -51,7 +51,9 @@ scan with {:
 :}
 
 
-terminal PROG, SEMI, PRINT, RETURN, PLUS, COMMA, VOID, CONST;
+terminal PROG; /* "program" */ 
+
+terminal SEMI, PRINT, RETURN, PLUS, COMMA, VOID, CONST;
 terminal String IDENT;
 terminal Integer NUMBER;
 terminal IF, ELSE;
@@ -79,7 +81,6 @@ nonterminal Addop;
 nonterminal ActualPars, ActualParamList;
 nonterminal Matched, Unmatched;
 
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl, MethodTypeName;
@@ -87,6 +88,9 @@ nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl, MethodTypeName;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Term, Factor, Expr;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program; /* Program = "program" ProgName (...) part, fetch program name and save to progName */
+
 
 Program ::= (Program) PROG ProgName:p VarDeclList LEFT_CURLY_BRACKET MethodDeclList RIGHT_CURLY_BRACKET;
 

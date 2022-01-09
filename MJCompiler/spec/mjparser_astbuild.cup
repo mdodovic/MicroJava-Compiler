@@ -201,6 +201,8 @@ ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend:O1 LEFT_CURLY_BRA
 OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName {: RESULT=new ClassHasParent(parentClassName); RESULT.setLine(parentClassNameleft); :}
 				   | 
  				   (ClassHasNoParent) {: RESULT=new ClassHasNoParent(); :} /* epsilon */
+				   | 
+ 				   (ErrorInExtendingClass) error {: RESULT=new ErrorInExtendingClass(); :} /* no need for "{" here; everything will be consumed until the "{" in ClassDecl production */
  				   ;
 
 Type ::= (Type) IDENT:typeName {: RESULT=new Type(typeName); RESULT.setLine(typeNameleft); :};

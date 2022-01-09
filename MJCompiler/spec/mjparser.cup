@@ -195,6 +195,8 @@ ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend LEFT_CURLY_BRACKE
 OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
 				   | 
  				   (ClassHasNoParent) /* epsilon */
+				   | 
+ 				   (ErrorInExtendingClass) error /* no need for "{" here; everything will be consumed until the "{" in ClassDecl production */
  				   ;
 
 Type ::= (Type) IDENT:typeName;

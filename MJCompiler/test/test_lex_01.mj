@@ -1,5 +1,4 @@
-program mojProgram
-
+program MJProgram
 	int x, y, z;
 	
 	bool global_flag;
@@ -15,6 +14,11 @@ program mojProgram
 	
 	int len, arr2[], sum;
 	
+	class A {}
+	class B extends A {}
+	class C extends B {}
+	class D extends A {}
+		
 {
 
 	//int k () int c; {

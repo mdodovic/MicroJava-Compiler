@@ -113,6 +113,8 @@ AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList VarDecl
 						(NoDeclarations) /* epsilon */
 						;
 
+/* constants */
+
 ConstantDeclaration ::= (ConstDecl) CONST ConstDeclarationType IDENT:constName ASSIGNMENT ConstValue:constValue MoreSingleLineConstDeclarations SEMI;
 
 ConstDeclarationType ::= (ConstDeclarationType) Type:constType;
@@ -129,12 +131,19 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 									(NoMoreConstDeclarations) /* epsilon */
 									;
 
+/* global variables */
+
 VarDeclList ::= (VarDeclarationsOLD) VarDeclList VarDecl
 				|
 				(NoVarDeclOLD) /* epsilon */
 				;
 
 VarDecl ::= (VarDecl) Type:varType IDENT:varName SEMI;
+
+
+
+
+
 
 Type ::= (Type) IDENT:typeName;
 

@@ -100,6 +100,7 @@ nonterminal AllDeclarationsList; /* this will collect all constants, (global) va
 nonterminal ConstantDeclaration; /* "const" (...) this will collect all ConstDecls */
 nonterminal ConstDeclarationType; /* type of constant */
 nonterminal ConstValue; /* value of constant */
+nonterminal MoreSingleLineConstDeclarations; /* this will collect all constants between initial constant and ; `"const" Type ident "=" value` (. "," ident "=" value .) `";"` */
 
 Program ::= (Program) PROG ProgName:p AllDeclarationsList LEFT_CURLY_BRACKET MethodDeclList RIGHT_CURLY_BRACKET;
 
@@ -112,7 +113,7 @@ AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList VarDecl
 						(NoDeclarations) /* epsilon */
 						;
 
-ConstantDeclaration ::= (ConstDecl) CONST ConstDeclarationType IDENT:constName ASSIGNMENT ConstValue:constValue SEMI;
+ConstantDeclaration ::= (ConstDecl) CONST ConstDeclarationType IDENT:constName ASSIGNMENT ConstValue:constValue MoreSingleLineConstDeclarations SEMI;
 
 ConstDeclarationType ::= (ConstDeclarationType) Type:constType;
 
@@ -122,6 +123,11 @@ ConstValue ::= (BooleanValue) BOOL_CONST:constValue
 			   |
 			   (CharValue) CHAR_CONST:constValue
 			   ;
+
+MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstDeclarations COMMA IDENT:constName ASSIGNMENT ConstValue:constValue
+									|
+									(NoMoreConstDeclarations) /* epsilon */
+									;
 
 VarDeclList ::= (VarDeclarationsOLD) VarDeclList VarDecl
 				|

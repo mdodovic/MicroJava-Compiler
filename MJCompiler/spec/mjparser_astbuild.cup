@@ -108,7 +108,7 @@ nonterminal AllDeclarationsList AllDeclarationsList; /* this will collect all co
 nonterminal ConstantDeclaration ConstantDeclaration; /* "const" (...) this will collect all ConstDecls */
 nonterminal ConstDeclarationType ConstDeclarationType; /* type of constant */
 nonterminal ConstValue ConstValue; /* value of constant */
-
+nonterminal MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations; /* this will collect all constants between initial constant and ; `"const" Type ident "=" value` (. "," ident "=" value .) `";"` */
 
 Program ::= (Program) PROG ProgName:p AllDeclarationsList:A1 LEFT_CURLY_BRACKET MethodDeclList:M2 RIGHT_CURLY_BRACKET {: RESULT=new Program(p, A1, M2); RESULT.setLine(pleft); :};
 
@@ -121,7 +121,7 @@ AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList:A1 VarDecl:V2 {: R
 						(NoDeclarations) {: RESULT=new NoDeclarations(); :} /* epsilon */
 						;
 
-ConstantDeclaration ::= (ConstDecl) CONST ConstDeclarationType:C1 IDENT:constName ASSIGNMENT ConstValue:constValue SEMI {: RESULT=new ConstDecl(C1, constName, constValue); RESULT.setLine(C1left); :};
+ConstantDeclaration ::= (ConstDecl) CONST ConstDeclarationType:C1 IDENT:constName ASSIGNMENT ConstValue:constValue MoreSingleLineConstDeclarations:M2 SEMI {: RESULT=new ConstDecl(C1, constName, constValue, M2); RESULT.setLine(C1left); :};
 
 ConstDeclarationType ::= (ConstDeclarationType) Type:constType {: RESULT=new ConstDeclarationType(constType); RESULT.setLine(constTypeleft); :};
 
@@ -129,8 +129,13 @@ ConstValue ::= (BooleanValue) BOOL_CONST:constValue {: RESULT=new BooleanValue()
 			   |
 			   (IntegerValue) NUMBER:constValue {: RESULT=new IntegerValue(constValue); RESULT.setLine(constValueleft); :}
 			   |
-			   (StringValue) CHAR_CONST:constValue {: RESULT=new StringValue(); :}
+			   (CharValue) CHAR_CONST:constValue {: RESULT=new CharValue(); :}
 			   ;
+
+MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstDeclarations:M1 COMMA IDENT:constName ASSIGNMENT ConstValue:constValue {: RESULT=new MoreConstDeclarations(M1, constName, constValue); RESULT.setLine(M1left); :}
+									|
+									(NoMoreConstDeclarations) {: RESULT=new NoMoreConstDeclarations(); :} /* epsilon */
+									;
 
 VarDeclList ::= (VarDeclarationsOLD) VarDeclList:V1 VarDecl:V2 {: RESULT=new VarDeclarationsOLD(V1, V2); RESULT.setLine(V1left); :}
 				|

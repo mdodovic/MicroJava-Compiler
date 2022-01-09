@@ -4,6 +4,7 @@ program MJProgram
 	const int e = 2;
 	const bool flag1 = true;
 	const bool flag2 = false;
+	const int n_1 = 1, n_2 = 2, n_3 = 3;	
 	const char a = 'a';	
 {
 

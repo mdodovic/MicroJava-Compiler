@@ -1,13 +1,13 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 10:46:9
+// 9/0/2022 11:5:51
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class StringValue extends ConstValue {
+public class CharValue extends ConstValue {
 
-    public StringValue () {
+    public CharValue () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class StringValue extends ConstValue {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("StringValue(\n");
+        buffer.append("CharValue(\n");
 
         buffer.append(tab);
-        buffer.append(") [StringValue]");
+        buffer.append(") [CharValue]");
         return buffer.toString();
     }
 }

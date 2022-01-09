@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 18:50:16
+// 9/0/2022 19:21:42
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,13 +8,16 @@ package rs.ac.bg.etf.pp1.ast;
 public abstract class VisitorAdaptor implements Visitor { 
 
     public void visit(Factor Factor) { }
+    public void visit(ArrayBrackets ArrayBrackets) { }
     public void visit(ActualParamList ActualParamList) { }
     public void visit(AllDeclarationsList AllDeclarationsList) { }
+    public void visit(LastVarDecl LastVarDecl) { }
     public void visit(Expr Expr) { }
     public void visit(FormalParamList FormalParamList) { }
     public void visit(FormPars FormPars) { }
     public void visit(VarDeclList VarDeclList) { }
     public void visit(ConstValue ConstValue) { }
+    public void visit(NotLastVarDecl NotLastVarDecl) { }
     public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations) { }
     public void visit(ConstantDeclaration ConstantDeclaration) { }
     public void visit(Unmatched Unmatched) { }
@@ -58,8 +61,12 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(NoMethodDecl NoMethodDecl) { visit(); }
     public void visit(MethodDeclarations MethodDeclarations) { visit(); }
     public void visit(Type Type) { visit(); }
-    public void visit(NoVarDeclOLD NoVarDeclOLD) { visit(); }
-    public void visit(VarDeclarationsOLD VarDeclarationsOLD) { visit(); }
+    public void visit(ErrorInVarFromLastPart ErrorInVarFromLastPart) { visit(); }
+    public void visit(VarFromLastPart VarFromLastPart) { visit(); }
+    public void visit(ErrorInVarFromMultiplePart ErrorInVarFromMultiplePart) { visit(); }
+    public void visit(VarFromMultiplePart VarFromMultiplePart) { visit(); }
+    public void visit(VarDeclLast VarDeclLast) { visit(); }
+    public void visit(VarDeclMultiple VarDeclMultiple) { visit(); }
     public void visit(VarDeclarationType VarDeclarationType) { visit(); }
     public void visit(VarDecl VarDecl) { visit(); }
     public void visit(NoMoreConstDeclarations NoMoreConstDeclarations) { visit(); }

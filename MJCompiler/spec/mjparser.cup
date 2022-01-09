@@ -80,7 +80,7 @@ terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET;
 
 
 
-nonterminal VarDeclList, MethodDeclList, VarDecl;
+nonterminal MethodDeclList;
 nonterminal FormPars, StatementList, FormalParamList, FormalParamDecl, Statement;
 nonterminal Addop;
 nonterminal ActualPars, ActualParamList;
@@ -103,8 +103,15 @@ nonterminal ConstDeclarationType; /* type of constant */
 nonterminal ConstValue; /* value of constant */
 nonterminal MoreSingleLineConstDeclarations; /* this will collect all constants between initial constant and ; `"const" Type ident "=" value` (. "," ident "=" value .) `";"` */
 
+nonterminal VarDecl; /* this will collect all global variables */
 nonterminal VarDeclarationType; /* type of global variables, this will be common type for all variables in the row */ 
-
+nonterminal rs.etf.pp1.symboltable.concepts.Obj VarDeclList; /* this will collect all variable names, and divide them to not-last-one ant the last one */
+/* NotLastVarDecl and LastVarDecl nonterminals are differed because of error handling: if the error happened all tokens except "," and ";" should be consumed.
+   NotLastVarDecl will cover consuming to the "," while the LastVarDecl will cover consuming to the ";"
+ */
+nonterminal NotLastVarDecl; /* this will collect all variable names untill the last, it can be like varName or varName[] */
+nonterminal LastVarDecl; /* this will collect the last variable name, it can be like varName or varName[]  */
+nonterminal ArrayBrackets; /* this will represent [] declaration like int a[], and will contain the info about if the variable is array or not */
 
 /* Grammar */
 
@@ -139,20 +146,24 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 
 /* global variables */
 
-VarDecl ::= (VarDecl) VarDeclarationType IDENT:varName SEMI;
+VarDecl ::= (VarDecl) VarDeclarationType VarDeclList;
 
 VarDeclarationType ::= (VarDeclarationType) Type:varType;
 
-VarDeclList ::= (VarDeclarationsOLD) VarDeclList VarDecl
+VarDeclList ::= (VarDeclMultiple) NotLastVarDecl VarDeclList
 				|
-				(NoVarDeclOLD) /* epsilon */
+				(VarDeclLast) LastVarDecl
 				;
 
+NotLastVarDecl ::= (VarFromMultiplePart) IDENT:varName COMMA
+   				   |
+				   (ErrorInVarFromMultiplePart) error COMMA
+				   ;
 
-
-
-
-
+LastVarDecl ::= (VarFromLastPart) IDENT:varName SEMI
+				|
+				(ErrorInVarFromLastPart) error SEMI
+				;
 
 Type ::= (Type) IDENT:typeName;
 

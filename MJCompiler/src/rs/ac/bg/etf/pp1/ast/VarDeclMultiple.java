@@ -5,26 +5,24 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class VarDecl implements SyntaxNode {
+public class VarDeclMultiple extends VarDeclList {
 
-    private SyntaxNode parent;
-    private int line;
-    private VarDeclarationType VarDeclarationType;
+    private NotLastVarDecl NotLastVarDecl;
     private VarDeclList VarDeclList;
 
-    public VarDecl (VarDeclarationType VarDeclarationType, VarDeclList VarDeclList) {
-        this.VarDeclarationType=VarDeclarationType;
-        if(VarDeclarationType!=null) VarDeclarationType.setParent(this);
+    public VarDeclMultiple (NotLastVarDecl NotLastVarDecl, VarDeclList VarDeclList) {
+        this.NotLastVarDecl=NotLastVarDecl;
+        if(NotLastVarDecl!=null) NotLastVarDecl.setParent(this);
         this.VarDeclList=VarDeclList;
         if(VarDeclList!=null) VarDeclList.setParent(this);
     }
 
-    public VarDeclarationType getVarDeclarationType() {
-        return VarDeclarationType;
+    public NotLastVarDecl getNotLastVarDecl() {
+        return NotLastVarDecl;
     }
 
-    public void setVarDeclarationType(VarDeclarationType VarDeclarationType) {
-        this.VarDeclarationType=VarDeclarationType;
+    public void setNotLastVarDecl(NotLastVarDecl NotLastVarDecl) {
+        this.NotLastVarDecl=NotLastVarDecl;
     }
 
     public VarDeclList getVarDeclList() {
@@ -35,39 +33,23 @@ public class VarDecl implements SyntaxNode {
         this.VarDeclList=VarDeclList;
     }
 
-    public SyntaxNode getParent() {
-        return parent;
-    }
-
-    public void setParent(SyntaxNode parent) {
-        this.parent=parent;
-    }
-
-    public int getLine() {
-        return line;
-    }
-
-    public void setLine(int line) {
-        this.line=line;
-    }
-
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(VarDeclarationType!=null) VarDeclarationType.accept(visitor);
+        if(NotLastVarDecl!=null) NotLastVarDecl.accept(visitor);
         if(VarDeclList!=null) VarDeclList.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(VarDeclarationType!=null) VarDeclarationType.traverseTopDown(visitor);
+        if(NotLastVarDecl!=null) NotLastVarDecl.traverseTopDown(visitor);
         if(VarDeclList!=null) VarDeclList.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(VarDeclarationType!=null) VarDeclarationType.traverseBottomUp(visitor);
+        if(NotLastVarDecl!=null) NotLastVarDecl.traverseBottomUp(visitor);
         if(VarDeclList!=null) VarDeclList.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -75,10 +57,10 @@ public class VarDecl implements SyntaxNode {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("VarDecl(\n");
+        buffer.append("VarDeclMultiple(\n");
 
-        if(VarDeclarationType!=null)
-            buffer.append(VarDeclarationType.toString("  "+tab));
+        if(NotLastVarDecl!=null)
+            buffer.append(NotLastVarDecl.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
@@ -90,7 +72,7 @@ public class VarDecl implements SyntaxNode {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [VarDecl]");
+        buffer.append(") [VarDeclMultiple]");
         return buffer.toString();
     }
 }

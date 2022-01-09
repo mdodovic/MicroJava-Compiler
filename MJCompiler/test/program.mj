@@ -1,41 +1,45 @@
 program MJProgram
-	int x; int y;
+	int x, y, z;
 	
 	bool global_flag;
-	char c;
+	char c1, c2, c3, c4;
 		
-	const int pi = 3;
-	const int e = 2;
+	const int pi = 3, e = 2;
 	const bool flag1 = true;
 	const bool flag2 = false;
 	const int n_1 = 1, n_2 = 2, n_3 = 3;	
 	const char a = 'a';	
+	
+	int arr1[];
+	
+	int len, arr2[], sum;
+	
 {
 
-	int k () int c; {
-		c = 2;
+	//int k () int c; {
+	//	c = 2;
 	
 		// print(0);
 		
 
-		return c+2;
-	}
+	//	return c+2;
+	//}
 
-	int main() {
+	//int main() {
 		
-		x = 3;
+	//	x = 3;
 		
-		print(1);
-		
-		y = 4 + 9 + k();
-		print(x);
+	//	print(1);
+	//	
+	//	y = 4 + 9 + k();
+	//	print(x);
 
-		k();
-		
-		print(y);
+	//	k();
+	//	
+	//	print(y);
 				
-		return 0;
+	//	return 0;
 
-	}
+	//}
 	
 }

@@ -41,8 +41,9 @@ public class SemanticPass extends VisitorAdaptor {
 	
 	public void visit(VarDecl varDecl){
 		varDeclCount++;
-		report_info("Deklarisana promenljiva "+ varDecl.getVarName(), varDecl);
-		Obj varNode = Tab.insert(Obj.Var, varDecl.getVarName(), varDecl.getVarDeclarationType().getType().struct);
+		// Access to the declared variable name!
+		// report_info("Deklarisana promenljiva "+ varDecl.getVarName(), varDecl);
+		// Obj varNode = Tab.insert(Obj.Var, varDecl.getVarName(), varDecl.getVarDeclarationType().getType().struct);
 		// Obj varNode = Tab.insert(Obj.Var, varDecl.getVarName(), varDecl.getType().struct);
 	}
 	

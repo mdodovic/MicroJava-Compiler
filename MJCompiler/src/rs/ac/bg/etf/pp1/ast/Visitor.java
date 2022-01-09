@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 18:50:16
+// 9/0/2022 19:21:42
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,13 +8,16 @@ package rs.ac.bg.etf.pp1.ast;
 public interface Visitor { 
 
     public void visit(Factor Factor);
+    public void visit(ArrayBrackets ArrayBrackets);
     public void visit(ActualParamList ActualParamList);
     public void visit(AllDeclarationsList AllDeclarationsList);
+    public void visit(LastVarDecl LastVarDecl);
     public void visit(Expr Expr);
     public void visit(FormalParamList FormalParamList);
     public void visit(FormPars FormPars);
     public void visit(VarDeclList VarDeclList);
     public void visit(ConstValue ConstValue);
+    public void visit(NotLastVarDecl NotLastVarDecl);
     public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations);
     public void visit(ConstantDeclaration ConstantDeclaration);
     public void visit(Unmatched Unmatched);
@@ -58,8 +61,12 @@ public interface Visitor {
     public void visit(NoMethodDecl NoMethodDecl);
     public void visit(MethodDeclarations MethodDeclarations);
     public void visit(Type Type);
-    public void visit(NoVarDeclOLD NoVarDeclOLD);
-    public void visit(VarDeclarationsOLD VarDeclarationsOLD);
+    public void visit(ErrorInVarFromLastPart ErrorInVarFromLastPart);
+    public void visit(VarFromLastPart VarFromLastPart);
+    public void visit(ErrorInVarFromMultiplePart ErrorInVarFromMultiplePart);
+    public void visit(VarFromMultiplePart VarFromMultiplePart);
+    public void visit(VarDeclLast VarDeclLast);
+    public void visit(VarDeclMultiple VarDeclMultiple);
     public void visit(VarDeclarationType VarDeclarationType);
     public void visit(VarDecl VarDecl);
     public void visit(NoMoreConstDeclarations NoMoreConstDeclarations);

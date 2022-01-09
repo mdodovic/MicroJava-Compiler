@@ -80,9 +80,7 @@ terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET;
 
 
 
-nonterminal VarDeclList VarDeclList;
 nonterminal MethodDeclList MethodDeclList;
-nonterminal VarDecl VarDecl;
 nonterminal FormPars FormPars;
 nonterminal StatementList StatementList;
 nonterminal FormalParamList FormalParamList;
@@ -111,8 +109,15 @@ nonterminal ConstDeclarationType ConstDeclarationType; /* type of constant */
 nonterminal ConstValue ConstValue; /* value of constant */
 nonterminal MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations; /* this will collect all constants between initial constant and ; `"const" Type ident "=" value` (. "," ident "=" value .) `";"` */
 
+nonterminal VarDecl VarDecl; /* this will collect all global variables */
 nonterminal VarDeclarationType VarDeclarationType; /* type of global variables, this will be common type for all variables in the row */ 
-
+nonterminal rs.etf.pp1.symboltable.concepts.Obj VarDeclList; /* this will collect all variable names, and divide them to not-last-one ant the last one */
+/* NotLastVarDecl and LastVarDecl nonterminals are differed because of error handling: if the error happened all tokens except "," and ";" should be consumed.
+   NotLastVarDecl will cover consuming to the "," while the LastVarDecl will cover consuming to the ";"
+ */
+nonterminal NotLastVarDecl NotLastVarDecl; /* this will collect all variable names untill the last, it can be like varName or varName[] */
+nonterminal LastVarDecl LastVarDecl; /* this will collect the last variable name, it can be like varName or varName[]  */
+nonterminal ArrayBrackets ArrayBrackets; /* this will represent [] declaration like int a[], and will contain the info about if the variable is array or not */
 
 /* Grammar */
 
@@ -147,20 +152,24 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 
 /* global variables */
 
-VarDecl ::= (VarDecl) VarDeclarationType:V1 IDENT:varName SEMI {: RESULT=new VarDecl(V1, varName); RESULT.setLine(V1left); :};
+VarDecl ::= (VarDecl) VarDeclarationType:V1 VarDeclList:V2 {: RESULT=new VarDecl(V1, V2); RESULT.setLine(V1left); :};
 
 VarDeclarationType ::= (VarDeclarationType) Type:varType {: RESULT=new VarDeclarationType(varType); RESULT.setLine(varTypeleft); :};
 
-VarDeclList ::= (VarDeclarationsOLD) VarDeclList:V1 VarDecl:V2 {: RESULT=new VarDeclarationsOLD(V1, V2); RESULT.setLine(V1left); :}
+VarDeclList ::= (VarDeclMultiple) NotLastVarDecl:N1 VarDeclList:V2 {: RESULT=new VarDeclMultiple(N1, V2); RESULT.setLine(N1left); :}
 				|
-				(NoVarDeclOLD) {: RESULT=new NoVarDeclOLD(); :} /* epsilon */
+				(VarDeclLast) LastVarDecl:L1 {: RESULT=new VarDeclLast(L1); RESULT.setLine(L1left); :}
 				;
 
+NotLastVarDecl ::= (VarFromMultiplePart) IDENT:varName COMMA {: RESULT=new VarFromMultiplePart(varName); RESULT.setLine(varNameleft); :}
+   				   |
+				   (ErrorInVarFromMultiplePart) error COMMA {: RESULT=new ErrorInVarFromMultiplePart(); :}
+				   ;
 
-
-
-
-
+LastVarDecl ::= (VarFromLastPart) IDENT:varName SEMI {: RESULT=new VarFromLastPart(varName); RESULT.setLine(varNameleft); :}
+				|
+				(ErrorInVarFromLastPart) error SEMI {: RESULT=new ErrorInVarFromLastPart(); :}
+				;
 
 Type ::= (Type) IDENT:typeName {: RESULT=new Type(typeName); RESULT.setLine(typeNameleft); :};
 

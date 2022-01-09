@@ -5,7 +5,7 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class Unmatched implements SyntaxNode {
+public abstract class ArrayBrackets implements SyntaxNode {
 
     private SyntaxNode parent;
 

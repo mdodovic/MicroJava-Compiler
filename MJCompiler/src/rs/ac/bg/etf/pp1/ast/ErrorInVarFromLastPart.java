@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class NoActuals extends ActualPars {
+public class ErrorInVarFromLastPart extends LastVarDecl {
 
-    public NoActuals () {
+    public ErrorInVarFromLastPart () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class NoActuals extends ActualPars {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("NoActuals(\n");
+        buffer.append("ErrorInVarFromLastPart(\n");
 
         buffer.append(tab);
-        buffer.append(") [NoActuals]");
+        buffer.append(") [ErrorInVarFromLastPart]");
         return buffer.toString();
     }
 }

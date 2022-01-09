@@ -5,9 +5,20 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class NoActuals extends ActualPars {
+public class VarFromLastPart extends LastVarDecl {
 
-    public NoActuals () {
+    private String varName;
+
+    public VarFromLastPart (String varName) {
+        this.varName=varName;
+    }
+
+    public String getVarName() {
+        return varName;
+    }
+
+    public void setVarName(String varName) {
+        this.varName=varName;
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +39,13 @@ public class NoActuals extends ActualPars {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("NoActuals(\n");
+        buffer.append("VarFromLastPart(\n");
+
+        buffer.append(" "+tab+varName);
+        buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [NoActuals]");
+        buffer.append(") [VarFromLastPart]");
         return buffer.toString();
     }
 }

@@ -97,10 +97,16 @@ nonterminal rs.etf.pp1.symboltable.concepts.Struct Term, Factor, Expr;
 /* NON terminals */
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program; /* Program = "program" ProgName (...) part, fetch program name and save to progName */
 nonterminal AllDeclarationsList; /* this will collect all constants, (global) variables, classes and records declarations */
+
 nonterminal ConstantDeclaration; /* "const" (...) this will collect all ConstDecls */
 nonterminal ConstDeclarationType; /* type of constant */
 nonterminal ConstValue; /* value of constant */
 nonterminal MoreSingleLineConstDeclarations; /* this will collect all constants between initial constant and ; `"const" Type ident "=" value` (. "," ident "=" value .) `";"` */
+
+nonterminal VarDeclarationType; /* type of global variables, this will be common type for all variables in the row */ 
+
+
+/* Grammar */
 
 Program ::= (Program) PROG ProgName:p AllDeclarationsList LEFT_CURLY_BRACKET MethodDeclList RIGHT_CURLY_BRACKET;
 
@@ -133,12 +139,15 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 
 /* global variables */
 
+VarDecl ::= (VarDecl) VarDeclarationType IDENT:varName SEMI;
+
+VarDeclarationType ::= (VarDeclarationType) Type:varType;
+
 VarDeclList ::= (VarDeclarationsOLD) VarDeclList VarDecl
 				|
 				(NoVarDeclOLD) /* epsilon */
 				;
 
-VarDecl ::= (VarDecl) Type:varType IDENT:varName SEMI;
 
 
 

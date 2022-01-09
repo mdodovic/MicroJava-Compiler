@@ -105,10 +105,16 @@ nonterminal rs.etf.pp1.symboltable.concepts.Struct Term, Factor, Expr;
 /* NON terminals */
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program; /* Program = "program" ProgName (...) part, fetch program name and save to progName */
 nonterminal AllDeclarationsList AllDeclarationsList; /* this will collect all constants, (global) variables, classes and records declarations */
+
 nonterminal ConstantDeclaration ConstantDeclaration; /* "const" (...) this will collect all ConstDecls */
 nonterminal ConstDeclarationType ConstDeclarationType; /* type of constant */
 nonterminal ConstValue ConstValue; /* value of constant */
 nonterminal MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations; /* this will collect all constants between initial constant and ; `"const" Type ident "=" value` (. "," ident "=" value .) `";"` */
+
+nonterminal VarDeclarationType VarDeclarationType; /* type of global variables, this will be common type for all variables in the row */ 
+
+
+/* Grammar */
 
 Program ::= (Program) PROG ProgName:p AllDeclarationsList:A1 LEFT_CURLY_BRACKET MethodDeclList:M2 RIGHT_CURLY_BRACKET {: RESULT=new Program(p, A1, M2); RESULT.setLine(pleft); :};
 
@@ -120,6 +126,8 @@ AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList:A1 VarDecl:V2 {: R
 						|
 						(NoDeclarations) {: RESULT=new NoDeclarations(); :} /* epsilon */
 						;
+
+/* constants */
 
 ConstantDeclaration ::= (ConstDecl) CONST ConstDeclarationType:C1 IDENT:constName ASSIGNMENT ConstValue:constValue MoreSingleLineConstDeclarations:M2 SEMI {: RESULT=new ConstDecl(C1, constName, constValue, M2); RESULT.setLine(C1left); :};
 
@@ -137,12 +145,22 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 									(NoMoreConstDeclarations) {: RESULT=new NoMoreConstDeclarations(); :} /* epsilon */
 									;
 
+/* global variables */
+
+VarDecl ::= (VarDecl) VarDeclarationType:V1 IDENT:varName SEMI {: RESULT=new VarDecl(V1, varName); RESULT.setLine(V1left); :};
+
+VarDeclarationType ::= (VarDeclarationType) Type:varType {: RESULT=new VarDeclarationType(varType); RESULT.setLine(varTypeleft); :};
+
 VarDeclList ::= (VarDeclarationsOLD) VarDeclList:V1 VarDecl:V2 {: RESULT=new VarDeclarationsOLD(V1, V2); RESULT.setLine(V1left); :}
 				|
 				(NoVarDeclOLD) {: RESULT=new NoVarDeclOLD(); :} /* epsilon */
 				;
 
-VarDecl ::= (VarDecl) Type:varType IDENT:varName SEMI {: RESULT=new VarDecl(varType, varName); RESULT.setLine(varTypeleft); :};
+
+
+
+
+
 
 Type ::= (Type) IDENT:typeName {: RESULT=new Type(typeName); RESULT.setLine(typeNameleft); :};
 

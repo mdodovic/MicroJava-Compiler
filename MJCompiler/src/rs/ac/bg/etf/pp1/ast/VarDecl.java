@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 11:5:51
+// 9/0/2022 18:50:16
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,21 +9,21 @@ public class VarDecl implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    private Type Type;
+    private VarDeclarationType VarDeclarationType;
     private String varName;
 
-    public VarDecl (Type Type, String varName) {
-        this.Type=Type;
-        if(Type!=null) Type.setParent(this);
+    public VarDecl (VarDeclarationType VarDeclarationType, String varName) {
+        this.VarDeclarationType=VarDeclarationType;
+        if(VarDeclarationType!=null) VarDeclarationType.setParent(this);
         this.varName=varName;
     }
 
-    public Type getType() {
-        return Type;
+    public VarDeclarationType getVarDeclarationType() {
+        return VarDeclarationType;
     }
 
-    public void setType(Type Type) {
-        this.Type=Type;
+    public void setVarDeclarationType(VarDeclarationType VarDeclarationType) {
+        this.VarDeclarationType=VarDeclarationType;
     }
 
     public String getVarName() {
@@ -55,16 +55,16 @@ public class VarDecl implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Type!=null) Type.accept(visitor);
+        if(VarDeclarationType!=null) VarDeclarationType.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Type!=null) Type.traverseTopDown(visitor);
+        if(VarDeclarationType!=null) VarDeclarationType.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Type!=null) Type.traverseBottomUp(visitor);
+        if(VarDeclarationType!=null) VarDeclarationType.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -73,8 +73,8 @@ public class VarDecl implements SyntaxNode {
         buffer.append(tab);
         buffer.append("VarDecl(\n");
 
-        if(Type!=null)
-            buffer.append(Type.toString("  "+tab));
+        if(VarDeclarationType!=null)
+            buffer.append(VarDeclarationType.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

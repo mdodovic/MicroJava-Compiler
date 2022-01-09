@@ -1,5 +1,9 @@
 program MJProgram
 	int x; int y;
+	
+	bool global_flag;
+	char c;
+		
 	const int pi = 3;
 	const int e = 2;
 	const bool flag1 = true;

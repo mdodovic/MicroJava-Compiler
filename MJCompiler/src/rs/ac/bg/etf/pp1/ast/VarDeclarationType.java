@@ -5,11 +5,23 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Addop implements SyntaxNode {
+public class VarDeclarationType implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    public Addop () {
+    private Type Type;
+
+    public VarDeclarationType (Type Type) {
+        this.Type=Type;
+        if(Type!=null) Type.setParent(this);
+    }
+
+    public Type getType() {
+        return Type;
+    }
+
+    public void setType(Type Type) {
+        this.Type=Type;
     }
 
     public SyntaxNode getParent() {
@@ -33,23 +45,32 @@ public class Addop implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
+        if(Type!=null) Type.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
+        if(Type!=null) Type.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
+        if(Type!=null) Type.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Addop(\n");
+        buffer.append("VarDeclarationType(\n");
+
+        if(Type!=null)
+            buffer.append(Type.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [Addop]");
+        buffer.append(") [VarDeclarationType]");
         return buffer.toString();
     }
 }

@@ -1,20 +1,22 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 19:42:13
+// 9/0/2022 19:46:44
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ConstDecl extends ConstantDeclaration {
+public class ConstDecl implements SyntaxNode {
 
-    private ConstDeclarationType ConstDeclarationType;
+    private SyntaxNode parent;
+    private int line;
+    private ConstDeclType ConstDeclType;
     private String constName;
     private ConstValue ConstValue;
     private MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations;
 
-    public ConstDecl (ConstDeclarationType ConstDeclarationType, String constName, ConstValue ConstValue, MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations) {
-        this.ConstDeclarationType=ConstDeclarationType;
-        if(ConstDeclarationType!=null) ConstDeclarationType.setParent(this);
+    public ConstDecl (ConstDeclType ConstDeclType, String constName, ConstValue ConstValue, MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations) {
+        this.ConstDeclType=ConstDeclType;
+        if(ConstDeclType!=null) ConstDeclType.setParent(this);
         this.constName=constName;
         this.ConstValue=ConstValue;
         if(ConstValue!=null) ConstValue.setParent(this);
@@ -22,12 +24,12 @@ public class ConstDecl extends ConstantDeclaration {
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.setParent(this);
     }
 
-    public ConstDeclarationType getConstDeclarationType() {
-        return ConstDeclarationType;
+    public ConstDeclType getConstDeclType() {
+        return ConstDeclType;
     }
 
-    public void setConstDeclarationType(ConstDeclarationType ConstDeclarationType) {
-        this.ConstDeclarationType=ConstDeclarationType;
+    public void setConstDeclType(ConstDeclType ConstDeclType) {
+        this.ConstDeclType=ConstDeclType;
     }
 
     public String getConstName() {
@@ -54,25 +56,41 @@ public class ConstDecl extends ConstantDeclaration {
         this.MoreSingleLineConstDeclarations=MoreSingleLineConstDeclarations;
     }
 
+    public SyntaxNode getParent() {
+        return parent;
+    }
+
+    public void setParent(SyntaxNode parent) {
+        this.parent=parent;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line=line;
+    }
+
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(ConstDeclarationType!=null) ConstDeclarationType.accept(visitor);
+        if(ConstDeclType!=null) ConstDeclType.accept(visitor);
         if(ConstValue!=null) ConstValue.accept(visitor);
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(ConstDeclarationType!=null) ConstDeclarationType.traverseTopDown(visitor);
+        if(ConstDeclType!=null) ConstDeclType.traverseTopDown(visitor);
         if(ConstValue!=null) ConstValue.traverseTopDown(visitor);
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(ConstDeclarationType!=null) ConstDeclarationType.traverseBottomUp(visitor);
+        if(ConstDeclType!=null) ConstDeclType.traverseBottomUp(visitor);
         if(ConstValue!=null) ConstValue.traverseBottomUp(visitor);
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.traverseBottomUp(visitor);
         accept(visitor);
@@ -83,8 +101,8 @@ public class ConstDecl extends ConstantDeclaration {
         buffer.append(tab);
         buffer.append("ConstDecl(\n");
 
-        if(ConstDeclarationType!=null)
-            buffer.append(ConstDeclarationType.toString("  "+tab));
+        if(ConstDeclType!=null)
+            buffer.append(ConstDeclType.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

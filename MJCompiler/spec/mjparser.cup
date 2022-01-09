@@ -100,13 +100,13 @@ nonterminal rs.etf.pp1.symboltable.concepts.Struct Term, Factor, Expr;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program; /* Program = "program" ProgName (...) part, fetch program name and save to progName */
 nonterminal AllDeclarationsList; /* this will collect all constants, (global) variables, classes and records declarations */
 
-nonterminal ConstantDeclaration; /* "const" (...) this will collect all ConstDecls */
-nonterminal ConstDeclarationType; /* type of constant */
+nonterminal ConstDecl; /* "const" (...) this will collect all ConstDecls */
+nonterminal ConstDeclType; /* type of constant */
 nonterminal ConstValue; /* value of constant */
 nonterminal MoreSingleLineConstDeclarations; /* this will collect all constants between initial constant and ; `"const" Type ident "=" value` (. "," ident "=" value .) `";"` */
 
 nonterminal VarDecl; /* this will collect all global variables */
-nonterminal VarDeclarationType; /* type of global variables, this will be common type for all variables in the row */ 
+nonterminal VarDeclType; /* type of global variables, this will be common type for all variables in the row */ 
 nonterminal VarDeclList; /* this will collect all variable names, and divide them to not-last-one ant the last-one */
 /* not-last-one (NotLastVarDecl) and last-one (LastVarDecl) nonterminals are differed because of error handling: if the error happened all tokens except "," and ";" should be consumed.
    NotLastVarDecl will cover consuming to the "," while the LastVarDecl will cover consuming to the ";"
@@ -126,16 +126,16 @@ ProgName ::= (ProgName) IDENT:progName;
 
 AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList VarDecl
 						|
-						(ConstDeclarations) AllDeclarationsList ConstantDeclaration
+						(ConstDeclarations) AllDeclarationsList ConstDecl
 						|
 						(NoDeclarations) /* epsilon */
 						;
 
 /* constants */
 
-ConstantDeclaration ::= (ConstDecl) CONST ConstDeclarationType IDENT:constName ASSIGNMENT ConstValue:constValue MoreSingleLineConstDeclarations SEMI;
+ConstDecl ::= (ConstDecl) CONST ConstDeclType IDENT:constName ASSIGNMENT ConstValue:constValue MoreSingleLineConstDeclarations SEMI;
 
-ConstDeclarationType ::= (ConstDeclarationType) Type:constType;
+ConstDeclType ::= (ConstDeclType) Type:constType;
 
 ConstValue ::= (BooleanValue) BOOL_CONST:constValue
 			   |
@@ -151,9 +151,9 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 
 /* global variables */
 
-VarDecl ::= (VarDecl) VarDeclarationType VarDeclList;
+VarDecl ::= (VarDecl) VarDeclType VarDeclList;
 
-VarDeclarationType ::= (VarDeclarationType) Type:varType;
+VarDeclType ::= (VarDeclType) Type:varType;
 
 VarDeclList ::= (VarDeclMultiple) NotLastVarDecl VarDeclList
 				|
@@ -174,6 +174,7 @@ ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET
 				  |
 				  (VariableIsNotArray) /* epsilon */
 				  ;
+
 
 Type ::= (Type) IDENT:typeName;
 

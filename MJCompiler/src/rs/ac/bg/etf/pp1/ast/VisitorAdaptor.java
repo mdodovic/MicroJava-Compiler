@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 19:42:13
+// 9/0/2022 19:46:44
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -19,7 +19,6 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(ConstValue ConstValue) { }
     public void visit(NotLastVarDecl NotLastVarDecl) { }
     public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations) { }
-    public void visit(ConstantDeclaration ConstantDeclaration) { }
     public void visit(Unmatched Unmatched) { }
     public void visit(FormalParamDecl FormalParamDecl) { }
     public void visit(MethodDeclList MethodDeclList) { }
@@ -69,14 +68,14 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(VarFromMultiplePart VarFromMultiplePart) { visit(); }
     public void visit(VarDeclLast VarDeclLast) { visit(); }
     public void visit(VarDeclMultiple VarDeclMultiple) { visit(); }
-    public void visit(VarDeclarationType VarDeclarationType) { visit(); }
+    public void visit(VarDeclType VarDeclType) { visit(); }
     public void visit(VarDecl VarDecl) { visit(); }
     public void visit(NoMoreConstDeclarations NoMoreConstDeclarations) { visit(); }
     public void visit(MoreConstDeclarations MoreConstDeclarations) { visit(); }
     public void visit(CharValue CharValue) { visit(); }
     public void visit(IntegerValue IntegerValue) { visit(); }
     public void visit(BooleanValue BooleanValue) { visit(); }
-    public void visit(ConstDeclarationType ConstDeclarationType) { visit(); }
+    public void visit(ConstDeclType ConstDeclType) { visit(); }
     public void visit(ConstDecl ConstDecl) { visit(); }
     public void visit(NoDeclarations NoDeclarations) { visit(); }
     public void visit(ConstDeclarations ConstDeclarations) { visit(); }

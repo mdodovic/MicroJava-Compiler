@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 19:42:13
+// 9/0/2022 19:46:44
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,13 +8,13 @@ package rs.ac.bg.etf.pp1.ast;
 public class ConstDeclarations extends AllDeclarationsList {
 
     private AllDeclarationsList AllDeclarationsList;
-    private ConstantDeclaration ConstantDeclaration;
+    private ConstDecl ConstDecl;
 
-    public ConstDeclarations (AllDeclarationsList AllDeclarationsList, ConstantDeclaration ConstantDeclaration) {
+    public ConstDeclarations (AllDeclarationsList AllDeclarationsList, ConstDecl ConstDecl) {
         this.AllDeclarationsList=AllDeclarationsList;
         if(AllDeclarationsList!=null) AllDeclarationsList.setParent(this);
-        this.ConstantDeclaration=ConstantDeclaration;
-        if(ConstantDeclaration!=null) ConstantDeclaration.setParent(this);
+        this.ConstDecl=ConstDecl;
+        if(ConstDecl!=null) ConstDecl.setParent(this);
     }
 
     public AllDeclarationsList getAllDeclarationsList() {
@@ -25,12 +25,12 @@ public class ConstDeclarations extends AllDeclarationsList {
         this.AllDeclarationsList=AllDeclarationsList;
     }
 
-    public ConstantDeclaration getConstantDeclaration() {
-        return ConstantDeclaration;
+    public ConstDecl getConstDecl() {
+        return ConstDecl;
     }
 
-    public void setConstantDeclaration(ConstantDeclaration ConstantDeclaration) {
-        this.ConstantDeclaration=ConstantDeclaration;
+    public void setConstDecl(ConstDecl ConstDecl) {
+        this.ConstDecl=ConstDecl;
     }
 
     public void accept(Visitor visitor) {
@@ -39,18 +39,18 @@ public class ConstDeclarations extends AllDeclarationsList {
 
     public void childrenAccept(Visitor visitor) {
         if(AllDeclarationsList!=null) AllDeclarationsList.accept(visitor);
-        if(ConstantDeclaration!=null) ConstantDeclaration.accept(visitor);
+        if(ConstDecl!=null) ConstDecl.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(AllDeclarationsList!=null) AllDeclarationsList.traverseTopDown(visitor);
-        if(ConstantDeclaration!=null) ConstantDeclaration.traverseTopDown(visitor);
+        if(ConstDecl!=null) ConstDecl.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(AllDeclarationsList!=null) AllDeclarationsList.traverseBottomUp(visitor);
-        if(ConstantDeclaration!=null) ConstantDeclaration.traverseBottomUp(visitor);
+        if(ConstDecl!=null) ConstDecl.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -65,8 +65,8 @@ public class ConstDeclarations extends AllDeclarationsList {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(ConstantDeclaration!=null)
-            buffer.append(ConstantDeclaration.toString("  "+tab));
+        if(ConstDecl!=null)
+            buffer.append(ConstDecl.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

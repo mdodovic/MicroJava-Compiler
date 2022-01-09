@@ -1,17 +1,17 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 19:42:13
+// 9/0/2022 19:46:44
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ConstDeclarationType implements SyntaxNode {
+public class ConstDeclType implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
     private Type Type;
 
-    public ConstDeclarationType (Type Type) {
+    public ConstDeclType (Type Type) {
         this.Type=Type;
         if(Type!=null) Type.setParent(this);
     }
@@ -61,7 +61,7 @@ public class ConstDeclarationType implements SyntaxNode {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ConstDeclarationType(\n");
+        buffer.append("ConstDeclType(\n");
 
         if(Type!=null)
             buffer.append(Type.toString("  "+tab));
@@ -70,7 +70,7 @@ public class ConstDeclarationType implements SyntaxNode {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [ConstDeclarationType]");
+        buffer.append(") [ConstDeclType]");
         return buffer.toString();
     }
 }

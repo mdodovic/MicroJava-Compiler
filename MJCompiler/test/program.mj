@@ -3,7 +3,9 @@ program MJProgram
 	
 	bool global_flag;
 	char c1, c2, c3, c4;
-		
+	
+	class Empty {}
+			
 	const int pi = 3, e = 2;
 	const bool flag1 = true;
 	const bool flag2 = false;
@@ -14,10 +16,19 @@ program MJProgram
 	
 	int len, arr2[], sum;
 	
-	class A {}
-	class B extends A {}
-	class C extends B {}
-	class D extends A {}
+	// string class
+	class Str { 
+		char s[];
+		int len;		
+		bool readable;
+		
+	}
+	
+	// class extending
+	class A { int fa1, fa2; }
+	class B extends A { char fb1;  }
+	class C extends B { int fc1, fc2; }
+	class D extends A { int fd1; }
 		
 {
 

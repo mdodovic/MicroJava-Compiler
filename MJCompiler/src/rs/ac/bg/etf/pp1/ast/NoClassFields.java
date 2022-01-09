@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class VariableIsArray extends ArrayBrackets {
+public class NoClassFields extends ClassFieldsVariables {
 
-    public VariableIsArray () {
+    public NoClassFields () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class VariableIsArray extends ArrayBrackets {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("VariableIsArray(\n");
+        buffer.append("NoClassFields(\n");
 
         buffer.append(tab);
-        buffer.append(") [VariableIsArray]");
+        buffer.append(") [NoClassFields]");
         return buffer.toString();
     }
 }

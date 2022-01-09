@@ -128,7 +128,7 @@ nonterminal ArrayBrackets ArrayBrackets; /* this will represent [] declaration l
 
 nonterminal ClassDecl ClassDecl; /* "class" className (.1.) "{" (.2.) "{" (.3.) (.4.) "}" "}" */
 nonterminal OptionalExtend OptionalExtend; /* "extends" superClassName, this is optional part in class declaration (.1.) */
-nonterminal ClassFieldsVariables ClassFieldsVariables; /* class fields (.2.) this is basically VarDecl */
+nonterminal ClassFieldsVariables ClassFieldsVariables; /* class fields (.2.), this is basically VarDecl */
 nonterminal ConstructorDecl ConstructorDecl; /* class constructor (.3.), method without type and with the same name as class. There we do not check this equallity. */
 nonterminal ClassMethodDeclarations ClassMethodDeclarations; /* class methods (.4.), no difference between regular methods */
 
@@ -168,7 +168,7 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 									(NoMoreConstDeclarations) {: RESULT=new NoMoreConstDeclarations(); :} /* epsilon */
 									;
 
-/* global variables */
+/* global variables; class fields */
 
 VarDecl ::= (VarDecl) VarDeclType:V1 VarDeclList:V2 {: RESULT=new VarDecl(V1, V2); RESULT.setLine(V1left); :};
 
@@ -196,7 +196,7 @@ ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET {: 
 
 /* classes */
 
-ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend:O1 LEFT_CURLY_BRACKET /* ClassFieldsVariables ConstructorDecl ClassMethodDeclarations */ RIGHT_CURLY_BRACKET {: RESULT=new ClassDecl(className, O1); RESULT.setLine(classNameleft); :};
+ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend:O1 LEFT_CURLY_BRACKET ClassFieldsVariables:C2 /* ConstructorDecl ClassMethodDeclarations */ RIGHT_CURLY_BRACKET {: RESULT=new ClassDecl(className, O1, C2); RESULT.setLine(classNameleft); :};
 
 OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName {: RESULT=new ClassHasParent(parentClassName); RESULT.setLine(parentClassNameleft); :}
 				   | 
@@ -204,6 +204,11 @@ OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName {: RESULT=new C
 				   | 
  				   (ErrorInExtendingClass) error {: RESULT=new ErrorInExtendingClass(); :} /* no need for "{" here; everything will be consumed until the "{" in ClassDecl production */
  				   ;
+
+ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables:C1 VarDecl:V2 {: RESULT=new ClassFields(C1, V2); RESULT.setLine(C1left); :}
+						 |
+						 (NoClassFields) {: RESULT=new NoClassFields(); :}/* epsilon */
+						 ;
 
 Type ::= (Type) IDENT:typeName {: RESULT=new Type(typeName); RESULT.setLine(typeNameleft); :};
 

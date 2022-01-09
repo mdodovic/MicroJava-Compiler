@@ -122,7 +122,7 @@ nonterminal ArrayBrackets; /* this will represent [] declaration like int a[], a
 
 nonterminal ClassDecl; /* "class" className (.1.) "{" (.2.) "{" (.3.) (.4.) "}" "}" */
 nonterminal OptionalExtend; /* "extends" superClassName, this is optional part in class declaration (.1.) */
-nonterminal ClassFieldsVariables; /* class fields (.2.) this is basically VarDecl */
+nonterminal ClassFieldsVariables; /* class fields (.2.), this is basically VarDecl */
 nonterminal ConstructorDecl; /* class constructor (.3.), method without type and with the same name as class. There we do not check this equallity. */
 nonterminal ClassMethodDeclarations; /* class methods (.4.), no difference between regular methods */
 
@@ -162,7 +162,7 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 									(NoMoreConstDeclarations) /* epsilon */
 									;
 
-/* global variables */
+/* global variables; class fields */
 
 VarDecl ::= (VarDecl) VarDeclType VarDeclList;
 
@@ -190,7 +190,7 @@ ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET
 
 /* classes */
 
-ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend LEFT_CURLY_BRACKET /* ClassFieldsVariables ConstructorDecl ClassMethodDeclarations */ RIGHT_CURLY_BRACKET;
+ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend LEFT_CURLY_BRACKET ClassFieldsVariables /* ConstructorDecl ClassMethodDeclarations */ RIGHT_CURLY_BRACKET;
 
 OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
 				   | 
@@ -198,6 +198,11 @@ OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
 				   | 
  				   (ErrorInExtendingClass) error /* no need for "{" here; everything will be consumed until the "{" in ClassDecl production */
  				   ;
+
+ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables VarDecl
+						 |
+						 (NoClassFields)/* epsilon */
+						 ;
 
 Type ::= (Type) IDENT:typeName;
 

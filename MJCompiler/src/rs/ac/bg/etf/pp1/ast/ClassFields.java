@@ -5,24 +5,24 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class VarDeclarations extends AllDeclarationsList {
+public class ClassFields extends ClassFieldsVariables {
 
-    private AllDeclarationsList AllDeclarationsList;
+    private ClassFieldsVariables ClassFieldsVariables;
     private VarDecl VarDecl;
 
-    public VarDeclarations (AllDeclarationsList AllDeclarationsList, VarDecl VarDecl) {
-        this.AllDeclarationsList=AllDeclarationsList;
-        if(AllDeclarationsList!=null) AllDeclarationsList.setParent(this);
+    public ClassFields (ClassFieldsVariables ClassFieldsVariables, VarDecl VarDecl) {
+        this.ClassFieldsVariables=ClassFieldsVariables;
+        if(ClassFieldsVariables!=null) ClassFieldsVariables.setParent(this);
         this.VarDecl=VarDecl;
         if(VarDecl!=null) VarDecl.setParent(this);
     }
 
-    public AllDeclarationsList getAllDeclarationsList() {
-        return AllDeclarationsList;
+    public ClassFieldsVariables getClassFieldsVariables() {
+        return ClassFieldsVariables;
     }
 
-    public void setAllDeclarationsList(AllDeclarationsList AllDeclarationsList) {
-        this.AllDeclarationsList=AllDeclarationsList;
+    public void setClassFieldsVariables(ClassFieldsVariables ClassFieldsVariables) {
+        this.ClassFieldsVariables=ClassFieldsVariables;
     }
 
     public VarDecl getVarDecl() {
@@ -38,18 +38,18 @@ public class VarDeclarations extends AllDeclarationsList {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(AllDeclarationsList!=null) AllDeclarationsList.accept(visitor);
+        if(ClassFieldsVariables!=null) ClassFieldsVariables.accept(visitor);
         if(VarDecl!=null) VarDecl.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(AllDeclarationsList!=null) AllDeclarationsList.traverseTopDown(visitor);
+        if(ClassFieldsVariables!=null) ClassFieldsVariables.traverseTopDown(visitor);
         if(VarDecl!=null) VarDecl.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(AllDeclarationsList!=null) AllDeclarationsList.traverseBottomUp(visitor);
+        if(ClassFieldsVariables!=null) ClassFieldsVariables.traverseBottomUp(visitor);
         if(VarDecl!=null) VarDecl.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -57,10 +57,10 @@ public class VarDeclarations extends AllDeclarationsList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("VarDeclarations(\n");
+        buffer.append("ClassFields(\n");
 
-        if(AllDeclarationsList!=null)
-            buffer.append(AllDeclarationsList.toString("  "+tab));
+        if(ClassFieldsVariables!=null)
+            buffer.append(ClassFieldsVariables.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
@@ -72,7 +72,7 @@ public class VarDeclarations extends AllDeclarationsList {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [VarDeclarations]");
+        buffer.append(") [ClassFields]");
         return buffer.toString();
     }
 }

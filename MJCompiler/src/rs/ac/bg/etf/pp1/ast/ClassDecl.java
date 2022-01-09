@@ -1,15 +1,38 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 19:54:35
+// 9/0/2022 20:8:51
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class ClassDecl implements SyntaxNode {
+public class ClassDecl implements SyntaxNode {
 
     private SyntaxNode parent;
-
     private int line;
+    private String className;
+    private OptionalExtend OptionalExtend;
+
+    public ClassDecl (String className, OptionalExtend OptionalExtend) {
+        this.className=className;
+        this.OptionalExtend=OptionalExtend;
+        if(OptionalExtend!=null) OptionalExtend.setParent(this);
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className=className;
+    }
+
+    public OptionalExtend getOptionalExtend() {
+        return OptionalExtend;
+    }
+
+    public void setOptionalExtend(OptionalExtend OptionalExtend) {
+        this.OptionalExtend=OptionalExtend;
+    }
 
     public SyntaxNode getParent() {
         return parent;
@@ -27,11 +50,40 @@ public abstract class ClassDecl implements SyntaxNode {
         this.line=line;
     }
 
-    public abstract void accept(Visitor visitor);
-    public abstract void childrenAccept(Visitor visitor);
-    public abstract void traverseTopDown(Visitor visitor);
-    public abstract void traverseBottomUp(Visitor visitor);
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 
-    public String toString() { return toString(""); }
-    public abstract String toString(String tab);
+    public void childrenAccept(Visitor visitor) {
+        if(OptionalExtend!=null) OptionalExtend.accept(visitor);
+    }
+
+    public void traverseTopDown(Visitor visitor) {
+        accept(visitor);
+        if(OptionalExtend!=null) OptionalExtend.traverseTopDown(visitor);
+    }
+
+    public void traverseBottomUp(Visitor visitor) {
+        if(OptionalExtend!=null) OptionalExtend.traverseBottomUp(visitor);
+        accept(visitor);
+    }
+
+    public String toString(String tab) {
+        StringBuffer buffer=new StringBuffer();
+        buffer.append(tab);
+        buffer.append("ClassDecl(\n");
+
+        buffer.append(" "+tab+className);
+        buffer.append("\n");
+
+        if(OptionalExtend!=null)
+            buffer.append(OptionalExtend.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        buffer.append(tab);
+        buffer.append(") [ClassDecl]");
+        return buffer.toString();
+    }
 }

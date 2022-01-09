@@ -5,7 +5,7 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class ActualPars implements SyntaxNode {
+public abstract class OptionalExtend implements SyntaxNode {
 
     private SyntaxNode parent;
 

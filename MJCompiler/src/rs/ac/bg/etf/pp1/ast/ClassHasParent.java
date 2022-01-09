@@ -5,21 +5,21 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Var extends Factor {
+public class ClassHasParent extends OptionalExtend {
 
-    private Designator Designator;
+    private Type Type;
 
-    public Var (Designator Designator) {
-        this.Designator=Designator;
-        if(Designator!=null) Designator.setParent(this);
+    public ClassHasParent (Type Type) {
+        this.Type=Type;
+        if(Type!=null) Type.setParent(this);
     }
 
-    public Designator getDesignator() {
-        return Designator;
+    public Type getType() {
+        return Type;
     }
 
-    public void setDesignator(Designator Designator) {
-        this.Designator=Designator;
+    public void setType(Type Type) {
+        this.Type=Type;
     }
 
     public void accept(Visitor visitor) {
@@ -27,32 +27,32 @@ public class Var extends Factor {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Designator!=null) Designator.accept(visitor);
+        if(Type!=null) Type.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Designator!=null) Designator.traverseTopDown(visitor);
+        if(Type!=null) Type.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Designator!=null) Designator.traverseBottomUp(visitor);
+        if(Type!=null) Type.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Var(\n");
+        buffer.append("ClassHasParent(\n");
 
-        if(Designator!=null)
-            buffer.append(Designator.toString("  "+tab));
+        if(Type!=null)
+            buffer.append(Type.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [Var]");
+        buffer.append(") [ClassHasParent]");
         return buffer.toString();
     }
 }

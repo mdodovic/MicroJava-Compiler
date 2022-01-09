@@ -1,32 +1,35 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 19:54:35
+// 9/0/2022 20:8:51
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public abstract class VisitorAdaptor implements Visitor { 
 
-    public void visit(Factor Factor) { }
-    public void visit(ArrayBrackets ArrayBrackets) { }
-    public void visit(ActualParamList ActualParamList) { }
-    public void visit(AllDeclarationsList AllDeclarationsList) { }
-    public void visit(LastVarDecl LastVarDecl) { }
-    public void visit(Expr Expr) { }
-    public void visit(ClassDecl ClassDecl) { }
-    public void visit(FormalParamList FormalParamList) { }
-    public void visit(FormPars FormPars) { }
-    public void visit(VarDeclList VarDeclList) { }
-    public void visit(ConstValue ConstValue) { }
-    public void visit(NotLastVarDecl NotLastVarDecl) { }
-    public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations) { }
     public void visit(Unmatched Unmatched) { }
-    public void visit(FormalParamDecl FormalParamDecl) { }
-    public void visit(MethodDeclList MethodDeclList) { }
-    public void visit(Statement Statement) { }
-    public void visit(StatementList StatementList) { }
+    public void visit(ArrayBrackets ArrayBrackets) { }
+    public void visit(ConstructorDecl ConstructorDecl) { }
     public void visit(Matched Matched) { }
+    public void visit(FormalParamDecl FormalParamDecl) { }
+    public void visit(ClassFieldsVariables ClassFieldsVariables) { }
+    public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations) { }
+    public void visit(StatementList StatementList) { }
+    public void visit(LastVarDecl LastVarDecl) { }
+    public void visit(Factor Factor) { }
+    public void visit(NotLastVarDecl NotLastVarDecl) { }
+    public void visit(ConstValue ConstValue) { }
+    public void visit(ActualParamList ActualParamList) { }
+    public void visit(ClassMethodDeclarations ClassMethodDeclarations) { }
+    public void visit(VarDeclList VarDeclList) { }
+    public void visit(FormalParamList FormalParamList) { }
+    public void visit(AllDeclarationsList AllDeclarationsList) { }
+    public void visit(Expr Expr) { }
     public void visit(ActualPars ActualPars) { }
+    public void visit(Statement Statement) { }
+    public void visit(MethodDeclList MethodDeclList) { }
+    public void visit(FormPars FormPars) { }
+    public void visit(OptionalExtend OptionalExtend) { }
     public void visit(Addop Addop) { visit(); }
     public void visit(Designator Designator) { visit(); }
     public void visit(ActualParam ActualParam) { visit(); }
@@ -61,7 +64,9 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(NoMethodDecl NoMethodDecl) { visit(); }
     public void visit(MethodDeclarations MethodDeclarations) { visit(); }
     public void visit(Type Type) { visit(); }
-    public void visit(ClassDeclDerived1 ClassDeclDerived1) { visit(); }
+    public void visit(ClassHasNoParent ClassHasNoParent) { visit(); }
+    public void visit(ClassHasParent ClassHasParent) { visit(); }
+    public void visit(ClassDecl ClassDecl) { visit(); }
     public void visit(VariableIsNotArray VariableIsNotArray) { visit(); }
     public void visit(VariableIsArray VariableIsArray) { visit(); }
     public void visit(ErrorInVarFromLastPart ErrorInVarFromLastPart) { visit(); }

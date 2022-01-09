@@ -1,32 +1,35 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 19:54:35
+// 9/0/2022 20:8:51
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public interface Visitor { 
 
-    public void visit(Factor Factor);
-    public void visit(ArrayBrackets ArrayBrackets);
-    public void visit(ActualParamList ActualParamList);
-    public void visit(AllDeclarationsList AllDeclarationsList);
-    public void visit(LastVarDecl LastVarDecl);
-    public void visit(Expr Expr);
-    public void visit(ClassDecl ClassDecl);
-    public void visit(FormalParamList FormalParamList);
-    public void visit(FormPars FormPars);
-    public void visit(VarDeclList VarDeclList);
-    public void visit(ConstValue ConstValue);
-    public void visit(NotLastVarDecl NotLastVarDecl);
-    public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations);
     public void visit(Unmatched Unmatched);
-    public void visit(FormalParamDecl FormalParamDecl);
-    public void visit(MethodDeclList MethodDeclList);
-    public void visit(Statement Statement);
-    public void visit(StatementList StatementList);
+    public void visit(ArrayBrackets ArrayBrackets);
+    public void visit(ConstructorDecl ConstructorDecl);
     public void visit(Matched Matched);
+    public void visit(FormalParamDecl FormalParamDecl);
+    public void visit(ClassFieldsVariables ClassFieldsVariables);
+    public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations);
+    public void visit(StatementList StatementList);
+    public void visit(LastVarDecl LastVarDecl);
+    public void visit(Factor Factor);
+    public void visit(NotLastVarDecl NotLastVarDecl);
+    public void visit(ConstValue ConstValue);
+    public void visit(ActualParamList ActualParamList);
+    public void visit(ClassMethodDeclarations ClassMethodDeclarations);
+    public void visit(VarDeclList VarDeclList);
+    public void visit(FormalParamList FormalParamList);
+    public void visit(AllDeclarationsList AllDeclarationsList);
+    public void visit(Expr Expr);
     public void visit(ActualPars ActualPars);
+    public void visit(Statement Statement);
+    public void visit(MethodDeclList MethodDeclList);
+    public void visit(FormPars FormPars);
+    public void visit(OptionalExtend OptionalExtend);
     public void visit(Addop Addop);
     public void visit(Designator Designator);
     public void visit(ActualParam ActualParam);
@@ -61,7 +64,9 @@ public interface Visitor {
     public void visit(NoMethodDecl NoMethodDecl);
     public void visit(MethodDeclarations MethodDeclarations);
     public void visit(Type Type);
-    public void visit(ClassDeclDerived1 ClassDeclDerived1);
+    public void visit(ClassHasNoParent ClassHasNoParent);
+    public void visit(ClassHasParent ClassHasParent);
+    public void visit(ClassDecl ClassDecl);
     public void visit(VariableIsNotArray VariableIsNotArray);
     public void visit(VariableIsArray VariableIsArray);
     public void visit(ErrorInVarFromLastPart ErrorInVarFromLastPart);

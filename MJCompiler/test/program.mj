@@ -14,7 +14,9 @@ program MJProgram
 	
 	int len, arr2[], sum;
 	
-	class
+	class A {}
+	class B extends A {}
+	class C extends B {}
 		
 {
 

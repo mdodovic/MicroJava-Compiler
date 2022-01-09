@@ -68,6 +68,7 @@ terminal BOOL_CONST; /* bool value: true/false*/
 terminal Integer NUMBER; /* integer value: 0, ... */
 
 terminal LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET; /* "[""]" */
+terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; /* "{""}" */
 
 
 terminal PRINT, RETURN, PLUS, VOID;
@@ -85,7 +86,6 @@ terminal SUPER, THIS, POINT;
 terminal BREAK, CONTINUE;
 terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
 terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET;
-terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; 
 
 
 
@@ -120,7 +120,11 @@ nonterminal NotLastVarDecl; /* this will collect all variable names until the la
 nonterminal LastVarDecl; /* this will collect the last variable name, it can be like varName or varName[]  */
 nonterminal ArrayBrackets; /* this will represent [] declaration like int a[], and will contain the info about if the variable is array or not */
 
-nonterminal ClassDecl; /* "class" className "extends" superClass "{" (...) "{" (...) "}" "}" */
+nonterminal ClassDecl; /* "class" className (.1.) "{" (.2.) "{" (.3.) (.4.) "}" "}" */
+nonterminal OptionalExtend; /* "extends" superClassName, this is optional part in class declaration (.1.) */
+nonterminal ClassFieldsVariables; /* class fields (.2.) this is basically VarDecl */
+nonterminal ConstructorDecl; /* class constructor (.3.), method without type and with the same name as class. There we do not check this equallity. */
+nonterminal ClassMethodDeclarations; /* class methods (.4.), no difference between regular methods */
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
@@ -186,7 +190,12 @@ ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET
 
 /* classes */
 
-ClassDecl ::= CLASS;
+ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend LEFT_CURLY_BRACKET /* ClassFieldsVariables ConstructorDecl ClassMethodDeclarations */ RIGHT_CURLY_BRACKET;
+
+OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
+				   | 
+ 				   (ClassHasNoParent) /* epsilon */
+ 				   ;
 
 Type ::= (Type) IDENT:typeName;
 

@@ -1,13 +1,13 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 19:54:35
+// 9/0/2022 20:8:51
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ClassDeclDerived1 extends ClassDecl {
+public class ClassHasNoParent extends OptionalExtend {
 
-    public ClassDeclDerived1 () {
+    public ClassHasNoParent () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class ClassDeclDerived1 extends ClassDecl {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ClassDeclDerived1(\n");
+        buffer.append("ClassHasNoParent(\n");
 
         buffer.append(tab);
-        buffer.append(") [ClassDeclDerived1]");
+        buffer.append(") [ClassHasNoParent]");
         return buffer.toString();
     }
 }

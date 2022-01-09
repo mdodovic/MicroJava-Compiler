@@ -90,8 +90,6 @@ nonterminal Addop;
 nonterminal ActualPars, ActualParamList;
 nonterminal Matched, Unmatched;
 
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
-
 nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl, MethodTypeName;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
@@ -116,6 +114,9 @@ nonterminal VarDeclList; /* this will collect all variable names, and divide the
 nonterminal NotLastVarDecl; /* this will collect all variable names until the last, it can be like varName or varName[] */
 nonterminal LastVarDecl; /* this will collect the last variable name, it can be like varName or varName[]  */
 nonterminal ArrayBrackets; /* this will represent [] declaration like int a[], and will contain the info about if the variable is array or not */
+
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
+
 
 /* Grammar */
 
@@ -159,15 +160,20 @@ VarDeclList ::= (VarDeclMultiple) NotLastVarDecl VarDeclList
 				(VarDeclLast) LastVarDecl
 				;
 
-NotLastVarDecl ::= (VarFromMultiplePart) IDENT:varName COMMA
+NotLastVarDecl ::= (VarFromMultiplePart) IDENT:varName ArrayBrackets COMMA
    				   |
 				   (ErrorInVarFromMultiplePart) error COMMA
 				   ;
 
-LastVarDecl ::= (VarFromLastPart) IDENT:varName SEMI
+LastVarDecl ::= (VarFromLastPart) IDENT:varName ArrayBrackets SEMI
 				|
 				(ErrorInVarFromLastPart) error SEMI
 				;
+
+ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET
+				  |
+				  (VariableIsNotArray) /* epsilon */
+				  ;
 
 Type ::= (Type) IDENT:typeName;
 

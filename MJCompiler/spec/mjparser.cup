@@ -67,6 +67,7 @@ terminal CHAR_CONST; /* char value: 'a', ... */
 terminal BOOL_CONST; /* bool value: true/false*/
 terminal Integer NUMBER; /* integer value: 0, ... */
 
+terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET; /* "("")" */
 terminal LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET; /* "[""]" */
 terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; /* "{""}" */
 
@@ -85,7 +86,6 @@ terminal SUPER, THIS, POINT;
 
 terminal BREAK, CONTINUE;
 terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
-terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET;
 
 
 
@@ -201,7 +201,7 @@ OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
 
 ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables VarDecl
 						 |
-						 (NoClassFields)/* epsilon */
+						 (NoClassFields) /* epsilon */
 						 ;
 
 Type ::= (Type) IDENT:typeName;

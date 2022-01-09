@@ -1,6 +1,10 @@
 program MJProgram
 	int x; int y;
-	const //int pi = 3, e = 2;
+	const int pi = 3;
+	const int e = 2;
+	const bool flag1 = true;
+	const bool flag2 = false;
+	const char a = 'a';	
 {
 
 	int k () int c; {

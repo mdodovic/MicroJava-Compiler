@@ -5,7 +5,7 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class FormalParamDecl implements SyntaxNode {
+public abstract class ConstValue implements SyntaxNode {
 
     private SyntaxNode parent;
 

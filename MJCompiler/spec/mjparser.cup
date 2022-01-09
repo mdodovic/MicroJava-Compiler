@@ -54,10 +54,14 @@ scan with {:
 
 terminal PROG; /* "program" */ 
 terminal CONST; /* "const" */
+terminal SEMI; /* ";" */
+terminal CHAR_CONST; /* char value: 'a', ... */ 
+terminal BOOL_CONST; /* bool value: true/false*/
+terminal Integer NUMBER; /* integer value: 0, ... */
 
-terminal SEMI, PRINT, RETURN, PLUS, COMMA, VOID;
+
+terminal PRINT, RETURN, PLUS, COMMA, VOID;
 terminal String IDENT;
-terminal Integer NUMBER;
 terminal IF, ELSE;
 
 terminal READ;
@@ -74,7 +78,6 @@ terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET;
 terminal LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET;
 terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; 
 
-terminal CHAR_CONST, BOOL_CONST;
 
 
 nonterminal VarDeclList, MethodDeclList, VarDecl;
@@ -95,7 +98,8 @@ nonterminal rs.etf.pp1.symboltable.concepts.Struct Term, Factor, Expr;
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program; /* Program = "program" ProgName (...) part, fetch program name and save to progName */
 nonterminal AllDeclarationsList; /* this will collect all constants, (global) variables, classes and records declarations */
 nonterminal ConstantDeclaration; /* "const" (...) this will collect all ConstDecls */
-
+nonterminal ConstDeclarationType; /* type of constant */
+nonterminal ConstValue; /* value of constant */
 
 Program ::= (Program) PROG ProgName:p AllDeclarationsList LEFT_CURLY_BRACKET MethodDeclList RIGHT_CURLY_BRACKET;
 
@@ -108,7 +112,16 @@ AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList VarDecl
 						(NoDeclarations) /* epsilon */
 						;
 
-ConstantDeclaration ::= (ConstDecl) CONST;
+ConstantDeclaration ::= (ConstDecl) CONST ConstDeclarationType IDENT:constName ASSIGNMENT ConstValue:constValue SEMI;
+
+ConstDeclarationType ::= (ConstDeclarationType) Type:constType;
+
+ConstValue ::= (BooleanValue) BOOL_CONST:constValue
+			   |
+			   (IntegerValue) NUMBER:constValue
+			   |
+			   (CharValue) CHAR_CONST:constValue
+			   ;
 
 VarDeclList ::= (VarDeclarationsOLD) VarDeclList VarDecl
 				|

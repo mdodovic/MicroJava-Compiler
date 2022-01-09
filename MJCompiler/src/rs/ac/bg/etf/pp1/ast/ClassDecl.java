@@ -5,7 +5,7 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class ActualParamList implements SyntaxNode {
+public abstract class ClassDecl implements SyntaxNode {
 
     private SyntaxNode parent;
 

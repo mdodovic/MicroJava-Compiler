@@ -54,6 +54,7 @@ scan with {:
 
 terminal PROG; /* "program" */ 
 terminal CONST; /* "const" */
+terminal VOID; /* "void" */
 
 terminal CLASS; /* "class" */
 terminal EXTENDS; /* "extends" */
@@ -72,7 +73,7 @@ terminal LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET; /* "[""]" */
 terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; /* "{""}" */
 
 
-terminal PRINT, RETURN, PLUS, VOID;
+terminal PRINT, RETURN, PLUS;
 terminal String IDENT;
 terminal IF, ELSE;
 
@@ -89,19 +90,13 @@ terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
 
 
 
-nonterminal MethodDeclList MethodDeclList;
-nonterminal FormPars FormPars;
 nonterminal StatementList StatementList;
-nonterminal FormalParamList FormalParamList;
-nonterminal FormalParamDecl FormalParamDecl;
 nonterminal Statement Statement;
 nonterminal Addop Addop;
 nonterminal ActualPars ActualPars;
 nonterminal ActualParamList ActualParamList;
 nonterminal Matched Matched;
 nonterminal Unmatched Unmatched;
-
-nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl, MethodTypeName;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
 
@@ -141,6 +136,16 @@ nonterminal ConstructorDecl ConstructorDecl; /* class constructor (.3.1.), metho
 nonterminal ClassMethodDeclarations ClassMethodDeclarations; /* class methods (.3.2.), no difference between regular methods */
 nonterminal ConstructorVarDecl ConstructorVarDecl; /* local variables for constructor, there error handling is as same as VarDecl */
 nonterminal ConstructorBody ConstructorBody; /* constructor body contains any statement */
+
+nonterminal MethodDeclList MethodDeclList; /* list of all methods' declarations */
+nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl; /* returnType methodName "(" ")" */
+nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodTypeName; /* this will represent return type and methodName */
+nonterminal MethodReturnType MethodReturnType; /* this will represent all possible return types */
+nonterminal MethodVarDecl MethodVarDecl; /* local variables for method, there error handling is as same as VarDecl */
+
+nonterminal FormPars FormPars;
+nonterminal FormalParamList FormalParamList;
+nonterminal FormalParamDecl FormalParamDecl;
 
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
@@ -261,27 +266,38 @@ ConstructorVarDecl ::= (ConstructorHasVariables) ConstructorVarDecl:C1 VarDecl:V
 					   ;
 
 ConstructorBody ::= (EmptyConstructorBody) {: RESULT=new EmptyConstructorBody(); :} /* epsilon */
-					;
+					; // Fill it with statement
 
 ClassMethodDeclarations ::= (NoClassMethodDecl) {: RESULT=new NoClassMethodDecl(); :} /* epsilon */
-							;
+							; // fill it with method
 
 /* Type; usage: constants, variables, classes */
 Type ::= (Type) IDENT:typeName {: RESULT=new Type(typeName); RESULT.setLine(typeNameleft); :};
 
+/* methods */
 
-
-MethodDeclList ::= (MethodDeclarations) MethodDeclList:M1 MethodDecl:M2 {: RESULT=new MethodDeclarations(M1, M2); RESULT.setLine(M1left); :}
-				|
-				(NoMethodDecl) {: RESULT=new NoMethodDecl(); :} /* epsilon */
-				;
+MethodDeclList ::= (NonEmptyMethodDeclList) MethodDeclList:M1 MethodDecl:M2 {: RESULT=new NonEmptyMethodDeclList(M1, M2); RESULT.setLine(M1left); :}
+				   |
+				   (EmptyMethodDeclList) {: RESULT=new EmptyMethodDeclList(); :} /* epsilon */
+				   ;
 
 MethodDecl ::= (MethodDecl) MethodTypeName:M1 
-				LEFT_ROUND_BRACKET FormPars:F2 RIGHT_ROUND_BRACKET VarDeclList:V3 
-				LEFT_CURLY_BRACKET StatementList:S4 RIGHT_CURLY_BRACKET {: RESULT=new MethodDecl(M1, F2, V3, S4); RESULT.setLine(M1left); :}
+				LEFT_ROUND_BRACKET FormPars:F2 RIGHT_ROUND_BRACKET MethodVarDecl:M3 
+				LEFT_CURLY_BRACKET StatementList:S4 RIGHT_CURLY_BRACKET {: RESULT=new MethodDecl(M1, F2, M3, S4); RESULT.setLine(M1left); :}
 				;
 
-MethodTypeName ::= (MethodTypeName) Type:retType IDENT:methName {: RESULT=new MethodTypeName(retType, methName); RESULT.setLine(retTypeleft); :};
+MethodTypeName ::= (MethodTypeName) MethodReturnType:M1 IDENT:methName {: RESULT=new MethodTypeName(M1, methName); RESULT.setLine(M1left); :};
+
+MethodReturnType ::= (ConcreteType) Type:retType {: RESULT=new ConcreteType(retType); RESULT.setLine(retTypeleft); :}
+					 |
+					 (VoidType) VOID {: RESULT=new VoidType(); :}
+					 ;
+
+MethodVarDecl ::= (MethodHasVariables) MethodVarDecl:M1 VarDecl:V2 {: RESULT=new MethodHasVariables(M1, V2); RESULT.setLine(M1left); :}
+				  |
+				  (MethodHasNotVariables) {: RESULT=new MethodHasNotVariables(); :} /* epsilon */
+				  ;
+
 
 FormPars ::= (FormParams) FormalParamList:F1 {: RESULT=new FormParams(F1); RESULT.setLine(F1left); :}
 			|

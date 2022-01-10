@@ -71,6 +71,15 @@ program MJProgram
 	Board b;
 {
 
+	int f1() {
+	
+	}
+
+	void f2() {
+	
+	}
+
+
 	//int k () int c; {
 	//	c = 2;
 	

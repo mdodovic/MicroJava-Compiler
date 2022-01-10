@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 11:11:26
+// 10/0/2022 12:50:15
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -11,8 +11,8 @@ public interface Visitor {
     public void visit(ArrayBrackets ArrayBrackets);
     public void visit(ConstructorDecl ConstructorDecl);
     public void visit(Matched Matched);
-    public void visit(ClassFieldsVariables ClassFieldsVariables);
     public void visit(FormalParamDecl FormalParamDecl);
+    public void visit(ClassFieldsVariables ClassFieldsVariables);
     public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations);
     public void visit(StatementList StatementList);
     public void visit(LastVarDecl LastVarDecl);
@@ -24,13 +24,15 @@ public interface Visitor {
     public void visit(NotLastVarDecl NotLastVarDecl);
     public void visit(ConstValue ConstValue);
     public void visit(ActualParamList ActualParamList);
+    public void visit(MethodVarDecl MethodVarDecl);
     public void visit(ClassMethodDeclarations ClassMethodDeclarations);
     public void visit(ConstructorBody ConstructorBody);
-    public void visit(VarDeclList VarDeclList);
     public void visit(FormalParamList FormalParamList);
+    public void visit(VarDeclList VarDeclList);
     public void visit(AllDeclarationsList AllDeclarationsList);
     public void visit(Expr Expr);
     public void visit(ActualPars ActualPars);
+    public void visit(MethodReturnType MethodReturnType);
     public void visit(Statement Statement);
     public void visit(ConstructorVarDecl ConstructorVarDecl);
     public void visit(MethodDeclList MethodDeclList);
@@ -65,10 +67,14 @@ public interface Visitor {
     public void visit(FormalParamDecls FormalParamDecls);
     public void visit(NoFormParam NoFormParam);
     public void visit(FormParams FormParams);
+    public void visit(MethodHasNotVariables MethodHasNotVariables);
+    public void visit(MethodHasVariables MethodHasVariables);
+    public void visit(VoidType VoidType);
+    public void visit(ConcreteType ConcreteType);
     public void visit(MethodTypeName MethodTypeName);
     public void visit(MethodDecl MethodDecl);
-    public void visit(NoMethodDecl NoMethodDecl);
-    public void visit(MethodDeclarations MethodDeclarations);
+    public void visit(EmptyMethodDeclList EmptyMethodDeclList);
+    public void visit(NonEmptyMethodDeclList NonEmptyMethodDeclList);
     public void visit(Type Type);
     public void visit(NoClassMethodDecl NoClassMethodDecl);
     public void visit(EmptyConstructorBody EmptyConstructorBody);

@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 11:11:26
+// 10/0/2022 12:50:15
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -11,8 +11,8 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(ArrayBrackets ArrayBrackets) { }
     public void visit(ConstructorDecl ConstructorDecl) { }
     public void visit(Matched Matched) { }
-    public void visit(ClassFieldsVariables ClassFieldsVariables) { }
     public void visit(FormalParamDecl FormalParamDecl) { }
+    public void visit(ClassFieldsVariables ClassFieldsVariables) { }
     public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations) { }
     public void visit(StatementList StatementList) { }
     public void visit(LastVarDecl LastVarDecl) { }
@@ -24,13 +24,15 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(NotLastVarDecl NotLastVarDecl) { }
     public void visit(ConstValue ConstValue) { }
     public void visit(ActualParamList ActualParamList) { }
+    public void visit(MethodVarDecl MethodVarDecl) { }
     public void visit(ClassMethodDeclarations ClassMethodDeclarations) { }
     public void visit(ConstructorBody ConstructorBody) { }
-    public void visit(VarDeclList VarDeclList) { }
     public void visit(FormalParamList FormalParamList) { }
+    public void visit(VarDeclList VarDeclList) { }
     public void visit(AllDeclarationsList AllDeclarationsList) { }
     public void visit(Expr Expr) { }
     public void visit(ActualPars ActualPars) { }
+    public void visit(MethodReturnType MethodReturnType) { }
     public void visit(Statement Statement) { }
     public void visit(ConstructorVarDecl ConstructorVarDecl) { }
     public void visit(MethodDeclList MethodDeclList) { }
@@ -65,10 +67,14 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(FormalParamDecls FormalParamDecls) { visit(); }
     public void visit(NoFormParam NoFormParam) { visit(); }
     public void visit(FormParams FormParams) { visit(); }
+    public void visit(MethodHasNotVariables MethodHasNotVariables) { visit(); }
+    public void visit(MethodHasVariables MethodHasVariables) { visit(); }
+    public void visit(VoidType VoidType) { visit(); }
+    public void visit(ConcreteType ConcreteType) { visit(); }
     public void visit(MethodTypeName MethodTypeName) { visit(); }
     public void visit(MethodDecl MethodDecl) { visit(); }
-    public void visit(NoMethodDecl NoMethodDecl) { visit(); }
-    public void visit(MethodDeclarations MethodDeclarations) { visit(); }
+    public void visit(EmptyMethodDeclList EmptyMethodDeclList) { visit(); }
+    public void visit(NonEmptyMethodDeclList NonEmptyMethodDeclList) { visit(); }
     public void visit(Type Type) { visit(); }
     public void visit(NoClassMethodDecl NoClassMethodDecl) { visit(); }
     public void visit(EmptyConstructorBody EmptyConstructorBody) { visit(); }

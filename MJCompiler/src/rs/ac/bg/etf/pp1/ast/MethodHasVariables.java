@@ -5,24 +5,24 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class RecordHasVariables extends RecordVarDecl {
+public class MethodHasVariables extends MethodVarDecl {
 
-    private RecordVarDecl RecordVarDecl;
+    private MethodVarDecl MethodVarDecl;
     private VarDecl VarDecl;
 
-    public RecordHasVariables (RecordVarDecl RecordVarDecl, VarDecl VarDecl) {
-        this.RecordVarDecl=RecordVarDecl;
-        if(RecordVarDecl!=null) RecordVarDecl.setParent(this);
+    public MethodHasVariables (MethodVarDecl MethodVarDecl, VarDecl VarDecl) {
+        this.MethodVarDecl=MethodVarDecl;
+        if(MethodVarDecl!=null) MethodVarDecl.setParent(this);
         this.VarDecl=VarDecl;
         if(VarDecl!=null) VarDecl.setParent(this);
     }
 
-    public RecordVarDecl getRecordVarDecl() {
-        return RecordVarDecl;
+    public MethodVarDecl getMethodVarDecl() {
+        return MethodVarDecl;
     }
 
-    public void setRecordVarDecl(RecordVarDecl RecordVarDecl) {
-        this.RecordVarDecl=RecordVarDecl;
+    public void setMethodVarDecl(MethodVarDecl MethodVarDecl) {
+        this.MethodVarDecl=MethodVarDecl;
     }
 
     public VarDecl getVarDecl() {
@@ -38,18 +38,18 @@ public class RecordHasVariables extends RecordVarDecl {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(RecordVarDecl!=null) RecordVarDecl.accept(visitor);
+        if(MethodVarDecl!=null) MethodVarDecl.accept(visitor);
         if(VarDecl!=null) VarDecl.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(RecordVarDecl!=null) RecordVarDecl.traverseTopDown(visitor);
+        if(MethodVarDecl!=null) MethodVarDecl.traverseTopDown(visitor);
         if(VarDecl!=null) VarDecl.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(RecordVarDecl!=null) RecordVarDecl.traverseBottomUp(visitor);
+        if(MethodVarDecl!=null) MethodVarDecl.traverseBottomUp(visitor);
         if(VarDecl!=null) VarDecl.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -57,10 +57,10 @@ public class RecordHasVariables extends RecordVarDecl {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("RecordHasVariables(\n");
+        buffer.append("MethodHasVariables(\n");
 
-        if(RecordVarDecl!=null)
-            buffer.append(RecordVarDecl.toString("  "+tab));
+        if(MethodVarDecl!=null)
+            buffer.append(MethodVarDecl.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
@@ -72,7 +72,7 @@ public class RecordHasVariables extends RecordVarDecl {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [RecordHasVariables]");
+        buffer.append(") [MethodHasVariables]");
         return buffer.toString();
     }
 }

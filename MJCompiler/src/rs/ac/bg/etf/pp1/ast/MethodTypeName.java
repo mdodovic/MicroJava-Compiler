@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 11:11:26
+// 10/0/2022 12:50:15
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -11,21 +11,21 @@ public class MethodTypeName implements SyntaxNode {
     private int line;
     public rs.etf.pp1.symboltable.concepts.Obj obj = null;
 
-    private Type Type;
+    private MethodReturnType MethodReturnType;
     private String methName;
 
-    public MethodTypeName (Type Type, String methName) {
-        this.Type=Type;
-        if(Type!=null) Type.setParent(this);
+    public MethodTypeName (MethodReturnType MethodReturnType, String methName) {
+        this.MethodReturnType=MethodReturnType;
+        if(MethodReturnType!=null) MethodReturnType.setParent(this);
         this.methName=methName;
     }
 
-    public Type getType() {
-        return Type;
+    public MethodReturnType getMethodReturnType() {
+        return MethodReturnType;
     }
 
-    public void setType(Type Type) {
-        this.Type=Type;
+    public void setMethodReturnType(MethodReturnType MethodReturnType) {
+        this.MethodReturnType=MethodReturnType;
     }
 
     public String getMethName() {
@@ -57,16 +57,16 @@ public class MethodTypeName implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Type!=null) Type.accept(visitor);
+        if(MethodReturnType!=null) MethodReturnType.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Type!=null) Type.traverseTopDown(visitor);
+        if(MethodReturnType!=null) MethodReturnType.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Type!=null) Type.traverseBottomUp(visitor);
+        if(MethodReturnType!=null) MethodReturnType.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -75,8 +75,8 @@ public class MethodTypeName implements SyntaxNode {
         buffer.append(tab);
         buffer.append("MethodTypeName(\n");
 
-        if(Type!=null)
-            buffer.append(Type.toString("  "+tab));
+        if(MethodReturnType!=null)
+            buffer.append(MethodReturnType.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

@@ -1,13 +1,13 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 11:11:26
+// 10/0/2022 12:50:15
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class NoMethodDecl extends MethodDeclList {
+public class MethodHasNotVariables extends MethodVarDecl {
 
-    public NoMethodDecl () {
+    public MethodHasNotVariables () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class NoMethodDecl extends MethodDeclList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("NoMethodDecl(\n");
+        buffer.append("MethodHasNotVariables(\n");
 
         buffer.append(tab);
-        buffer.append(") [NoMethodDecl]");
+        buffer.append(") [MethodHasNotVariables]");
         return buffer.toString();
     }
 }

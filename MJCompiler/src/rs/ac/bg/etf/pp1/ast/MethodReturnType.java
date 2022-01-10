@@ -5,7 +5,7 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class ClassVarDecl implements SyntaxNode {
+public abstract class MethodReturnType implements SyntaxNode {
 
     private SyntaxNode parent;
 

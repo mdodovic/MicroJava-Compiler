@@ -1,16 +1,16 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 11:11:26
+// 10/0/2022 12:50:15
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class MethodDeclarations extends MethodDeclList {
+public class NonEmptyMethodDeclList extends MethodDeclList {
 
     private MethodDeclList MethodDeclList;
     private MethodDecl MethodDecl;
 
-    public MethodDeclarations (MethodDeclList MethodDeclList, MethodDecl MethodDecl) {
+    public NonEmptyMethodDeclList (MethodDeclList MethodDeclList, MethodDecl MethodDecl) {
         this.MethodDeclList=MethodDeclList;
         if(MethodDeclList!=null) MethodDeclList.setParent(this);
         this.MethodDecl=MethodDecl;
@@ -57,7 +57,7 @@ public class MethodDeclarations extends MethodDeclList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("MethodDeclarations(\n");
+        buffer.append("NonEmptyMethodDeclList(\n");
 
         if(MethodDeclList!=null)
             buffer.append(MethodDeclList.toString("  "+tab));
@@ -72,7 +72,7 @@ public class MethodDeclarations extends MethodDeclList {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [MethodDeclarations]");
+        buffer.append(") [NonEmptyMethodDeclList]");
         return buffer.toString();
     }
 }

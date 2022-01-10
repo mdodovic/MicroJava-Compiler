@@ -86,10 +86,10 @@ public class SemanticPass extends VisitorAdaptor {
     
     @Override
     public void visit(MethodTypeName methodTypeName) {    	
-    	currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethName(), methodTypeName.getType().struct);
-    	methodTypeName.obj = currentMethod;
-    	Tab.openScope();
-		report_info("Obradjuje se funkcija " + methodTypeName.getMethName(), methodTypeName);
+    	//currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethName(), methodTypeName.getType().struct);
+    	//methodTypeName.obj = currentMethod;
+    	//Tab.openScope();
+		//report_info("Obradjuje se funkcija " + methodTypeName.getMethName(), methodTypeName);
     }
 
     @Override

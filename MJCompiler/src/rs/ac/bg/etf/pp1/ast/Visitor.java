@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 18:58:14
+// 10/0/2022 19:23:13
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -42,25 +42,24 @@ public interface Visitor {
     public void visit(OptionalExtend OptionalExtend);
     public void visit(Addop Addop);
     public void visit(Designator Designator);
-    public void visit(ActualParam ActualParam);
-    public void visit(ActualParams ActualParams);
-    public void visit(NoActuals NoActuals);
-    public void visit(Actuals Actuals);
     public void visit(FuncCall FuncCall);
     public void visit(Var Var);
     public void visit(Const Const);
     public void visit(Term Term);
-    public void visit(TermExpr TermExpr);
-    public void visit(AddExpt AddExpt);
     public void visit(ProcCall ProcCall);
     public void visit(MatchedStatement MatchedStatement);
     public void visit(ReturnNoExpr ReturnNoExpr);
     public void visit(ReturnExpr ReturnExpr);
     public void visit(PrintStmt PrintStmt);
-    public void visit(ErrorStmt ErrorStmt);
-    public void visit(AssignmentOLD AssignmentOLD);
     public void visit(UnmatchedIfElse UnmatchedIfElse);
     public void visit(IfStatement IfStatement);
+    public void visit(ActualParam ActualParam);
+    public void visit(ActualParams ActualParams);
+    public void visit(NoActuals NoActuals);
+    public void visit(Actuals Actuals);
+    public void visit(TermExpr TermExpr);
+    public void visit(AddExpt AddExpt);
+    public void visit(DesignatorFunctionCall DesignatorFunctionCall);
     public void visit(ErrorInDesignatorAssignOperation ErrorInDesignatorAssignOperation);
     public void visit(DesignatorAssignOperation DesignatorAssignOperation);
     public void visit(StatementDesignator StatementDesignator);

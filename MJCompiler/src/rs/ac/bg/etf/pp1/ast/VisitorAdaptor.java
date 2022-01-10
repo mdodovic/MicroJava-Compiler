@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 18:58:14
+// 10/0/2022 19:23:13
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -42,25 +42,24 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(OptionalExtend OptionalExtend) { }
     public void visit(Addop Addop) { visit(); }
     public void visit(Designator Designator) { visit(); }
-    public void visit(ActualParam ActualParam) { visit(); }
-    public void visit(ActualParams ActualParams) { visit(); }
-    public void visit(NoActuals NoActuals) { visit(); }
-    public void visit(Actuals Actuals) { visit(); }
     public void visit(FuncCall FuncCall) { visit(); }
     public void visit(Var Var) { visit(); }
     public void visit(Const Const) { visit(); }
     public void visit(Term Term) { visit(); }
-    public void visit(TermExpr TermExpr) { visit(); }
-    public void visit(AddExpt AddExpt) { visit(); }
     public void visit(ProcCall ProcCall) { visit(); }
     public void visit(MatchedStatement MatchedStatement) { visit(); }
     public void visit(ReturnNoExpr ReturnNoExpr) { visit(); }
     public void visit(ReturnExpr ReturnExpr) { visit(); }
     public void visit(PrintStmt PrintStmt) { visit(); }
-    public void visit(ErrorStmt ErrorStmt) { visit(); }
-    public void visit(AssignmentOLD AssignmentOLD) { visit(); }
     public void visit(UnmatchedIfElse UnmatchedIfElse) { visit(); }
     public void visit(IfStatement IfStatement) { visit(); }
+    public void visit(ActualParam ActualParam) { visit(); }
+    public void visit(ActualParams ActualParams) { visit(); }
+    public void visit(NoActuals NoActuals) { visit(); }
+    public void visit(Actuals Actuals) { visit(); }
+    public void visit(TermExpr TermExpr) { visit(); }
+    public void visit(AddExpt AddExpt) { visit(); }
+    public void visit(DesignatorFunctionCall DesignatorFunctionCall) { visit(); }
     public void visit(ErrorInDesignatorAssignOperation ErrorInDesignatorAssignOperation) { visit(); }
     public void visit(DesignatorAssignOperation DesignatorAssignOperation) { visit(); }
     public void visit(StatementDesignator StatementDesignator) { visit(); }

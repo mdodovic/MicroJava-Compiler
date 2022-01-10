@@ -346,7 +346,24 @@ DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT E
 						|
 						(ErrorInDesignatorAssignOperation) error SEMI:l
 					    {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :} {: RESULT=new ErrorInDesignatorAssignOperation(); :}
+						|
+						(DesignatorFunctionCall) Designator:functionName LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new DesignatorFunctionCall(functionName, A1); RESULT.setLine(functionNameleft); :}
 						;
+
+Expr ::= (AddExpt) Expr:te Addop:A1 Term:t {: RESULT=new AddExpt(te, A1, t); RESULT.setLine(teleft); :}
+		|
+		(TermExpr) Term:t {: RESULT=new TermExpr(t); RESULT.setLine(tleft); :}
+		;						
+
+ActualPars ::= (Actuals) ActualParamList:A1 {: RESULT=new Actuals(A1); RESULT.setLine(A1left); :}
+			|
+			(NoActuals) {: RESULT=new NoActuals(); :} /* epsilon */
+			;
+			
+ActualParamList ::= (ActualParams) ActualParamList:A1 COMMA Expr:E2 {: RESULT=new ActualParams(A1, E2); RESULT.setLine(A1left); :}
+				|
+				(ActualParam) Expr:E1 {: RESULT=new ActualParam(E1); RESULT.setLine(E1left); :}
+				;		
 
 
 //Statement ::= (MatchedStmt) Matched
@@ -359,12 +376,7 @@ Unmatched ::= (IfStatement) IF Expr:E1 Statement:S2 {: RESULT=new IfStatement(E1
 			  (UnmatchedIfElse) IF Expr:E1 Matched:M2 ELSE Unmatched:U3 {: RESULT=new UnmatchedIfElse(E1, M2, U3); RESULT.setLine(E1left); :}
 			  ;
 
-Matched ::= (AssignmentOLD) Designator:dest ASSIGNMENT Expr:e SEMI {: RESULT=new AssignmentOLD(dest, e); RESULT.setLine(destleft); :}
-			  |
-			  (ErrorStmt) error SEMI:l
-			  {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :} {: RESULT=new ErrorStmt(); :}
-			  |
-			  (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr:E1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
+Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr:E1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
 			  |
 			  (ReturnExpr) RETURN Expr:t SEMI {: RESULT=new ReturnExpr(t); RESULT.setLine(tleft); :}
 			  |
@@ -376,10 +388,6 @@ Matched ::= (AssignmentOLD) Designator:dest ASSIGNMENT Expr:e SEMI {: RESULT=new
 			  ;				
 
 
-Expr ::= (AddExpt) Expr:te Addop:A1 Term:t {: RESULT=new AddExpt(te, A1, t); RESULT.setLine(teleft); :}
-		|
-		(TermExpr) Term:t {: RESULT=new TermExpr(t); RESULT.setLine(tleft); :}
-		;						
 
 Term ::= (Term) Factor:t {: RESULT=new Term(t); RESULT.setLine(tleft); :};
 
@@ -390,15 +398,6 @@ Factor ::= (Const) NUMBER:N1 {: RESULT=new Const(N1); RESULT.setLine(N1left); :}
 		(FuncCall) Designator:func LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET {: RESULT=new FuncCall(func, A1); RESULT.setLine(funcleft); :}
 		;
 		
-ActualPars ::= (Actuals) ActualParamList:A1 {: RESULT=new Actuals(A1); RESULT.setLine(A1left); :}
-			|
-			(NoActuals) {: RESULT=new NoActuals(); :} /* epsilon */
-			;
-			
-ActualParamList ::= (ActualParams) ActualParamList:A1 COMMA Expr:E2 {: RESULT=new ActualParams(A1, E2); RESULT.setLine(A1left); :}
-				|
-				(ActualParam) Expr:E1 {: RESULT=new ActualParam(E1); RESULT.setLine(E1left); :}
-				;		
 	
 Designator ::= (Designator) IDENT:name {: RESULT=new Designator(name); RESULT.setLine(nameleft); :};
 

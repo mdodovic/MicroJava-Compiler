@@ -344,7 +344,26 @@ DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT E
 						|
 						(ErrorInDesignatorAssignOperation) error SEMI:l
 					    {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :}
+						|
+						(DesignatorFunctionCall) Designator:functionName LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET SEMI
 						;
+
+Designator ::= (Designator) IDENT:name;
+
+Expr ::= (AddExpt) Expr:te Addop Term:t
+		|
+		(TermExpr) Term:t
+		;						
+
+ActualPars ::= (Actuals) ActualParamList
+			|
+			(NoActuals) /* epsilon */
+			;
+			
+ActualParamList ::= (ActualParams) ActualParamList COMMA Expr
+				|
+				(ActualParam) Expr
+				;		
 
 
 //Statement ::= (MatchedStmt) Matched
@@ -357,12 +376,7 @@ Unmatched ::= (IfStatement) IF Expr Statement
 			  (UnmatchedIfElse) IF Expr Matched ELSE Unmatched
 			  ;
 
-Matched ::= (AssignmentOLD) Designator:dest ASSIGNMENT Expr:e SEMI
-			  |
-			  (ErrorStmt) error SEMI:l
-			  {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :}
-			  |
-			  (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr RIGHT_ROUND_BRACKET SEMI
+Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr RIGHT_ROUND_BRACKET SEMI
 			  |
 			  (ReturnExpr) RETURN Expr:t SEMI
 			  |
@@ -374,10 +388,6 @@ Matched ::= (AssignmentOLD) Designator:dest ASSIGNMENT Expr:e SEMI
 			  ;				
 
 
-Expr ::= (AddExpt) Expr:te Addop Term:t
-		|
-		(TermExpr) Term:t
-		;						
 
 Term ::= (Term) Factor:t;
 
@@ -388,17 +398,7 @@ Factor ::= (Const) NUMBER
 		(FuncCall) Designator:func LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET
 		;
 		
-ActualPars ::= (Actuals) ActualParamList
-			|
-			(NoActuals) /* epsilon */
-			;
-			
-ActualParamList ::= (ActualParams) ActualParamList COMMA Expr
-				|
-				(ActualParam) Expr
-				;		
 	
-Designator ::= (Designator) IDENT:name;
 
 Addop ::= (Addop) PLUS;
 		

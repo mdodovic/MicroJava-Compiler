@@ -176,7 +176,7 @@ public class SemanticPass extends VisitorAdaptor {
     }
     
     @Override
-    public void visit(Assignment assignment) {
+    public void visit(DesignatorAssignOperation assignment) {
     	if(!assignment.getExpr().struct.assignableTo(assignment.getDesignator().obj.getType()))
     		report_error("Greska na liniji " + assignment.getLine() + " : " + " nekompatibilni tipovi u dodeli vrednosti! ", null);    	
     }

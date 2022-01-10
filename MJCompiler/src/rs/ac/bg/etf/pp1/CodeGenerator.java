@@ -3,9 +3,9 @@ package rs.ac.bg.etf.pp1;
 import rs.ac.bg.etf.pp1.CounterVisitor.FormParamCounter;
 import rs.ac.bg.etf.pp1.CounterVisitor.VarCounter;
 import rs.ac.bg.etf.pp1.ast.AddExpt;
-import rs.ac.bg.etf.pp1.ast.Assignment;
 import rs.ac.bg.etf.pp1.ast.Const;
 import rs.ac.bg.etf.pp1.ast.Designator;
+import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
 import rs.ac.bg.etf.pp1.ast.FuncCall;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
@@ -79,7 +79,7 @@ public class CodeGenerator extends VisitorAdaptor{
 	}
 	
 	@Override
-	public void visit(Assignment assignment) {
+	public void visit(DesignatorAssignOperation assignment) {
 		Code.store(assignment.getDesignator().obj);
 	}
 	
@@ -87,7 +87,7 @@ public class CodeGenerator extends VisitorAdaptor{
 	public void visit(Designator designator) {
 		SyntaxNode parent = designator.getParent();
 		
-		if(Assignment.class != parent.getClass() && FuncCall.class != parent.getClass() && ProcCall.class != parent.getClass()) {
+		if(DesignatorAssignOperation.class != parent.getClass() && FuncCall.class != parent.getClass() && ProcCall.class != parent.getClass()) {
 			// if designator is variable that is in expressions
 			// if it is global or local variable getstatic or load will be generated
 			Code.load(designator.obj);

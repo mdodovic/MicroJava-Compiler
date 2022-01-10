@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ErrorInListOfFormalParameters extends FormalParamList {
+public class ErrorInDesignatorAssignOperation extends DesignatorStatement {
 
-    public ErrorInListOfFormalParameters () {
+    public ErrorInDesignatorAssignOperation () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class ErrorInListOfFormalParameters extends FormalParamList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ErrorInListOfFormalParameters(\n");
+        buffer.append("ErrorInDesignatorAssignOperation(\n");
 
         buffer.append(tab);
-        buffer.append(") [ErrorInListOfFormalParameters]");
+        buffer.append(") [ErrorInDesignatorAssignOperation]");
         return buffer.toString();
     }
 }

@@ -1,16 +1,16 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 18:43:14
+// 10/0/2022 18:58:14
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Assignment extends SingleStatement {
+public class DesignatorAssignOperation extends DesignatorStatement {
 
     private Designator Designator;
     private Expr Expr;
 
-    public Assignment (Designator Designator, Expr Expr) {
+    public DesignatorAssignOperation (Designator Designator, Expr Expr) {
         this.Designator=Designator;
         if(Designator!=null) Designator.setParent(this);
         this.Expr=Expr;
@@ -57,7 +57,7 @@ public class Assignment extends SingleStatement {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Assignment(\n");
+        buffer.append("DesignatorAssignOperation(\n");
 
         if(Designator!=null)
             buffer.append(Designator.toString("  "+tab));
@@ -72,7 +72,7 @@ public class Assignment extends SingleStatement {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [Assignment]");
+        buffer.append(") [DesignatorAssignOperation]");
         return buffer.toString();
     }
 }

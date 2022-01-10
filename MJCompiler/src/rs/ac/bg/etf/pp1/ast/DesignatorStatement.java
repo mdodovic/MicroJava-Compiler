@@ -5,7 +5,7 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class ClassFieldsVariables implements SyntaxNode {
+public abstract class DesignatorStatement implements SyntaxNode {
 
     private SyntaxNode parent;
 

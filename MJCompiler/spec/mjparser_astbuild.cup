@@ -155,7 +155,7 @@ nonterminal Statement Statement; /* this will represent optionalLabel":" (.5.) o
 /* (.6.) is repeated StatementList in inner block, here we do not worry about the scope, but it represents an inner scope */
 nonterminal Label Label; /* this will represent label name */
 nonterminal SingleStatement SingleStatement; /* this is collection of all simple statements (.5.) */
-
+nonterminal DesignatorStatement DesignatorStatement; /* this will collect assignment, function calls, inc and dec statements */
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
@@ -337,10 +337,16 @@ Statement ::= (LabeledSingleStatementMatch) Label:L1 COLON SingleStatement:S2 {:
 			  (StatementBlock) LEFT_CURLY_BRACKET StatementList:S1 RIGHT_CURLY_BRACKET {: RESULT=new StatementBlock(S1); RESULT.setLine(S1left); :} 
 			  ;
 
-SingleStatement ::= (Assignment) Designator:dest ASSIGNMENT Expr:e SEMI {: RESULT=new Assignment(dest, e); RESULT.setLine(destleft); :};
-
 /* Label; usage: statement */
 Label ::= (Label) IDENT:labelName {: RESULT=new Label(labelName); RESULT.setLine(labelNameleft); :};
+
+SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new StatementDesignator(D1); RESULT.setLine(D1left); :};
+
+DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT Expr:e SEMI {: RESULT=new DesignatorAssignOperation(dest, e); RESULT.setLine(destleft); :}
+						|
+						(ErrorInDesignatorAssignOperation) error SEMI:l
+					    {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :} {: RESULT=new ErrorInDesignatorAssignOperation(); :}
+						;
 
 
 //Statement ::= (MatchedStmt) Matched

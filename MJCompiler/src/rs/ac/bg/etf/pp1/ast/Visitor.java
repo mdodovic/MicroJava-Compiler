@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 10:59:51
+// 10/0/2022 11:11:26
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -11,13 +11,14 @@ public interface Visitor {
     public void visit(ArrayBrackets ArrayBrackets);
     public void visit(ConstructorDecl ConstructorDecl);
     public void visit(Matched Matched);
-    public void visit(FormalParamDecl FormalParamDecl);
     public void visit(ClassFieldsVariables ClassFieldsVariables);
+    public void visit(FormalParamDecl FormalParamDecl);
     public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations);
     public void visit(StatementList StatementList);
     public void visit(LastVarDecl LastVarDecl);
     public void visit(ClassVarDecl ClassVarDecl);
     public void visit(Factor Factor);
+    public void visit(RecordVarDecl RecordVarDecl);
     public void visit(ClassVarDeclList ClassVarDeclList);
     public void visit(ClassBody ClassBody);
     public void visit(NotLastVarDecl NotLastVarDecl);
@@ -88,6 +89,9 @@ public interface Visitor {
     public void visit(ClassHasNoParent ClassHasNoParent);
     public void visit(ClassHasParent ClassHasParent);
     public void visit(ClassDecl ClassDecl);
+    public void visit(RecordHasNotVariables RecordHasNotVariables);
+    public void visit(RecordHasVariables RecordHasVariables);
+    public void visit(RecordDecl RecordDecl);
     public void visit(VariableIsNotArray VariableIsNotArray);
     public void visit(VariableIsArray VariableIsArray);
     public void visit(ErrorInVarFromLastPart ErrorInVarFromLastPart);
@@ -106,6 +110,7 @@ public interface Visitor {
     public void visit(ConstDeclType ConstDeclType);
     public void visit(ConstDecl ConstDecl);
     public void visit(NoDeclarations NoDeclarations);
+    public void visit(RecordDeclarations RecordDeclarations);
     public void visit(ClassDeclarations ClassDeclarations);
     public void visit(ConstDeclarations ConstDeclarations);
     public void visit(VarDeclarations VarDeclarations);

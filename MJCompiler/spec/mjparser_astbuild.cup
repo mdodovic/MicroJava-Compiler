@@ -126,6 +126,9 @@ nonterminal NotLastVarDecl NotLastVarDecl; /* this will collect all variable nam
 nonterminal LastVarDecl LastVarDecl; /* this will collect the last variable name, it can be like varName or varName[]  */
 nonterminal ArrayBrackets ArrayBrackets; /* this will represent [] declaration like int a[], and will contain the info about if the variable is array or not */
 
+nonterminal RecordDecl RecordDecl; /* "record" recordName "{" (...) "}" */
+nonterminal RecordVarDecl RecordVarDecl; /* this will represent variable declarations in record */
+
 nonterminal ClassDecl ClassDecl; /* "class" className (.1.) (.2.) */
 nonterminal OptionalExtend OptionalExtend; /* "extends" superClassName, this is optional part in class declaration (.1.) */
 nonterminal ClassBody ClassBody; /* this will be the class body "{" (.2.) (.3.) "}", brackets are mandatory, and inner content is optional, and it is bellow */
@@ -154,6 +157,8 @@ AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList:A1 VarDecl:V2 {: R
 						(ConstDeclarations) AllDeclarationsList:A1 ConstDecl:C2 {: RESULT=new ConstDeclarations(A1, C2); RESULT.setLine(A1left); :}
 						|
 						(ClassDeclarations) AllDeclarationsList:A1 ClassDecl:C2 {: RESULT=new ClassDeclarations(A1, C2); RESULT.setLine(A1left); :}
+						|
+						(RecordDeclarations) AllDeclarationsList:A1 RecordDecl:R2 {: RESULT=new RecordDeclarations(A1, R2); RESULT.setLine(A1left); :}
 						|
 						(NoDeclarations) {: RESULT=new NoDeclarations(); :} /* epsilon */
 						;
@@ -204,7 +209,12 @@ ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET {: 
 
 /* records */
 
+RecordDecl ::= (RecordDecl) RECORD IDENT:recordName LEFT_CURLY_BRACKET RecordVarDecl:R1 RIGHT_CURLY_BRACKET {: RESULT=new RecordDecl(recordName, R1); RESULT.setLine(recordNameleft); :};
 
+RecordVarDecl ::= (RecordHasVariables) RecordVarDecl:R1 VarDecl:V2 {: RESULT=new RecordHasVariables(R1, V2); RESULT.setLine(R1left); :}
+				  |
+				  (RecordHasNotVariables) {: RESULT=new RecordHasNotVariables(); :} /* epsilon */
+			      ;
 
 /* classes */
 

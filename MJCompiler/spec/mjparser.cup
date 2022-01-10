@@ -120,6 +120,9 @@ nonterminal NotLastVarDecl; /* this will collect all variable names until the la
 nonterminal LastVarDecl; /* this will collect the last variable name, it can be like varName or varName[]  */
 nonterminal ArrayBrackets; /* this will represent [] declaration like int a[], and will contain the info about if the variable is array or not */
 
+nonterminal RecordDecl; /* "record" recordName "{" (...) "}" */
+nonterminal RecordVarDecl; /* this will represent variable declarations in record */
+
 nonterminal ClassDecl; /* "class" className (.1.) (.2.) */
 nonterminal OptionalExtend; /* "extends" superClassName, this is optional part in class declaration (.1.) */
 nonterminal ClassBody; /* this will be the class body "{" (.2.) (.3.) "}", brackets are mandatory, and inner content is optional, and it is bellow */
@@ -148,6 +151,8 @@ AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList VarDecl
 						(ConstDeclarations) AllDeclarationsList ConstDecl
 						|
 						(ClassDeclarations) AllDeclarationsList ClassDecl
+						|
+						(RecordDeclarations) AllDeclarationsList RecordDecl
 						|
 						(NoDeclarations) /* epsilon */
 						;
@@ -198,7 +203,12 @@ ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET
 
 /* records */
 
+RecordDecl ::= (RecordDecl) RECORD IDENT:recordName LEFT_CURLY_BRACKET RecordVarDecl RIGHT_CURLY_BRACKET;
 
+RecordVarDecl ::= (RecordHasVariables) RecordVarDecl VarDecl
+				  |
+				  (RecordHasNotVariables) /* epsilon */
+			      ;
 
 /* classes */
 

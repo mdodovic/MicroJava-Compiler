@@ -5,16 +5,16 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class VarDeclarations extends AllDeclarationsList {
+public class RecordDeclarations extends AllDeclarationsList {
 
     private AllDeclarationsList AllDeclarationsList;
-    private VarDecl VarDecl;
+    private RecordDecl RecordDecl;
 
-    public VarDeclarations (AllDeclarationsList AllDeclarationsList, VarDecl VarDecl) {
+    public RecordDeclarations (AllDeclarationsList AllDeclarationsList, RecordDecl RecordDecl) {
         this.AllDeclarationsList=AllDeclarationsList;
         if(AllDeclarationsList!=null) AllDeclarationsList.setParent(this);
-        this.VarDecl=VarDecl;
-        if(VarDecl!=null) VarDecl.setParent(this);
+        this.RecordDecl=RecordDecl;
+        if(RecordDecl!=null) RecordDecl.setParent(this);
     }
 
     public AllDeclarationsList getAllDeclarationsList() {
@@ -25,12 +25,12 @@ public class VarDeclarations extends AllDeclarationsList {
         this.AllDeclarationsList=AllDeclarationsList;
     }
 
-    public VarDecl getVarDecl() {
-        return VarDecl;
+    public RecordDecl getRecordDecl() {
+        return RecordDecl;
     }
 
-    public void setVarDecl(VarDecl VarDecl) {
-        this.VarDecl=VarDecl;
+    public void setRecordDecl(RecordDecl RecordDecl) {
+        this.RecordDecl=RecordDecl;
     }
 
     public void accept(Visitor visitor) {
@@ -39,25 +39,25 @@ public class VarDeclarations extends AllDeclarationsList {
 
     public void childrenAccept(Visitor visitor) {
         if(AllDeclarationsList!=null) AllDeclarationsList.accept(visitor);
-        if(VarDecl!=null) VarDecl.accept(visitor);
+        if(RecordDecl!=null) RecordDecl.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(AllDeclarationsList!=null) AllDeclarationsList.traverseTopDown(visitor);
-        if(VarDecl!=null) VarDecl.traverseTopDown(visitor);
+        if(RecordDecl!=null) RecordDecl.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(AllDeclarationsList!=null) AllDeclarationsList.traverseBottomUp(visitor);
-        if(VarDecl!=null) VarDecl.traverseBottomUp(visitor);
+        if(RecordDecl!=null) RecordDecl.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("VarDeclarations(\n");
+        buffer.append("RecordDeclarations(\n");
 
         if(AllDeclarationsList!=null)
             buffer.append(AllDeclarationsList.toString("  "+tab));
@@ -65,14 +65,14 @@ public class VarDeclarations extends AllDeclarationsList {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(VarDecl!=null)
-            buffer.append(VarDecl.toString("  "+tab));
+        if(RecordDecl!=null)
+            buffer.append(RecordDecl.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [VarDeclarations]");
+        buffer.append(") [RecordDeclarations]");
         return buffer.toString();
     }
 }

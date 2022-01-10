@@ -132,7 +132,8 @@ nonterminal ClassVarDecl;
 nonterminal ClassVarDeclList;
 nonterminal ClassSingleVarDecl;
 nonterminal OptionalConstructorAndMethods; /* class constructor and methods together (.3.), surrounded with "{}" */
-
+nonterminal ConstructorVarDecl;
+nonterminal ConstructorBody;
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
@@ -170,7 +171,7 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 									(NoMoreConstDeclarations) /* epsilon */
 									;
 
-/* global variables; class fields */
+/* global variables; constructor variables */
 
 VarDecl ::= (VarDecl) VarDeclType VarDeclList;
 
@@ -230,12 +231,19 @@ ClassVarDeclList ::= (ClassVarDeclMultiple) ClassVarDeclList COMMA ClassSingleVa
 
 ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:varName ArrayBrackets;
 
-ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET
+ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl LEFT_CURLY_BRACKET ConstructorBody RIGHT_CURLY_BRACKET
 					|
 					(NoClassConstructor) /* epsilon */
 					; 
 
+ConstructorVarDecl ::= (ConstructorHasVariables) VarDecl
+					   |
+					   (ConstructorHasNotVariables) /* epsilon */
+					   ;
 
+
+ConstructorBody ::= (EmptyConstructorBody) /* epsilon */
+					; // Not finished, Statement missing
 
 Type ::= (Type) IDENT:typeName;
 

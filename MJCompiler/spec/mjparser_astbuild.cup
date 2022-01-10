@@ -67,6 +67,7 @@ terminal CHAR_CONST; /* char value: 'a', ... */
 terminal BOOL_CONST; /* bool value: true/false*/
 terminal Integer NUMBER; /* integer value: 0, ... */
 
+terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET; /* "("")" */
 terminal LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET; /* "[""]" */
 terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; /* "{""}" */
 
@@ -85,7 +86,6 @@ terminal SUPER, THIS, POINT;
 
 terminal BREAK, CONTINUE;
 terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
-terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET;
 
 
 
@@ -132,6 +132,15 @@ nonterminal ClassFieldsVariables ClassFieldsVariables; /* class fields (.2.), th
 nonterminal ConstructorDecl ConstructorDecl; /* class constructor (.3.), method without type and with the same name as class. There we do not check this equallity. */
 nonterminal ClassMethodDeclarations ClassMethodDeclarations; /* class methods (.4.), no difference between regular methods */
 
+nonterminal ClassBody ClassBody;
+
+nonterminal ClassVarDecl ClassVarDecl;
+nonterminal ClassVarDeclList ClassVarDeclList;
+nonterminal ClassSingleVarDecl ClassSingleVarDecl;
+nonterminal OptionalConstructorAndMethods OptionalConstructorAndMethods; /* class constructor and methods together (.3.), surrounded with "{}" */
+nonterminal ConstructorVarDecl ConstructorVarDecl;
+nonterminal ConstructorBody ConstructorBody;
+
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
 
@@ -168,7 +177,7 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 									(NoMoreConstDeclarations) {: RESULT=new NoMoreConstDeclarations(); :} /* epsilon */
 									;
 
-/* global variables; class fields */
+/* global variables; constructor variables */
 
 VarDecl ::= (VarDecl) VarDeclType:V1 VarDeclList:V2 {: RESULT=new VarDecl(V1, V2); RESULT.setLine(V1left); :};
 
@@ -196,7 +205,7 @@ ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET {: 
 
 /* classes */
 
-ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend:O1 LEFT_CURLY_BRACKET ClassFieldsVariables:C2 /* ConstructorDecl ClassMethodDeclarations */ RIGHT_CURLY_BRACKET {: RESULT=new ClassDecl(className, O1, C2); RESULT.setLine(classNameleft); :};
+ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend:O1 ClassBody:C2 {: RESULT=new ClassDecl(className, O1, C2); RESULT.setLine(classNameleft); :};
 
 OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName {: RESULT=new ClassHasParent(parentClassName); RESULT.setLine(parentClassNameleft); :}
 				   | 
@@ -205,10 +214,42 @@ OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName {: RESULT=new C
  				   (ErrorInExtendingClass) error {: RESULT=new ErrorInExtendingClass(); :} /* no need for "{" here; everything will be consumed until the "{" in ClassDecl production */
  				   ;
 
-ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables:C1 VarDecl:V2 {: RESULT=new ClassFields(C1, V2); RESULT.setLine(C1left); :}
+ClassBody ::= (ClassBodyNoConstructorNoMethod) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 RIGHT_CURLY_BRACKET {: RESULT=new ClassBodyNoConstructorNoMethod(C1); RESULT.setLine(C1left); :}
+			  |
+			  (ClassFullBody) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 LEFT_CURLY_BRACKET ConstructorDecl:C2 RIGHT_CURLY_BRACKET RIGHT_CURLY_BRACKET {: RESULT=new ClassFullBody(C1, C2); RESULT.setLine(C1left); :}
+			  ;
+ /* ClassMethodDeclarations */
+
+ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables:C1 ClassVarDecl:C2 {: RESULT=new ClassFields(C1, C2); RESULT.setLine(C1left); :}
 						 |
-						 (NoClassFields) {: RESULT=new NoClassFields(); :}/* epsilon */
+						 (NoClassFields) {: RESULT=new NoClassFields(); :} /* epsilon */
 						 ;
+
+ClassVarDecl ::= (TypedListClassVarDecl) Type:varType ClassVarDeclList:C1 SEMI {: RESULT=new TypedListClassVarDecl(varType, C1); RESULT.setLine(varTypeleft); :}
+				 |
+				 (ErrorInClassVarDecl) error {: RESULT=new ErrorInClassVarDecl(); :}
+    			 ;
+
+ClassVarDeclList ::= (ClassVarDeclMultiple) ClassVarDeclList:C1 COMMA ClassSingleVarDecl:C2 {: RESULT=new ClassVarDeclMultiple(C1, C2); RESULT.setLine(C1left); :} 
+				|
+				(ClassVarDeclSingle) ClassSingleVarDecl:C1 {: RESULT=new ClassVarDeclSingle(C1); RESULT.setLine(C1left); :}
+				;
+
+ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:varName ArrayBrackets:A1 {: RESULT=new ClassSingleVarDecl(varName, A1); RESULT.setLine(varNameleft); :};
+
+ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl:C1 LEFT_CURLY_BRACKET ConstructorBody:C2 RIGHT_CURLY_BRACKET {: RESULT=new ClassConstructor(constructorName, C1, C2); RESULT.setLine(constructorNameleft); :}
+					|
+					(NoClassConstructor) {: RESULT=new NoClassConstructor(); :} /* epsilon */
+					; 
+
+ConstructorVarDecl ::= (ConstructorHasVariables) VarDecl:V1 {: RESULT=new ConstructorHasVariables(V1); RESULT.setLine(V1left); :}
+					   |
+					   (ConstructorHasNotVariables) {: RESULT=new ConstructorHasNotVariables(); :} /* epsilon */
+					   ;
+
+
+ConstructorBody ::= (EmptyConstructorBody) {: RESULT=new EmptyConstructorBody(); :} /* epsilon */
+					; // Not finished, Statement missing
 
 Type ::= (Type) IDENT:typeName {: RESULT=new Type(typeName); RESULT.setLine(typeNameleft); :};
 

@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 9/0/2022 20:28:43
+// 10/0/2022 10:16:8
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,13 +8,13 @@ package rs.ac.bg.etf.pp1.ast;
 public class ClassFields extends ClassFieldsVariables {
 
     private ClassFieldsVariables ClassFieldsVariables;
-    private VarDecl VarDecl;
+    private ClassVarDecl ClassVarDecl;
 
-    public ClassFields (ClassFieldsVariables ClassFieldsVariables, VarDecl VarDecl) {
+    public ClassFields (ClassFieldsVariables ClassFieldsVariables, ClassVarDecl ClassVarDecl) {
         this.ClassFieldsVariables=ClassFieldsVariables;
         if(ClassFieldsVariables!=null) ClassFieldsVariables.setParent(this);
-        this.VarDecl=VarDecl;
-        if(VarDecl!=null) VarDecl.setParent(this);
+        this.ClassVarDecl=ClassVarDecl;
+        if(ClassVarDecl!=null) ClassVarDecl.setParent(this);
     }
 
     public ClassFieldsVariables getClassFieldsVariables() {
@@ -25,12 +25,12 @@ public class ClassFields extends ClassFieldsVariables {
         this.ClassFieldsVariables=ClassFieldsVariables;
     }
 
-    public VarDecl getVarDecl() {
-        return VarDecl;
+    public ClassVarDecl getClassVarDecl() {
+        return ClassVarDecl;
     }
 
-    public void setVarDecl(VarDecl VarDecl) {
-        this.VarDecl=VarDecl;
+    public void setClassVarDecl(ClassVarDecl ClassVarDecl) {
+        this.ClassVarDecl=ClassVarDecl;
     }
 
     public void accept(Visitor visitor) {
@@ -39,18 +39,18 @@ public class ClassFields extends ClassFieldsVariables {
 
     public void childrenAccept(Visitor visitor) {
         if(ClassFieldsVariables!=null) ClassFieldsVariables.accept(visitor);
-        if(VarDecl!=null) VarDecl.accept(visitor);
+        if(ClassVarDecl!=null) ClassVarDecl.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(ClassFieldsVariables!=null) ClassFieldsVariables.traverseTopDown(visitor);
-        if(VarDecl!=null) VarDecl.traverseTopDown(visitor);
+        if(ClassVarDecl!=null) ClassVarDecl.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ClassFieldsVariables!=null) ClassFieldsVariables.traverseBottomUp(visitor);
-        if(VarDecl!=null) VarDecl.traverseBottomUp(visitor);
+        if(ClassVarDecl!=null) ClassVarDecl.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -65,8 +65,8 @@ public class ClassFields extends ClassFieldsVariables {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(VarDecl!=null)
-            buffer.append(VarDecl.toString("  "+tab));
+        if(ClassVarDecl!=null)
+            buffer.append(ClassVarDecl.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

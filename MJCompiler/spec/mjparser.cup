@@ -63,6 +63,8 @@ terminal SEMI; /* ";" */
 terminal COLON; /* ":" */
 terminal COMMA; /* "," */
 
+terminal POINT; /* "." */
+
 terminal ASSIGNMENT; /* "=" */
 
 terminal CHAR_CONST; /* char value: 'a', ... */ 
@@ -73,6 +75,10 @@ terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET; /* "("")" */
 terminal LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET; /* "[""]" */
 terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; /* "{""}" */
 
+terminal INC;
+terminal DEC;
+terminal MINUS; /* "-" */
+terminal MULTIPLY, DIVIDE, MODUO;
 
 terminal PRINT, RETURN, PLUS;
 terminal String IDENT;
@@ -80,11 +86,11 @@ terminal IF, ELSE;
 
 terminal READ;
 terminal GOTO, DO, WHILE;
-terminal INC, DEC, MINUS, MULTIPLY, DIVIDE, MODUO;
+
 terminal AND, OR;
 terminal NEW;
 terminal ENUM, RECORD;
-terminal SUPER, THIS, POINT;
+terminal SUPER, THIS;
 
 terminal BREAK, CONTINUE;
 terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
@@ -95,9 +101,6 @@ nonterminal Addop;
 nonterminal ActualPars, ActualParamList;
 nonterminal Matched, Unmatched;
 
-nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
-
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Term, Factor, Expr;
 
 /* NON terminals */
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program; /* Program = "program" ProgName (...) part, fetch program name and save to progName */
@@ -155,6 +158,12 @@ nonterminal Label; /* this will represent label name */
 nonterminal SingleStatement; /* this is collection of all simple statements (.5.) */
 nonterminal DesignatorStatement; /* this will collect assignment, function calls, inc and dec statements */
 
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator; /* this will represent variable, or className.someName (with arbitrary depth of indirection) or arrayName[expression]*/
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr; /* represent expressions, with possible +/- operators because of asociativiry */
+
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Term;
+nonterminal TermList;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
 
@@ -348,12 +357,33 @@ DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT E
 						(DesignatorFunctionCall) Designator:functionName LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET SEMI
 						;
 
-Designator ::= (Designator) IDENT:name;
+Designator ::= (ClassFieldDesignator) Designator POINT IDENT:leftField
+			   |
+			   (ArrayDesignator) Designator LEFT_SQUARE_BRACKET Expr:arrayIndex RIGHT_SQUARE_BRACKET
+			   |
+			   (SimpleDesignator) IDENT:name
+			   ;
 
-Expr ::= (AddExpt) Expr:te Addop Term:t
+
+Expr ::= (PositiveExpr) TermList:t
+		 |
+		 (NegativeExpr) MINUS TermList:t
+		 ;						
+
+TermList ::= (AddOpTermList) TermList Addop Term
+			 |
+			 (SingleTerm) Term:t
+			 ;
+
+Term ::= (Term) Factor:t;
+
+Factor ::= (Const) NUMBER
 		|
-		(TermExpr) Term:t
-		;						
+		(Var) Designator:d
+		|
+		(FuncCall) Designator:func LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET
+		;
+
 
 ActualPars ::= (Actuals) ActualParamList
 			|
@@ -389,14 +419,6 @@ Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr RIGHT_ROUND_BRACKET SEMI
 
 
 
-Term ::= (Term) Factor:t;
-
-Factor ::= (Const) NUMBER
-		|
-		(Var) Designator:d
-		|
-		(FuncCall) Designator:func LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET
-		;
 		
 	
 

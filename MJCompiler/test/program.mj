@@ -45,7 +45,7 @@ program MJProgram
 		int y;
 		bool fy[]; 
 		{
-			Y() int y_; {
+			Y() int y_, cnt; bool predefined; {
 				
 			}
 		}

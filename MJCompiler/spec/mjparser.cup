@@ -120,20 +120,20 @@ nonterminal NotLastVarDecl; /* this will collect all variable names until the la
 nonterminal LastVarDecl; /* this will collect the last variable name, it can be like varName or varName[]  */
 nonterminal ArrayBrackets; /* this will represent [] declaration like int a[], and will contain the info about if the variable is array or not */
 
-nonterminal ClassDecl; /* "class" className (.1.) "{" (.2.) "{" (.3.) (.4.) "}" "}" */
+nonterminal ClassDecl; /* "class" className (.1.) (.2.) */
 nonterminal OptionalExtend; /* "extends" superClassName, this is optional part in class declaration (.1.) */
-nonterminal ClassFieldsVariables; /* class fields (.2.), this is basically VarDecl */
-nonterminal ConstructorDecl; /* class constructor (.3.), method without type and with the same name as class. There we do not check this equallity. */
-nonterminal ClassMethodDeclarations; /* class methods (.4.), no difference between regular methods */
+nonterminal ClassBody; /* this will be the class body "{" (.2.) (.3.) "}", brackets are mandatory, and inner content is optional, and it is bellow */
+nonterminal ClassFieldsVariables; /* class fields (.2.), this is basically VarDecl, but error handling is different: all tokens except ";" and "{" should be consumed  */
+nonterminal ClassVarDecl; /* collect one declaration: type (.2.1.) ";", there we consume symbols */
+nonterminal ClassVarDeclList; /* list of variable names bounded by ",", (.2.1.) in ClassVarDecl*/
+nonterminal ClassSingleVarDecl; /* one variable name, it can be like varName or varName[] */
 
-nonterminal ClassBody;
+/* (.3.) is optional part of class, and it is like "{" (.3.1.) (.3.2.) "}" */
+nonterminal ConstructorDecl; /* class constructor (.3.1.), method without type and with the same name as class. There we do not check this equallity. */
+nonterminal ClassMethodDeclarations; /* class methods (.3.2.), no difference between regular methods */
 
-nonterminal ClassVarDecl;
-nonterminal ClassVarDeclList;
-nonterminal ClassSingleVarDecl;
-nonterminal OptionalConstructorAndMethods; /* class constructor and methods together (.3.), surrounded with "{}" */
-nonterminal ConstructorVarDecl;
-nonterminal ConstructorBody;
+nonterminal ConstructorVarDecl; /* local variables for constructor, there error handling is as same as VarDecl */
+nonterminal ConstructorBody; /* constructor body contains any statement */
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
@@ -231,20 +231,21 @@ ClassVarDeclList ::= (ClassVarDeclMultiple) ClassVarDeclList COMMA ClassSingleVa
 
 ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:varName ArrayBrackets;
 
+
 ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl LEFT_CURLY_BRACKET ConstructorBody RIGHT_CURLY_BRACKET
 					|
 					(NoClassConstructor) /* epsilon */
 					; 
 
-ConstructorVarDecl ::= (ConstructorHasVariables) VarDecl
+ConstructorVarDecl ::= (ConstructorHasVariables) ConstructorVarDecl VarDecl
 					   |
 					   (ConstructorHasNotVariables) /* epsilon */
 					   ;
 
-
 ConstructorBody ::= (EmptyConstructorBody) /* epsilon */
 					; // Not finished, Statement missing
 
+/* Type; usage: constants, variables, classes */
 Type ::= (Type) IDENT:typeName;
 
 

@@ -1,16 +1,16 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 10:40:40
+// 10/0/2022 10:59:51
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ClasDeclarations extends AllDeclarationsList {
+public class ClassDeclarations extends AllDeclarationsList {
 
     private AllDeclarationsList AllDeclarationsList;
     private ClassDecl ClassDecl;
 
-    public ClasDeclarations (AllDeclarationsList AllDeclarationsList, ClassDecl ClassDecl) {
+    public ClassDeclarations (AllDeclarationsList AllDeclarationsList, ClassDecl ClassDecl) {
         this.AllDeclarationsList=AllDeclarationsList;
         if(AllDeclarationsList!=null) AllDeclarationsList.setParent(this);
         this.ClassDecl=ClassDecl;
@@ -57,7 +57,7 @@ public class ClasDeclarations extends AllDeclarationsList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ClasDeclarations(\n");
+        buffer.append("ClassDeclarations(\n");
 
         if(AllDeclarationsList!=null)
             buffer.append(AllDeclarationsList.toString("  "+tab));
@@ -72,7 +72,7 @@ public class ClasDeclarations extends AllDeclarationsList {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [ClasDeclarations]");
+        buffer.append(") [ClassDeclarations]");
         return buffer.toString();
     }
 }

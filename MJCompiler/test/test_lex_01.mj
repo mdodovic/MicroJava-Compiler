@@ -22,7 +22,7 @@ program MJProgram
 		char s[];
 		int len;		
 		bool readable;
-		int y_, len, 0tt, sup_y;
+		// int y_, len, 0tt, sup_y;
 				
 		{
 			Str() {
@@ -31,7 +31,9 @@ program MJProgram
 		}
 		
 	}
-
+	
+	Str string_a, string_b;
+	
 	// full classes
 	class X { 
 		int x; 
@@ -44,11 +46,11 @@ program MJProgram
 	class Y { 
 		int y;
 		bool fy[]; 
-		//{
-			//Y() int y_, len; bool predefined; {
-			//	
-			//}
-		//}
+		{
+			Y() int y_, cnt; bool predefined; {
+				
+			}
+		}
 	}
 
 	

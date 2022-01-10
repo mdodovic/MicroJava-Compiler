@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ReturnNoExpr extends Matched {
+public class NoClassMethodDecl extends ClassMethodDeclarations {
 
-    public ReturnNoExpr () {
+    public NoClassMethodDecl () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class ReturnNoExpr extends Matched {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ReturnNoExpr(\n");
+        buffer.append("NoClassMethodDecl(\n");
 
         buffer.append(tab);
-        buffer.append(") [ReturnNoExpr]");
+        buffer.append(") [NoClassMethodDecl]");
         return buffer.toString();
     }
 }

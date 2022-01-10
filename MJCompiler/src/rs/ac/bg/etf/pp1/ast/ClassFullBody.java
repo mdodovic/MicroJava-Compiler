@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 10:40:40
+// 10/0/2022 10:59:51
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,12 +9,15 @@ public class ClassFullBody extends ClassBody {
 
     private ClassFieldsVariables ClassFieldsVariables;
     private ConstructorDecl ConstructorDecl;
+    private ClassMethodDeclarations ClassMethodDeclarations;
 
-    public ClassFullBody (ClassFieldsVariables ClassFieldsVariables, ConstructorDecl ConstructorDecl) {
+    public ClassFullBody (ClassFieldsVariables ClassFieldsVariables, ConstructorDecl ConstructorDecl, ClassMethodDeclarations ClassMethodDeclarations) {
         this.ClassFieldsVariables=ClassFieldsVariables;
         if(ClassFieldsVariables!=null) ClassFieldsVariables.setParent(this);
         this.ConstructorDecl=ConstructorDecl;
         if(ConstructorDecl!=null) ConstructorDecl.setParent(this);
+        this.ClassMethodDeclarations=ClassMethodDeclarations;
+        if(ClassMethodDeclarations!=null) ClassMethodDeclarations.setParent(this);
     }
 
     public ClassFieldsVariables getClassFieldsVariables() {
@@ -33,6 +36,14 @@ public class ClassFullBody extends ClassBody {
         this.ConstructorDecl=ConstructorDecl;
     }
 
+    public ClassMethodDeclarations getClassMethodDeclarations() {
+        return ClassMethodDeclarations;
+    }
+
+    public void setClassMethodDeclarations(ClassMethodDeclarations ClassMethodDeclarations) {
+        this.ClassMethodDeclarations=ClassMethodDeclarations;
+    }
+
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
@@ -40,17 +51,20 @@ public class ClassFullBody extends ClassBody {
     public void childrenAccept(Visitor visitor) {
         if(ClassFieldsVariables!=null) ClassFieldsVariables.accept(visitor);
         if(ConstructorDecl!=null) ConstructorDecl.accept(visitor);
+        if(ClassMethodDeclarations!=null) ClassMethodDeclarations.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(ClassFieldsVariables!=null) ClassFieldsVariables.traverseTopDown(visitor);
         if(ConstructorDecl!=null) ConstructorDecl.traverseTopDown(visitor);
+        if(ClassMethodDeclarations!=null) ClassMethodDeclarations.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ClassFieldsVariables!=null) ClassFieldsVariables.traverseBottomUp(visitor);
         if(ConstructorDecl!=null) ConstructorDecl.traverseBottomUp(visitor);
+        if(ClassMethodDeclarations!=null) ClassMethodDeclarations.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -67,6 +81,12 @@ public class ClassFullBody extends ClassBody {
 
         if(ConstructorDecl!=null)
             buffer.append(ConstructorDecl.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(ClassMethodDeclarations!=null)
+            buffer.append(ClassMethodDeclarations.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

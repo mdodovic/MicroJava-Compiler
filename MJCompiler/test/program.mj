@@ -31,7 +31,9 @@ program MJProgram
 		}
 		
 	}
-
+	
+	Str string_a, string_b;
+	
 	// full classes
 	class X { 
 		int x; 

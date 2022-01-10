@@ -127,13 +127,12 @@ nonterminal ClassFieldsVariables; /* class fields (.2.), this is basically VarDe
 nonterminal ClassVarDecl; /* collect one declaration: type (.2.1.) ";", there we consume symbols */
 nonterminal ClassVarDeclList; /* list of variable names bounded by ",", (.2.1.) in ClassVarDecl*/
 nonterminal ClassSingleVarDecl; /* one variable name, it can be like varName or varName[] */
-
 /* (.3.) is optional part of class, and it is like "{" (.3.1.) (.3.2.) "}" */
 nonterminal ConstructorDecl; /* class constructor (.3.1.), method without type and with the same name as class. There we do not check this equallity. */
 nonterminal ClassMethodDeclarations; /* class methods (.3.2.), no difference between regular methods */
-
 nonterminal ConstructorVarDecl; /* local variables for constructor, there error handling is as same as VarDecl */
 nonterminal ConstructorBody; /* constructor body contains any statement */
+
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
@@ -148,7 +147,7 @@ AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList VarDecl
 						|
 						(ConstDeclarations) AllDeclarationsList ConstDecl
 						|
-						(ClasDeclarations) AllDeclarationsList ClassDecl
+						(ClassDeclarations) AllDeclarationsList ClassDecl
 						|
 						(NoDeclarations) /* epsilon */
 						;
@@ -197,6 +196,10 @@ ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET
 				  (VariableIsNotArray) /* epsilon */
 				  ;
 
+/* records */
+
+
+
 /* classes */
 
 ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend ClassBody;
@@ -210,9 +213,8 @@ OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
 
 ClassBody ::= (ClassBodyNoConstructorNoMethod) LEFT_CURLY_BRACKET ClassFieldsVariables RIGHT_CURLY_BRACKET
 			  |
-			  (ClassFullBody) LEFT_CURLY_BRACKET ClassFieldsVariables LEFT_CURLY_BRACKET ConstructorDecl RIGHT_CURLY_BRACKET RIGHT_CURLY_BRACKET
+			  (ClassFullBody) LEFT_CURLY_BRACKET ClassFieldsVariables LEFT_CURLY_BRACKET ConstructorDecl ClassMethodDeclarations RIGHT_CURLY_BRACKET RIGHT_CURLY_BRACKET
 			  ;
- /* ClassMethodDeclarations */
 
 ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables ClassVarDecl
 						 |
@@ -243,7 +245,10 @@ ConstructorVarDecl ::= (ConstructorHasVariables) ConstructorVarDecl VarDecl
 					   ;
 
 ConstructorBody ::= (EmptyConstructorBody) /* epsilon */
-					; // Not finished, Statement missing
+					;
+
+ClassMethodDeclarations ::= (NoClassMethodDecl) /* epsilon */
+							;
 
 /* Type; usage: constants, variables, classes */
 Type ::= (Type) IDENT:typeName;

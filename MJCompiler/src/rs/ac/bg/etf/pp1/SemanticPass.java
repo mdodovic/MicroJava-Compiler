@@ -107,12 +107,12 @@ public class SemanticPass extends VisitorAdaptor {
     }
     
     @Override
-    public void visit(Designator designator) {
-    	Obj obj = Tab.find(designator.getName());
+    public void visit(SimpleDesignator simpleDesignator) {
+    	Obj obj = Tab.find(simpleDesignator.getName());
     	if(obj == Tab.noObj){
-			report_error("Greska na liniji " + designator.getLine() + " : ime " + designator.getName() + " nije deklarisano! ", null);
+			report_error("Greska na liniji " + simpleDesignator.getLine() + " : ime " + simpleDesignator.getName() + " nije deklarisano! ", null);
     	}
-    	designator.obj = obj;
+    	simpleDesignator.obj = obj;
 
     }
     
@@ -133,11 +133,13 @@ public class SemanticPass extends VisitorAdaptor {
     	
     }
     
+    /*
     @Override
     public void visit(Term term) {
-    	term.struct = term.getFactor().struct;
+    	term.struct = term.getFactorList()  .struct;
     }
-    
+    */
+    /*
     @Override
     public void visit(TermExpr termExpr) {
     	termExpr.struct = termExpr.getTerm().struct;
@@ -155,7 +157,7 @@ public class SemanticPass extends VisitorAdaptor {
 			addExpt.struct = Tab.noType;
     	}
     }
-
+	*/
     @Override
     public void visit(Const cnst){
     	cnst.struct = Tab.intType;

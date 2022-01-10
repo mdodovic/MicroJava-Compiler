@@ -106,7 +106,7 @@ program MJProgram
 		c1 = 1;
 		objC.fc1 = 3;
 		objC.theA.fa1 = 2;
-		objC.theA.fa2 = - 2;
+		objC.theA.fa2 = - 2 + 7 * 11 / objC.theA.fa1 - c1 % 5;
 		
 		// arr1 = new int[3];
 		

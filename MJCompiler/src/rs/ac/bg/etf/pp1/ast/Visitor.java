@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 19:23:13
+// 10/0/2022 20:18:37
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,16 +9,21 @@ public interface Visitor {
 
     public void visit(Unmatched Unmatched);
     public void visit(ArrayBrackets ArrayBrackets);
+    public void visit(Mulop Mulop);
     public void visit(MethodDecl MethodDecl);
     public void visit(ConstructorDecl ConstructorDecl);
     public void visit(Matched Matched);
+    public void visit(TermList TermList);
     public void visit(ClassFieldsVariables ClassFieldsVariables);
     public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations);
     public void visit(StatementList StatementList);
     public void visit(LastVarDecl LastVarDecl);
     public void visit(ClassVarDecl ClassVarDecl);
+    public void visit(FactorList FactorList);
+    public void visit(Addop Addop);
     public void visit(Factor Factor);
     public void visit(RecordVarDecl RecordVarDecl);
+    public void visit(Designator Designator);
     public void visit(ClassVarDeclList ClassVarDeclList);
     public void visit(ClassBody ClassBody);
     public void visit(NotLastVarDecl NotLastVarDecl);
@@ -40,12 +45,11 @@ public interface Visitor {
     public void visit(SingleStatement SingleStatement);
     public void visit(FormPars FormPars);
     public void visit(OptionalExtend OptionalExtend);
-    public void visit(Addop Addop);
-    public void visit(Designator Designator);
-    public void visit(FuncCall FuncCall);
-    public void visit(Var Var);
-    public void visit(Const Const);
-    public void visit(Term Term);
+    public void visit(ModuoOp ModuoOp);
+    public void visit(DivideOp DivideOp);
+    public void visit(MultiplyOp MultiplyOp);
+    public void visit(MinusOp MinusOp);
+    public void visit(PlusOp PlusOp);
     public void visit(ProcCall ProcCall);
     public void visit(MatchedStatement MatchedStatement);
     public void visit(ReturnNoExpr ReturnNoExpr);
@@ -57,8 +61,19 @@ public interface Visitor {
     public void visit(ActualParams ActualParams);
     public void visit(NoActuals NoActuals);
     public void visit(Actuals Actuals);
-    public void visit(TermExpr TermExpr);
-    public void visit(AddExpt AddExpt);
+    public void visit(FuncCall FuncCall);
+    public void visit(Var Var);
+    public void visit(Const Const);
+    public void visit(SingleFactor SingleFactor);
+    public void visit(MulOpFactorList MulOpFactorList);
+    public void visit(Term Term);
+    public void visit(SingleTerm SingleTerm);
+    public void visit(AddOpTermList AddOpTermList);
+    public void visit(NegativeExpr NegativeExpr);
+    public void visit(PositiveExpr PositiveExpr);
+    public void visit(SimpleDesignator SimpleDesignator);
+    public void visit(ArrayDesignator ArrayDesignator);
+    public void visit(ClassFieldDesignator ClassFieldDesignator);
     public void visit(DesignatorFunctionCall DesignatorFunctionCall);
     public void visit(ErrorInDesignatorAssignOperation ErrorInDesignatorAssignOperation);
     public void visit(DesignatorAssignOperation DesignatorAssignOperation);

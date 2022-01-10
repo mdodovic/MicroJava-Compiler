@@ -63,6 +63,8 @@ terminal SEMI; /* ";" */
 terminal COLON; /* ":" */
 terminal COMMA; /* "," */
 
+terminal POINT; /* "." */
+
 terminal ASSIGNMENT; /* "=" */
 
 terminal CHAR_CONST; /* char value: 'a', ... */ 
@@ -73,33 +75,36 @@ terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET; /* "("")" */
 terminal LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET; /* "[""]" */
 terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; /* "{""}" */
 
+terminal INC;
+terminal DEC;
+terminal PLUS; /* "+" */
+terminal MINUS; /* "-" */
+terminal MULTIPLY; /* "*" */
+terminal DIVIDE; /* "/" */
+terminal MODUO; /* "%" */
 
-terminal PRINT, RETURN, PLUS;
+terminal PRINT, RETURN;
 terminal String IDENT;
 terminal IF, ELSE;
 
 terminal READ;
 terminal GOTO, DO, WHILE;
-terminal INC, DEC, MINUS, MULTIPLY, DIVIDE, MODUO;
+
 terminal AND, OR;
 terminal NEW;
 terminal ENUM, RECORD;
-terminal SUPER, THIS, POINT;
+terminal SUPER, THIS;
 
 terminal BREAK, CONTINUE;
 terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
 
 
 
-nonterminal Addop Addop;
 nonterminal ActualPars ActualPars;
 nonterminal ActualParamList ActualParamList;
 nonterminal Matched Matched;
 nonterminal Unmatched Unmatched;
 
-nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
-
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Term, Factor, Expr;
 
 /* NON terminals */
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program; /* Program = "program" ProgName (...) part, fetch program name and save to progName */
@@ -157,7 +162,17 @@ nonterminal Label Label; /* this will represent label name */
 nonterminal SingleStatement SingleStatement; /* this is collection of all simple statements (.5.) */
 nonterminal DesignatorStatement DesignatorStatement; /* this will collect assignment, function calls, inc and dec statements */
 
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator; /* this will represent variable, or className.someName (with arbitrary depth of indirection) or arrayName[expression]*/
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr; /* represent expressions, with possible +/- operators because of asociativiry */
+
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Term;
+nonterminal TermList TermList;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
+nonterminal FactorList FactorList;
+
+nonterminal Addop Addop; /* contains "+" and "-" */
+nonterminal Mulop Mulop; /* contains "*", "/" and "%" */
 
 
 /* Grammar */
@@ -350,10 +365,38 @@ DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT E
 						(DesignatorFunctionCall) Designator:functionName LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new DesignatorFunctionCall(functionName, A1); RESULT.setLine(functionNameleft); :}
 						;
 
-Expr ::= (AddExpt) Expr:te Addop:A1 Term:t {: RESULT=new AddExpt(te, A1, t); RESULT.setLine(teleft); :}
+Designator ::= (ClassFieldDesignator) Designator:D1 POINT IDENT:leftField {: RESULT=new ClassFieldDesignator(D1, leftField); RESULT.setLine(D1left); :}
+			   |
+			   (ArrayDesignator) Designator:D1 LEFT_SQUARE_BRACKET Expr:arrayIndex RIGHT_SQUARE_BRACKET {: RESULT=new ArrayDesignator(D1, arrayIndex); RESULT.setLine(D1left); :}
+			   |
+			   (SimpleDesignator) IDENT:name {: RESULT=new SimpleDesignator(name); RESULT.setLine(nameleft); :}
+			   ;
+
+
+Expr ::= (PositiveExpr) TermList:t {: RESULT=new PositiveExpr(t); RESULT.setLine(tleft); :}
+		 |
+		 (NegativeExpr) MINUS TermList:t {: RESULT=new NegativeExpr(t); RESULT.setLine(tleft); :}
+		 ;						
+
+TermList ::= (AddOpTermList) TermList:T1 Addop:A2 Term:T3 {: RESULT=new AddOpTermList(T1, A2, T3); RESULT.setLine(T1left); :}
+			 |
+			 (SingleTerm) Term:t {: RESULT=new SingleTerm(t); RESULT.setLine(tleft); :}
+			 ;
+
+Term ::= (Term) FactorList:t {: RESULT=new Term(t); RESULT.setLine(tleft); :};
+
+FactorList ::= (MulOpFactorList) FactorList:t Mulop:M1 Factor:F2 {: RESULT=new MulOpFactorList(t, M1, F2); RESULT.setLine(tleft); :}
+			   |
+			   (SingleFactor) Factor:t {: RESULT=new SingleFactor(t); RESULT.setLine(tleft); :}
+			   ;
+
+Factor ::= (Const) NUMBER:N1 {: RESULT=new Const(N1); RESULT.setLine(N1left); :}
 		|
-		(TermExpr) Term:t {: RESULT=new TermExpr(t); RESULT.setLine(tleft); :}
-		;						
+		(Var) Designator:d {: RESULT=new Var(d); RESULT.setLine(dleft); :}
+		|
+		(FuncCall) Designator:func LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET {: RESULT=new FuncCall(func, A1); RESULT.setLine(funcleft); :}
+		;
+
 
 ActualPars ::= (Actuals) ActualParamList:A1 {: RESULT=new Actuals(A1); RESULT.setLine(A1left); :}
 			|
@@ -389,17 +432,16 @@ Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr:E1 RIGHT_ROUND_BRACKET S
 
 
 
-Term ::= (Term) Factor:t {: RESULT=new Term(t); RESULT.setLine(tleft); :};
-
-Factor ::= (Const) NUMBER:N1 {: RESULT=new Const(N1); RESULT.setLine(N1left); :}
-		|
-		(Var) Designator:d {: RESULT=new Var(d); RESULT.setLine(dleft); :}
-		|
-		(FuncCall) Designator:func LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET {: RESULT=new FuncCall(func, A1); RESULT.setLine(funcleft); :}
-		;
 		
 	
-Designator ::= (Designator) IDENT:name {: RESULT=new Designator(name); RESULT.setLine(nameleft); :};
 
-Addop ::= (Addop) PLUS {: RESULT=new Addop(); :};
-		
+Addop ::= (PlusOp) PLUS {: RESULT=new PlusOp(); :}
+		  |
+		  (MinusOp) MINUS {: RESULT=new MinusOp(); :};
+
+Mulop ::= (MultiplyOp) MULTIPLY {: RESULT=new MultiplyOp(); :}
+		  |
+		  (DivideOp) DIVIDE {: RESULT=new DivideOp(); :}
+		  |
+		  (ModuoOp) MODUO {: RESULT=new ModuoOp(); :}
+		  ;

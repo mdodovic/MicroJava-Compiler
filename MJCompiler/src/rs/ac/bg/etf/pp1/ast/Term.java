@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 19:23:13
+// 10/0/2022 20:18:37
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -11,19 +11,19 @@ public class Term implements SyntaxNode {
     private int line;
     public rs.etf.pp1.symboltable.concepts.Struct struct = null;
 
-    private Factor Factor;
+    private FactorList FactorList;
 
-    public Term (Factor Factor) {
-        this.Factor=Factor;
-        if(Factor!=null) Factor.setParent(this);
+    public Term (FactorList FactorList) {
+        this.FactorList=FactorList;
+        if(FactorList!=null) FactorList.setParent(this);
     }
 
-    public Factor getFactor() {
-        return Factor;
+    public FactorList getFactorList() {
+        return FactorList;
     }
 
-    public void setFactor(Factor Factor) {
-        this.Factor=Factor;
+    public void setFactorList(FactorList FactorList) {
+        this.FactorList=FactorList;
     }
 
     public SyntaxNode getParent() {
@@ -47,16 +47,16 @@ public class Term implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Factor!=null) Factor.accept(visitor);
+        if(FactorList!=null) FactorList.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Factor!=null) Factor.traverseTopDown(visitor);
+        if(FactorList!=null) FactorList.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Factor!=null) Factor.traverseBottomUp(visitor);
+        if(FactorList!=null) FactorList.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -65,8 +65,8 @@ public class Term implements SyntaxNode {
         buffer.append(tab);
         buffer.append("Term(\n");
 
-        if(Factor!=null)
-            buffer.append(Factor.toString("  "+tab));
+        if(FactorList!=null)
+            buffer.append(FactorList.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

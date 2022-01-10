@@ -208,8 +208,10 @@ OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
  				   ;
 
 ClassBody ::= (ClassBodyNoConstructorNoMethod) LEFT_CURLY_BRACKET ClassFieldsVariables RIGHT_CURLY_BRACKET
+			  |
+			  (ClassFullBody) LEFT_CURLY_BRACKET ClassFieldsVariables LEFT_CURLY_BRACKET ConstructorDecl RIGHT_CURLY_BRACKET RIGHT_CURLY_BRACKET
 			  ;
-/* ConstructorDecl ClassMethodDeclarations */
+ /* ClassMethodDeclarations */
 
 ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables ClassVarDecl
 						 |
@@ -227,6 +229,12 @@ ClassVarDeclList ::= (ClassVarDeclMultiple) ClassVarDeclList COMMA ClassSingleVa
 				;
 
 ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:varName ArrayBrackets;
+
+ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET
+					|
+					(NoClassConstructor) /* epsilon */
+					; 
+
 
 
 Type ::= (Type) IDENT:typeName;

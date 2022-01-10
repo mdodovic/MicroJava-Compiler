@@ -6,9 +6,9 @@ program MJProgram
 	
 	class Empty {
 	
-		//{
+		{
 			//Empty()
-		//}
+		}
 	}
 			
 	const int pi = 3, e = 2;
@@ -28,22 +28,23 @@ program MJProgram
 		bool readable;
 		int y_, len, 0tt, sup_y;
 				
-		//{
+		{
 			//Str() {
 			//
 			//}
-		//}
+		}
 		
 	}
 
 	// full classes
 	class X { 
 		int x; 
-		//{
+		{
+			X()
 			//X() int x_; {
 			//
 			//}
-		//}
+		}
 	}
 	class Y { 
 		int y;

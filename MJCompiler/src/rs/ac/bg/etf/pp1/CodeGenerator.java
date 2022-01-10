@@ -2,10 +2,10 @@ package rs.ac.bg.etf.pp1;
 
 import rs.ac.bg.etf.pp1.CounterVisitor.FormParamCounter;
 import rs.ac.bg.etf.pp1.CounterVisitor.VarCounter;
-import rs.ac.bg.etf.pp1.ast.Const;
 import rs.ac.bg.etf.pp1.ast.Designator;
 import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
-import rs.ac.bg.etf.pp1.ast.FuncCall;
+import rs.ac.bg.etf.pp1.ast.FactorFunctionCall;
+import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
 import rs.ac.bg.etf.pp1.ast.PrintStmt;
@@ -38,10 +38,10 @@ public class CodeGenerator extends VisitorAdaptor{
 	}
 	
 	@Override
-	public void visit(Const cnst) {
+	public void visit(FactorNumConst cnst) {
 		Obj con = Tab.insert(Obj.Con, "$", cnst.struct);
 		con.setLevel(0);
-		con.setAdr(cnst.getN1());
+		con.setAdr(cnst.getConstValue());
 		
 		Code.load(con);
 	}
@@ -86,7 +86,7 @@ public class CodeGenerator extends VisitorAdaptor{
 	public void visit(Designator designator) {
 		SyntaxNode parent = designator.getParent();
 		
-		if(DesignatorAssignOperation.class != parent.getClass() && FuncCall.class != parent.getClass() && ProcCall.class != parent.getClass()) {
+		if(DesignatorAssignOperation.class != parent.getClass() && FactorFunctionCall.class != parent.getClass() && ProcCall.class != parent.getClass()) {
 			// if designator is variable that is in expressions
 			// if it is global or local variable getstatic or load will be generated
 			Code.load(designator.obj);
@@ -94,8 +94,8 @@ public class CodeGenerator extends VisitorAdaptor{
 	}
 
 	@Override
-	public void visit(FuncCall funcCall) {
-		Obj functionObj = funcCall.getDesignator().obj;
+	public void visit(FactorFunctionCall factorFunctionCall) {
+		Obj functionObj = factorFunctionCall.getDesignator().obj;
 		int offset = functionObj.getAdr() - Code.pc;
 
 		Code.put(Code.call);

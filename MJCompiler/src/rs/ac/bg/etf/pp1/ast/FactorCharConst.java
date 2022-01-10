@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class VoidType extends MethodReturnType {
+public class FactorCharConst extends Factor {
 
-    public VoidType () {
+    public FactorCharConst () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class VoidType extends MethodReturnType {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("VoidType(\n");
+        buffer.append("FactorCharConst(\n");
 
         buffer.append(tab);
-        buffer.append(") [VoidType]");
+        buffer.append(") [FactorCharConst]");
         return buffer.toString();
     }
 }

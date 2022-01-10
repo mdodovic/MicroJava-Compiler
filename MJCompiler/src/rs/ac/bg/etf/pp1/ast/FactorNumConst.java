@@ -5,9 +5,20 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class VoidType extends MethodReturnType {
+public class FactorNumConst extends Factor {
 
-    public VoidType () {
+    private Integer constValue;
+
+    public FactorNumConst (Integer constValue) {
+        this.constValue=constValue;
+    }
+
+    public Integer getConstValue() {
+        return constValue;
+    }
+
+    public void setConstValue(Integer constValue) {
+        this.constValue=constValue;
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +39,13 @@ public class VoidType extends MethodReturnType {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("VoidType(\n");
+        buffer.append("FactorNumConst(\n");
+
+        buffer.append(" "+tab+constValue);
+        buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [VoidType]");
+        buffer.append(") [FactorNumConst]");
         return buffer.toString();
     }
 }

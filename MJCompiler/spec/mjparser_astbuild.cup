@@ -58,6 +58,7 @@ terminal VOID; /* "void" */
 
 terminal CLASS; /* "class" */
 terminal EXTENDS; /* "extends" */
+terminal NEW; /* "new" */
 
 terminal SEMI; /* ";" */
 terminal COLON; /* ":" */
@@ -70,6 +71,7 @@ terminal ASSIGNMENT; /* "=" */
 terminal CHAR_CONST; /* char value: 'a', ... */ 
 terminal BOOL_CONST; /* bool value: true/false*/
 terminal Integer NUMBER; /* integer value: 0, ... */
+terminal String IDENT; /* string value: varName, ... */
 
 terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET; /* "("")" */
 terminal LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET; /* "[""]" */
@@ -84,14 +86,12 @@ terminal DIVIDE; /* "/" */
 terminal MODUO; /* "%" */
 
 terminal PRINT, RETURN;
-terminal String IDENT;
 terminal IF, ELSE;
 
 terminal READ;
 terminal GOTO, DO, WHILE;
 
 terminal AND, OR;
-terminal NEW;
 terminal ENUM, RECORD;
 terminal SUPER, THIS;
 
@@ -390,12 +390,20 @@ FactorList ::= (MulOpFactorList) FactorList:t Mulop:M1 Factor:F2 {: RESULT=new M
 			   (SingleFactor) Factor:t {: RESULT=new SingleFactor(t); RESULT.setLine(tleft); :}
 			   ;
 
-Factor ::= (Const) NUMBER:N1 {: RESULT=new Const(N1); RESULT.setLine(N1left); :}
-		|
-		(Var) Designator:d {: RESULT=new Var(d); RESULT.setLine(dleft); :}
-		|
-		(FuncCall) Designator:func LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET {: RESULT=new FuncCall(func, A1); RESULT.setLine(funcleft); :}
-		;
+Factor ::= (FactorVariable) Designator:variableName {: RESULT=new FactorVariable(variableName); RESULT.setLine(variableNameleft); :}
+		   |
+		   (FactorFunctionCall) Designator:functionName LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET {: RESULT=new FactorFunctionCall(functionName, A1); RESULT.setLine(functionNameleft); :}
+		   |
+		   (FactorNumConst) NUMBER:constValue {: RESULT=new FactorNumConst(constValue); RESULT.setLine(constValueleft); :}
+		   |
+		   (FactorCharConst) CHAR_CONST:constValue {: RESULT=new FactorCharConst(); :}
+		   |
+		   (FactorBoolConst) BOOL_CONST:constValue {: RESULT=new FactorBoolConst(); :}
+		   |
+		   (FactorNewOperator) NEW Type:arrayName LEFT_SQUARE_BRACKET Expr:arrayIndex RIGHT_SQUARE_BRACKET {: RESULT=new FactorNewOperator(arrayName, arrayIndex); RESULT.setLine(arrayNameleft); :}
+		   |
+		   (FactorBracketExpression) LEFT_ROUND_BRACKET Expr:innerExpression RIGHT_ROUND_BRACKET {: RESULT=new FactorBracketExpression(innerExpression); RESULT.setLine(innerExpressionleft); :}
+		   ;
 
 
 ActualPars ::= (Actuals) ActualParamList:A1 {: RESULT=new Actuals(A1); RESULT.setLine(A1left); :}

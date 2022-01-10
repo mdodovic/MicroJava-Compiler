@@ -115,9 +115,9 @@ public class SemanticPass extends VisitorAdaptor {
     	simpleDesignator.obj = obj;
 
     }
-    
+
     @Override
-    public void visit(FuncCall funcCall) {
+    public void visit(FactorFunctionCall funcCall) {
     	Obj func = funcCall.getDesignator().obj;
     	if(Obj.Meth == func.getKind()){
     		if(Tab.noType == func.getType()) {
@@ -158,14 +158,15 @@ public class SemanticPass extends VisitorAdaptor {
     	}
     }
 	*/
+    
     @Override
-    public void visit(Const cnst){
-    	cnst.struct = Tab.intType;
+    public void visit(FactorNumConst factorNumConst) {
+    	factorNumConst.struct = Tab.intType;
     }
     
     @Override
-    public void visit(Var var){
-    	var.struct = var.getDesignator().obj.getType();
+    public void visit(FactorVariable factorVariable) {
+    	factorVariable.struct = factorVariable.getDesignator().obj.getType();
     }
 
     @Override

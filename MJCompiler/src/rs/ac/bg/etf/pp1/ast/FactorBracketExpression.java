@@ -5,21 +5,21 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ClassHasParent extends OptionalExtend {
+public class FactorBracketExpression extends Factor {
 
-    private Type Type;
+    private Expr Expr;
 
-    public ClassHasParent (Type Type) {
-        this.Type=Type;
-        if(Type!=null) Type.setParent(this);
+    public FactorBracketExpression (Expr Expr) {
+        this.Expr=Expr;
+        if(Expr!=null) Expr.setParent(this);
     }
 
-    public Type getType() {
-        return Type;
+    public Expr getExpr() {
+        return Expr;
     }
 
-    public void setType(Type Type) {
-        this.Type=Type;
+    public void setExpr(Expr Expr) {
+        this.Expr=Expr;
     }
 
     public void accept(Visitor visitor) {
@@ -27,32 +27,32 @@ public class ClassHasParent extends OptionalExtend {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Type!=null) Type.accept(visitor);
+        if(Expr!=null) Expr.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Type!=null) Type.traverseTopDown(visitor);
+        if(Expr!=null) Expr.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Type!=null) Type.traverseBottomUp(visitor);
+        if(Expr!=null) Expr.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ClassHasParent(\n");
+        buffer.append("FactorBracketExpression(\n");
 
-        if(Type!=null)
-            buffer.append(Type.toString("  "+tab));
+        if(Expr!=null)
+            buffer.append(Expr.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [ClassHasParent]");
+        buffer.append(") [FactorBracketExpression]");
         return buffer.toString();
     }
 }

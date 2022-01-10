@@ -1,16 +1,16 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 20:18:37
+// 10/0/2022 20:38:10
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class FuncCall extends Factor {
+public class FactorFunctionCall extends Factor {
 
     private Designator Designator;
     private ActualPars ActualPars;
 
-    public FuncCall (Designator Designator, ActualPars ActualPars) {
+    public FactorFunctionCall (Designator Designator, ActualPars ActualPars) {
         this.Designator=Designator;
         if(Designator!=null) Designator.setParent(this);
         this.ActualPars=ActualPars;
@@ -57,7 +57,7 @@ public class FuncCall extends Factor {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("FuncCall(\n");
+        buffer.append("FactorFunctionCall(\n");
 
         if(Designator!=null)
             buffer.append(Designator.toString("  "+tab));
@@ -72,7 +72,7 @@ public class FuncCall extends Factor {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [FuncCall]");
+        buffer.append(") [FactorFunctionCall]");
         return buffer.toString();
     }
 }

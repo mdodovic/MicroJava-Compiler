@@ -52,7 +52,10 @@ program MJProgram
 			}
 		}
 	}
-
+	
+	X arrx[];
+	Y arry[];
+	
 	
 	// class extending
 	class A { int fa1, fa2; }
@@ -86,7 +89,7 @@ program MJProgram
 			outerLabel: l = 0;		
 	}
 
-	void f2(char c, X xarr[], Y yarr[], bool act, A arr[]) int cnt; X x1; Y y1; A a; {
+	char f2(char c, X xarr[], Y yarr[], bool act, A arr[]) int cnt; X x1; Y y1; A a; {
 		cnt = 0;
 		f1();
 	}
@@ -101,19 +104,25 @@ program MJProgram
 	//	return c+2;
 	//}
 
-	int main() C objC; {
+	int main() C objC; char retc; {
 		
 		c1 = 1;
 		objC.fc1 = 3;
 		objC.theA.fa1 = 2;
 		objC.theA.fa2 = - 2 + 7 * 11 / objC.theA.fa1 - c1 % 5;
+		objC.theA.fa2 = f0() * f1('x', false)  + 'a' * true / objC.theA.fa1 - c1 % 5;
 		
-		// arr1 = new int[3];
+		arr1 = new int[3];
 		
 	ArrLabel:	arr1[0] = 6;
 		arr1[1] = 5;
 		
 		arr1[c1] = 3;
+		
+		arrx = new X[f0() - 4];
+		arry = new Y[7];
+		
+		c = f2(c1, arrx, arry, true, null);
 		
 	//	x = 3;
 		

@@ -77,10 +77,13 @@ terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; /* "{""}" */
 
 terminal INC;
 terminal DEC;
+terminal PLUS; /* "+" */
 terminal MINUS; /* "-" */
-terminal MULTIPLY, DIVIDE, MODUO;
+terminal MULTIPLY; /* "*" */
+terminal DIVIDE; /* "/" */
+terminal MODUO; /* "%" */
 
-terminal PRINT, RETURN, PLUS;
+terminal PRINT, RETURN;
 terminal String IDENT;
 terminal IF, ELSE;
 
@@ -97,7 +100,6 @@ terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
 
 
 
-nonterminal Addop;
 nonterminal ActualPars, ActualParamList;
 nonterminal Matched, Unmatched;
 
@@ -165,6 +167,10 @@ nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Term;
 nonterminal TermList;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
+nonterminal FactorList;
+
+nonterminal Addop; /* contains "+" and "-" */
+nonterminal Mulop; /* contains "*", "/" and "%" */
 
 
 /* Grammar */
@@ -375,7 +381,12 @@ TermList ::= (AddOpTermList) TermList Addop Term
 			 (SingleTerm) Term:t
 			 ;
 
-Term ::= (Term) Factor:t;
+Term ::= (Term) FactorList:t;
+
+FactorList ::= (MulOpFactorList) FactorList:t Mulop Factor
+			   |
+			   (SingleFactor) Factor:t
+			   ;
 
 Factor ::= (Const) NUMBER
 		|
@@ -422,5 +433,13 @@ Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr RIGHT_ROUND_BRACKET SEMI
 		
 	
 
-Addop ::= (Addop) PLUS;
-		
+Addop ::= (PlusOp) PLUS
+		  |
+		  (MinusOp) MINUS;
+
+Mulop ::= (MultiplyOp) MULTIPLY
+		  |
+		  (DivideOp) DIVIDE
+		  |
+		  (ModuoOp) MODUO
+		  ;

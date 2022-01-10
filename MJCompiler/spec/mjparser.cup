@@ -126,6 +126,14 @@ nonterminal ClassFieldsVariables; /* class fields (.2.), this is basically VarDe
 nonterminal ConstructorDecl; /* class constructor (.3.), method without type and with the same name as class. There we do not check this equallity. */
 nonterminal ClassMethodDeclarations; /* class methods (.4.), no difference between regular methods */
 
+nonterminal ClassBody;
+
+nonterminal ClassVarDecl;
+nonterminal ClassVarDeclList;
+nonterminal ClassSingleVarDecl;
+nonterminal OptionalConstructorAndMethods; /* class constructor and methods together (.3.), surrounded with "{}" */
+
+
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
 
@@ -190,7 +198,7 @@ ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET
 
 /* classes */
 
-ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend LEFT_CURLY_BRACKET ClassFieldsVariables /* ConstructorDecl ClassMethodDeclarations */ RIGHT_CURLY_BRACKET;
+ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend ClassBody;
 
 OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
 				   | 
@@ -199,10 +207,27 @@ OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
  				   (ErrorInExtendingClass) error /* no need for "{" here; everything will be consumed until the "{" in ClassDecl production */
  				   ;
 
-ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables VarDecl
+ClassBody ::= (ClassBodyNoConstructorNoMethod) LEFT_CURLY_BRACKET ClassFieldsVariables RIGHT_CURLY_BRACKET
+			  ;
+/* ConstructorDecl ClassMethodDeclarations */
+
+ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables ClassVarDecl
 						 |
 						 (NoClassFields) /* epsilon */
 						 ;
+
+ClassVarDecl ::= (TypedListClassVarDecl) Type:varType ClassVarDeclList SEMI
+				 |
+				 (ErrorInClassVarDecl) error
+    			 ;
+
+ClassVarDeclList ::= (ClassVarDeclMultiple) ClassVarDeclList COMMA ClassSingleVarDecl 
+				|
+				(ClassVarDeclSingle) ClassSingleVarDecl
+				;
+
+ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:varName ArrayBrackets;
+
 
 Type ::= (Type) IDENT:typeName;
 

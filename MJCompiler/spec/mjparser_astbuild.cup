@@ -100,8 +100,6 @@ terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
 
 
 
-nonterminal ActualPars ActualPars;
-nonterminal ActualParamList ActualParamList;
 nonterminal Matched Matched;
 nonterminal Unmatched Unmatched;
 
@@ -163,13 +161,16 @@ nonterminal SingleStatement SingleStatement; /* this is collection of all simple
 nonterminal DesignatorStatement DesignatorStatement; /* this will collect assignment, function calls, inc and dec statements */
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator; /* this will represent variable, or className.someName (with arbitrary depth of indirection) or arrayName[expression]*/
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr; /* represent expressions, with possible +/- operators because of asociativiry */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr; /* represent expressions which optionally can start with "-" */
+nonterminal TermList TermList; /* represent list of terms with possible +/- operators because of asociativity  */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Term; /* represent single term which is the list of factors */
+nonterminal FactorList FactorList; /* represent list of factors with possible mul/mod/div operators because of asociativity */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor; /* represent single factor that can be variable, functionCall, number, character, true/false, creation of an array (new int[expression]) and expression surrounded with "(" ")" */
 
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Term;
-nonterminal TermList TermList;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
-nonterminal FactorList FactorList;
+
+nonterminal ActualPars ActualPars; /* this will say if there are any actual parameters in the function call */ 
+nonterminal ActualParamList ActualParamList; /* this represents actual parameters in function call, that can by any expression */
 
 nonterminal Addop Addop; /* contains "+" and "-" */
 nonterminal Mulop Mulop; /* contains "*", "/" and "%" */
@@ -357,6 +358,8 @@ Label ::= (Label) IDENT:labelName {: RESULT=new Label(labelName); RESULT.setLine
 
 SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new StatementDesignator(D1); RESULT.setLine(D1left); :};
 
+/* Designators */
+
 DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT Expr:e SEMI {: RESULT=new DesignatorAssignOperation(dest, e); RESULT.setLine(destleft); :}
 						|
 						(ErrorInDesignatorAssignOperation) error SEMI:l
@@ -372,6 +375,7 @@ Designator ::= (ClassFieldDesignator) Designator:D1 POINT IDENT:leftField {: RES
 			   (SimpleDesignator) IDENT:name {: RESULT=new SimpleDesignator(name); RESULT.setLine(nameleft); :}
 			   ;
 
+/* Expressions */
 
 Expr ::= (PositiveExpr) TermList:t {: RESULT=new PositiveExpr(t); RESULT.setLine(tleft); :}
 		 |
@@ -407,14 +411,14 @@ Factor ::= (FactorVariable) Designator:variableName {: RESULT=new FactorVariable
 
 
 ActualPars ::= (Actuals) ActualParamList:A1 {: RESULT=new Actuals(A1); RESULT.setLine(A1left); :}
-			|
-			(NoActuals) {: RESULT=new NoActuals(); :} /* epsilon */
-			;
+			   |
+			   (NoActuals) {: RESULT=new NoActuals(); :} /* epsilon */
+			   ;
 			
 ActualParamList ::= (ActualParams) ActualParamList:A1 COMMA Expr:E2 {: RESULT=new ActualParams(A1, E2); RESULT.setLine(A1left); :}
-				|
-				(ActualParam) Expr:E1 {: RESULT=new ActualParam(E1); RESULT.setLine(E1left); :}
-				;		
+				    |
+				    (ActualParam) Expr:E1 {: RESULT=new ActualParam(E1); RESULT.setLine(E1left); :}
+				    ;		
 
 
 //Statement ::= (MatchedStmt) Matched
@@ -434,14 +438,12 @@ Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr:E1 RIGHT_ROUND_BRACKET S
 			  (ReturnNoExpr) RETURN SEMI {: RESULT=new ReturnNoExpr(); :}
 			  |
 			  (MatchedStatement) IF Expr:E1 Matched:M2 ELSE Matched:M3 {: RESULT=new MatchedStatement(E1, M2, M3); RESULT.setLine(E1left); :}
-              |
-			  (ProcCall) Designator:func LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new ProcCall(func, A1); RESULT.setLine(funcleft); :}
 			  ;				
 
 
 
 		
-	
+/* Operations */	
 
 Addop ::= (PlusOp) PLUS {: RESULT=new PlusOp(); :}
 		  |

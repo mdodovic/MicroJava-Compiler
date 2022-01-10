@@ -100,7 +100,6 @@ terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
 
 
 
-nonterminal ActualPars, ActualParamList;
 nonterminal Matched, Unmatched;
 
 
@@ -161,13 +160,16 @@ nonterminal SingleStatement; /* this is collection of all simple statements (.5.
 nonterminal DesignatorStatement; /* this will collect assignment, function calls, inc and dec statements */
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator; /* this will represent variable, or className.someName (with arbitrary depth of indirection) or arrayName[expression]*/
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr; /* represent expressions, with possible +/- operators because of asociativiry */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr; /* represent expressions which optionally can start with "-" */
+nonterminal TermList; /* represent list of terms with possible +/- operators because of asociativity  */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Term; /* represent single term which is the list of factors */
+nonterminal FactorList; /* represent list of factors with possible mul/mod/div operators because of asociativity */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor; /* represent single factor that can be variable, functionCall, number, character, true/false, creation of an array (new int[expression]) and expression surrounded with "(" ")" */
 
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor;
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Term;
-nonterminal TermList;
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
-nonterminal FactorList;
+
+nonterminal ActualPars; /* this will say if there are any actual parameters in the function call */ 
+nonterminal ActualParamList; /* this represents actual parameters in function call, that can by any expression */
 
 nonterminal Addop; /* contains "+" and "-" */
 nonterminal Mulop; /* contains "*", "/" and "%" */
@@ -355,6 +357,8 @@ Label ::= (Label) IDENT:labelName;
 
 SingleStatement ::= (StatementDesignator) DesignatorStatement;
 
+/* Designators */
+
 DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT Expr:e SEMI
 						|
 						(ErrorInDesignatorAssignOperation) error SEMI:l
@@ -370,6 +374,7 @@ Designator ::= (ClassFieldDesignator) Designator POINT IDENT:leftField
 			   (SimpleDesignator) IDENT:name
 			   ;
 
+/* Expressions */
 
 Expr ::= (PositiveExpr) TermList:t
 		 |
@@ -405,14 +410,14 @@ Factor ::= (FactorVariable) Designator:variableName
 
 
 ActualPars ::= (Actuals) ActualParamList
-			|
-			(NoActuals) /* epsilon */
-			;
+			   |
+			   (NoActuals) /* epsilon */
+			   ;
 			
 ActualParamList ::= (ActualParams) ActualParamList COMMA Expr
-				|
-				(ActualParam) Expr
-				;		
+				    |
+				    (ActualParam) Expr
+				    ;		
 
 
 //Statement ::= (MatchedStmt) Matched
@@ -437,7 +442,7 @@ Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr RIGHT_ROUND_BRACKET SEMI
 
 
 		
-	
+/* Operations */	
 
 Addop ::= (PlusOp) PLUS
 		  |

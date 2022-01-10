@@ -282,7 +282,8 @@ MethodDeclList ::= (NonEmptyMethodDeclList) MethodDeclList:M1 MethodDecl:M2 {: R
 				   ;
 
 MethodDecl ::= (MethodDecl) MethodTypeName:M1 
-				LEFT_ROUND_BRACKET FormPars:F2 RIGHT_ROUND_BRACKET MethodVarDecl:M3 
+				LEFT_ROUND_BRACKET FormPars:F2 RIGHT_ROUND_BRACKET 
+				MethodVarDecl:M3 
 				LEFT_CURLY_BRACKET StatementList:S4 RIGHT_CURLY_BRACKET {: RESULT=new MethodDecl(M1, F2, M3, S4); RESULT.setLine(M1left); :}
 				;
 

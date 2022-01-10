@@ -71,11 +71,11 @@ program MJProgram
 	Board b;
 {
 
-	int f1() {
+	int f1() char c1, c2; int l; {
 	
 	}
 
-	void f2() {
+	void f2() X x1; Y y1; A a; {
 	
 	}
 

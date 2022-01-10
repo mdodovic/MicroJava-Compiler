@@ -277,7 +277,8 @@ MethodDeclList ::= (NonEmptyMethodDeclList) MethodDeclList MethodDecl
 				   ;
 
 MethodDecl ::= (MethodDecl) MethodTypeName 
-				LEFT_ROUND_BRACKET FormPars RIGHT_ROUND_BRACKET MethodVarDecl 
+				LEFT_ROUND_BRACKET FormPars RIGHT_ROUND_BRACKET 
+				MethodVarDecl 
 				LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET
 				;
 

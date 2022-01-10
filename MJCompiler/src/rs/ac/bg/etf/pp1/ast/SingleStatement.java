@@ -5,7 +5,7 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class RecordVarDecl implements SyntaxNode {
+public abstract class SingleStatement implements SyntaxNode {
 
     private SyntaxNode parent;
 

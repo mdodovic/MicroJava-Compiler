@@ -60,6 +60,7 @@ terminal CLASS; /* "class" */
 terminal EXTENDS; /* "extends" */
 
 terminal SEMI; /* ";" */
+terminal COLON; /* ":" */
 terminal COMMA; /* "," */
 
 terminal ASSIGNMENT; /* "=" */
@@ -81,7 +82,7 @@ terminal READ;
 terminal GOTO, DO, WHILE;
 terminal INC, DEC, MINUS, MULTIPLY, DIVIDE, MODUO;
 terminal AND, OR;
-terminal COLON, NEW;
+terminal NEW;
 terminal ENUM, RECORD;
 terminal SUPER, THIS, POINT;
 
@@ -90,8 +91,6 @@ terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
 
 
 
-nonterminal StatementList StatementList;
-nonterminal Statement Statement;
 nonterminal Addop Addop;
 nonterminal ActualPars ActualPars;
 nonterminal ActualParamList ActualParamList;
@@ -151,6 +150,12 @@ nonterminal FormalParamList FormalParamList; /* this will represent the whole op
    */
 nonterminal FormalParameterDeclaration FormalParameterDeclaration; /* one formal parameter name, it can be like parName or parName[] */
 
+nonterminal StatementList StatementList; /* this will say if there is any statement */
+nonterminal Statement Statement; /* this will represent optionalLabel":" (.5.) or "{" (.6.) "}" */
+/* (.6.) is repeated StatementList in inner block, here we do not worry about the scope, but it represents an inner scope */
+nonterminal Label Label; /* this will represent label name */
+nonterminal SingleStatement SingleStatement; /* this is collection of all simple statements (.5.) */
+
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
@@ -189,6 +194,9 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 									|
 									(NoMoreConstDeclarations) {: RESULT=new NoMoreConstDeclarations(); :} /* epsilon */
 									;
+
+/* Type; usage: constants, variables, classes */
+Type ::= (Type) IDENT:typeName {: RESULT=new Type(typeName); RESULT.setLine(typeNameleft); :};
 
 /* global variables; constructor variables */
 
@@ -275,8 +283,7 @@ ConstructorBody ::= (EmptyConstructorBody) {: RESULT=new EmptyConstructorBody();
 ClassMethodDeclarations ::= (NoClassMethodDecl) {: RESULT=new NoClassMethodDecl(); :} /* epsilon */
 							; // fill it with method
 
-/* Type; usage: constants, variables, classes */
-Type ::= (Type) IDENT:typeName {: RESULT=new Type(typeName); RESULT.setLine(typeNameleft); :};
+
 
 /* methods */
 
@@ -316,24 +323,37 @@ FormalParamList ::= (MultipleFormalParameters) FormalParameterDeclaration:F1 COM
 
 FormalParameterDeclaration ::= (FormalParameterDeclaration) Type:parameterType IDENT:parameterName ArrayBrackets:A1 {: RESULT=new FormalParameterDeclaration(parameterType, parameterName, A1); RESULT.setLine(parameterTypeleft); :};
 
+/* statements */
 
+StatementList ::= (NonEmptyStement) StatementList:S1 Statement:S2 {: RESULT=new NonEmptyStement(S1, S2); RESULT.setLine(S1left); :}
+				  |
+				  (NoStatements) {: RESULT=new NoStatements(); :} /* epsilon */
+				  ;
 
-StatementList ::= (Statements) StatementList:S1 Statement:S2 {: RESULT=new Statements(S1, S2); RESULT.setLine(S1left); :}
-				|
-				(NoStmt) {: RESULT=new NoStmt(); :} /* epsilon */
-				;
-
-Statement ::= (MatchedStmt) Matched:M1 {: RESULT=new MatchedStmt(M1); RESULT.setLine(M1left); :}
+Statement ::= (LabeledSingleStatementMatch) Label:L1 COLON SingleStatement:S2 {: RESULT=new LabeledSingleStatementMatch(L1, S2); RESULT.setLine(L1left); :}
 			  |
-			  (UnmatchedStmt) Unmatched:U1 {: RESULT=new UnmatchedStmt(U1); RESULT.setLine(U1left); :}
-  			  ;
+			  (SingleStatementMatch) SingleStatement:S1 {: RESULT=new SingleStatementMatch(S1); RESULT.setLine(S1left); :}
+			  |
+			  (StatementBlock) LEFT_CURLY_BRACKET StatementList:S1 RIGHT_CURLY_BRACKET {: RESULT=new StatementBlock(S1); RESULT.setLine(S1left); :} 
+			  ;
+
+SingleStatement ::= (Assignment) Designator:dest ASSIGNMENT Expr:e SEMI {: RESULT=new Assignment(dest, e); RESULT.setLine(destleft); :};
+
+/* Label; usage: statement */
+Label ::= (Label) IDENT:labelName {: RESULT=new Label(labelName); RESULT.setLine(labelNameleft); :};
+
+
+//Statement ::= (MatchedStmt) Matched
+//			  |
+//			  (UnmatchedStmt) Unmatched
+// 			  ;
 
 Unmatched ::= (IfStatement) IF Expr:E1 Statement:S2 {: RESULT=new IfStatement(E1, S2); RESULT.setLine(E1left); :}
 			  |
 			  (UnmatchedIfElse) IF Expr:E1 Matched:M2 ELSE Unmatched:U3 {: RESULT=new UnmatchedIfElse(E1, M2, U3); RESULT.setLine(E1left); :}
 			  ;
 
-Matched ::= (Assignment) Designator:dest ASSIGNMENT Expr:e SEMI {: RESULT=new Assignment(dest, e); RESULT.setLine(destleft); :}
+Matched ::= (AssignmentOLD) Designator:dest ASSIGNMENT Expr:e SEMI {: RESULT=new AssignmentOLD(dest, e); RESULT.setLine(destleft); :}
 			  |
 			  (ErrorStmt) error SEMI:l
 			  {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :} {: RESULT=new ErrorStmt(); :}
@@ -348,6 +368,7 @@ Matched ::= (Assignment) Designator:dest ASSIGNMENT Expr:e SEMI {: RESULT=new As
               |
 			  (ProcCall) Designator:func LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new ProcCall(func, A1); RESULT.setLine(funcleft); :}
 			  ;				
+
 
 Expr ::= (AddExpt) Expr:te Addop:A1 Term:t {: RESULT=new AddExpt(te, A1, t); RESULT.setLine(teleft); :}
 		|

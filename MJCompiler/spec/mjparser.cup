@@ -60,6 +60,7 @@ terminal CLASS; /* "class" */
 terminal EXTENDS; /* "extends" */
 
 terminal SEMI; /* ";" */
+terminal COLON; /* ":" */
 terminal COMMA; /* "," */
 
 terminal ASSIGNMENT; /* "=" */
@@ -81,7 +82,7 @@ terminal READ;
 terminal GOTO, DO, WHILE;
 terminal INC, DEC, MINUS, MULTIPLY, DIVIDE, MODUO;
 terminal AND, OR;
-terminal COLON, NEW;
+terminal NEW;
 terminal ENUM, RECORD;
 terminal SUPER, THIS, POINT;
 
@@ -90,7 +91,6 @@ terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
 
 
 
-nonterminal StatementList, Statement;
 nonterminal Addop;
 nonterminal ActualPars, ActualParamList;
 nonterminal Matched, Unmatched;
@@ -148,6 +148,12 @@ nonterminal FormalParamList; /* this will represent the whole optional formal pa
    */
 nonterminal FormalParameterDeclaration; /* one formal parameter name, it can be like parName or parName[] */
 
+nonterminal StatementList; /* this will say if there is any statement */
+nonterminal Statement; /* this will represent optionalLabel":" (.5.) or "{" (.6.) "}" */
+/* (.6.) is repeated StatementList in inner block, here we do not worry about the scope, but it represents an inner scope */
+nonterminal Label; /* this will represent label name */
+nonterminal SingleStatement; /* this is collection of all simple statements (.5.) */
+
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
@@ -186,6 +192,9 @@ MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstD
 									|
 									(NoMoreConstDeclarations) /* epsilon */
 									;
+
+/* Type; usage: constants, variables, classes */
+Type ::= (Type) IDENT:typeName;
 
 /* global variables; constructor variables */
 
@@ -272,8 +281,7 @@ ConstructorBody ::= (EmptyConstructorBody) /* epsilon */
 ClassMethodDeclarations ::= (NoClassMethodDecl) /* epsilon */
 							; // fill it with method
 
-/* Type; usage: constants, variables, classes */
-Type ::= (Type) IDENT:typeName;
+
 
 /* methods */
 
@@ -313,24 +321,37 @@ FormalParamList ::= (MultipleFormalParameters) FormalParameterDeclaration COMMA 
 
 FormalParameterDeclaration ::= (FormalParameterDeclaration) Type:parameterType IDENT:parameterName ArrayBrackets;
 
+/* statements */
 
+StatementList ::= (NonEmptyStement) StatementList Statement
+				  |
+				  (NoStatements) /* epsilon */
+				  ;
 
-StatementList ::= (Statements) StatementList Statement
-				|
-				(NoStmt) /* epsilon */
-				;
-
-Statement ::= (MatchedStmt) Matched
+Statement ::= (LabeledSingleStatementMatch) Label COLON SingleStatement
 			  |
-			  (UnmatchedStmt) Unmatched
-  			  ;
+			  (SingleStatementMatch) SingleStatement
+			  |
+			  (StatementBlock) LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET 
+			  ;
+
+SingleStatement ::= (Assignment) Designator:dest ASSIGNMENT Expr:e SEMI;
+
+/* Label; usage: statement */
+Label ::= (Label) IDENT:labelName;
+
+
+//Statement ::= (MatchedStmt) Matched
+//			  |
+//			  (UnmatchedStmt) Unmatched
+// 			  ;
 
 Unmatched ::= (IfStatement) IF Expr Statement
 			  |
 			  (UnmatchedIfElse) IF Expr Matched ELSE Unmatched
 			  ;
 
-Matched ::= (Assignment) Designator:dest ASSIGNMENT Expr:e SEMI
+Matched ::= (AssignmentOLD) Designator:dest ASSIGNMENT Expr:e SEMI
 			  |
 			  (ErrorStmt) error SEMI:l
 			  {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :}
@@ -345,6 +366,7 @@ Matched ::= (Assignment) Designator:dest ASSIGNMENT Expr:e SEMI
               |
 			  (ProcCall) Designator:func LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET SEMI
 			  ;				
+
 
 Expr ::= (AddExpt) Expr:te Addop Term:t
 		|

@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 17:5:24
+// 10/0/2022 18:43:14
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -36,6 +36,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(Statement Statement) { }
     public void visit(ConstructorVarDecl ConstructorVarDecl) { }
     public void visit(MethodDeclList MethodDeclList) { }
+    public void visit(SingleStatement SingleStatement) { }
     public void visit(FormPars FormPars) { }
     public void visit(OptionalExtend OptionalExtend) { }
     public void visit(Addop Addop) { visit(); }
@@ -56,13 +57,16 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(ReturnExpr ReturnExpr) { visit(); }
     public void visit(PrintStmt PrintStmt) { visit(); }
     public void visit(ErrorStmt ErrorStmt) { visit(); }
-    public void visit(Assignment Assignment) { visit(); }
+    public void visit(AssignmentOLD AssignmentOLD) { visit(); }
     public void visit(UnmatchedIfElse UnmatchedIfElse) { visit(); }
     public void visit(IfStatement IfStatement) { visit(); }
-    public void visit(UnmatchedStmt UnmatchedStmt) { visit(); }
-    public void visit(MatchedStmt MatchedStmt) { visit(); }
-    public void visit(NoStmt NoStmt) { visit(); }
-    public void visit(Statements Statements) { visit(); }
+    public void visit(Label Label) { visit(); }
+    public void visit(Assignment Assignment) { visit(); }
+    public void visit(StatementBlock StatementBlock) { visit(); }
+    public void visit(SingleStatementMatch SingleStatementMatch) { visit(); }
+    public void visit(LabeledSingleStatementMatch LabeledSingleStatementMatch) { visit(); }
+    public void visit(NoStatements NoStatements) { visit(); }
+    public void visit(NonEmptyStement NonEmptyStement) { visit(); }
     public void visit(FormalParameterDeclaration FormalParameterDeclaration) { visit(); }
     public void visit(ErrorInListOfFormalParameters ErrorInListOfFormalParameters) { visit(); }
     public void visit(ErrorInOneFormalParameter ErrorInOneFormalParameter) { visit(); }
@@ -78,7 +82,6 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(CorrectMethodDecl CorrectMethodDecl) { visit(); }
     public void visit(EmptyMethodDeclList EmptyMethodDeclList) { visit(); }
     public void visit(NonEmptyMethodDeclList NonEmptyMethodDeclList) { visit(); }
-    public void visit(Type Type) { visit(); }
     public void visit(NoClassMethodDecl NoClassMethodDecl) { visit(); }
     public void visit(EmptyConstructorBody EmptyConstructorBody) { visit(); }
     public void visit(ConstructorHasNotVariables ConstructorHasNotVariables) { visit(); }
@@ -111,6 +114,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(VarDeclMultiple VarDeclMultiple) { visit(); }
     public void visit(VarDeclType VarDeclType) { visit(); }
     public void visit(VarDecl VarDecl) { visit(); }
+    public void visit(Type Type) { visit(); }
     public void visit(NoMoreConstDeclarations NoMoreConstDeclarations) { visit(); }
     public void visit(MoreConstDeclarations MoreConstDeclarations) { visit(); }
     public void visit(CharValue CharValue) { visit(); }

@@ -72,7 +72,15 @@ program MJProgram
 {
 
 	int f1(char c, bool check) char c1, c2; int l; {
-	
+		beginLabel: 
+			
+			l = 0;
+			{
+				innerLabel:
+					l = 0;
+				l = 1;	
+			}
+			outerLabel: l = 0;		
 	}
 
 	void f2(X xarr[], Y yarr[], bool act, A arr[]) X x1; Y y1; A a; {

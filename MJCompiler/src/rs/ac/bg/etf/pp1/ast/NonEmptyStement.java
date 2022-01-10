@@ -1,16 +1,16 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 17:5:24
+// 10/0/2022 18:43:14
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Statements extends StatementList {
+public class NonEmptyStement extends StatementList {
 
     private StatementList StatementList;
     private Statement Statement;
 
-    public Statements (StatementList StatementList, Statement Statement) {
+    public NonEmptyStement (StatementList StatementList, Statement Statement) {
         this.StatementList=StatementList;
         if(StatementList!=null) StatementList.setParent(this);
         this.Statement=Statement;
@@ -57,7 +57,7 @@ public class Statements extends StatementList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Statements(\n");
+        buffer.append("NonEmptyStement(\n");
 
         if(StatementList!=null)
             buffer.append(StatementList.toString("  "+tab));
@@ -72,7 +72,7 @@ public class Statements extends StatementList {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [Statements]");
+        buffer.append(") [NonEmptyStement]");
         return buffer.toString();
     }
 }

@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 17:5:24
+// 10/0/2022 18:43:14
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -36,6 +36,7 @@ public interface Visitor {
     public void visit(Statement Statement);
     public void visit(ConstructorVarDecl ConstructorVarDecl);
     public void visit(MethodDeclList MethodDeclList);
+    public void visit(SingleStatement SingleStatement);
     public void visit(FormPars FormPars);
     public void visit(OptionalExtend OptionalExtend);
     public void visit(Addop Addop);
@@ -56,13 +57,16 @@ public interface Visitor {
     public void visit(ReturnExpr ReturnExpr);
     public void visit(PrintStmt PrintStmt);
     public void visit(ErrorStmt ErrorStmt);
-    public void visit(Assignment Assignment);
+    public void visit(AssignmentOLD AssignmentOLD);
     public void visit(UnmatchedIfElse UnmatchedIfElse);
     public void visit(IfStatement IfStatement);
-    public void visit(UnmatchedStmt UnmatchedStmt);
-    public void visit(MatchedStmt MatchedStmt);
-    public void visit(NoStmt NoStmt);
-    public void visit(Statements Statements);
+    public void visit(Label Label);
+    public void visit(Assignment Assignment);
+    public void visit(StatementBlock StatementBlock);
+    public void visit(SingleStatementMatch SingleStatementMatch);
+    public void visit(LabeledSingleStatementMatch LabeledSingleStatementMatch);
+    public void visit(NoStatements NoStatements);
+    public void visit(NonEmptyStement NonEmptyStement);
     public void visit(FormalParameterDeclaration FormalParameterDeclaration);
     public void visit(ErrorInListOfFormalParameters ErrorInListOfFormalParameters);
     public void visit(ErrorInOneFormalParameter ErrorInOneFormalParameter);
@@ -78,7 +82,6 @@ public interface Visitor {
     public void visit(CorrectMethodDecl CorrectMethodDecl);
     public void visit(EmptyMethodDeclList EmptyMethodDeclList);
     public void visit(NonEmptyMethodDeclList NonEmptyMethodDeclList);
-    public void visit(Type Type);
     public void visit(NoClassMethodDecl NoClassMethodDecl);
     public void visit(EmptyConstructorBody EmptyConstructorBody);
     public void visit(ConstructorHasNotVariables ConstructorHasNotVariables);
@@ -111,6 +114,7 @@ public interface Visitor {
     public void visit(VarDeclMultiple VarDeclMultiple);
     public void visit(VarDeclType VarDeclType);
     public void visit(VarDecl VarDecl);
+    public void visit(Type Type);
     public void visit(NoMoreConstDeclarations NoMoreConstDeclarations);
     public void visit(MoreConstDeclarations MoreConstDeclarations);
     public void visit(CharValue CharValue);

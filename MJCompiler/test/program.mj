@@ -71,11 +71,11 @@ program MJProgram
 	Board b;
 {
 
-	int f1() char c1, c2; int l; {
+	int f1(char c, bool check) char c1, c2; int l; {
 	
 	}
 
-	void f2() X x1; Y y1; A a; {
+	void f2(X xarr[], Y yarr[], bool act, A arr[]) X x1; Y y1; A a; {
 	
 	}
 
@@ -89,7 +89,7 @@ program MJProgram
 	//	return c+2;
 	//}
 
-	//int main() {
+	int main() {
 		
 	//	x = 3;
 		
@@ -104,6 +104,6 @@ program MJProgram
 				
 	//	return 0;
 
-	//}
+	}
 	
 }

@@ -57,10 +57,28 @@ program MJProgram
 	// class extending
 	class A { int fa1, fa2; }
 	class B extends A { char fb1;  }
-	class C extends B { int fc1, fc2; }
+	class C extends B { int fc1, fc2; A theA; }
 	class D extends A { int fd1; }
-		
+	
+	// record
+	record Board {
+		int rows, columns;
+		char color[];
+	}
+	
+	record EmptyRecord {}
+	
+	Board b;
 {
+
+	int f1(char c, bool check) char c1, c2; int l; {
+	
+	}
+
+	void f2(X xa#rr[], Y yarr[], bool ac#t, A ar##r[]) X x1; Y y1; A a; {
+	
+	}
+
 
 	//int k () int c; {
 	//	c = 2;

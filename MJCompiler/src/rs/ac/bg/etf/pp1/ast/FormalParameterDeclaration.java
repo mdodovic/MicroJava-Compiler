@@ -5,15 +5,20 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ConstDeclType implements SyntaxNode {
+public class FormalParameterDeclaration implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
     private Type Type;
+    private String parameterName;
+    private ArrayBrackets ArrayBrackets;
 
-    public ConstDeclType (Type Type) {
+    public FormalParameterDeclaration (Type Type, String parameterName, ArrayBrackets ArrayBrackets) {
         this.Type=Type;
         if(Type!=null) Type.setParent(this);
+        this.parameterName=parameterName;
+        this.ArrayBrackets=ArrayBrackets;
+        if(ArrayBrackets!=null) ArrayBrackets.setParent(this);
     }
 
     public Type getType() {
@@ -22,6 +27,22 @@ public class ConstDeclType implements SyntaxNode {
 
     public void setType(Type Type) {
         this.Type=Type;
+    }
+
+    public String getParameterName() {
+        return parameterName;
+    }
+
+    public void setParameterName(String parameterName) {
+        this.parameterName=parameterName;
+    }
+
+    public ArrayBrackets getArrayBrackets() {
+        return ArrayBrackets;
+    }
+
+    public void setArrayBrackets(ArrayBrackets ArrayBrackets) {
+        this.ArrayBrackets=ArrayBrackets;
     }
 
     public SyntaxNode getParent() {
@@ -46,22 +67,25 @@ public class ConstDeclType implements SyntaxNode {
 
     public void childrenAccept(Visitor visitor) {
         if(Type!=null) Type.accept(visitor);
+        if(ArrayBrackets!=null) ArrayBrackets.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(Type!=null) Type.traverseTopDown(visitor);
+        if(ArrayBrackets!=null) ArrayBrackets.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(Type!=null) Type.traverseBottomUp(visitor);
+        if(ArrayBrackets!=null) ArrayBrackets.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ConstDeclType(\n");
+        buffer.append("FormalParameterDeclaration(\n");
 
         if(Type!=null)
             buffer.append(Type.toString("  "+tab));
@@ -69,8 +93,17 @@ public class ConstDeclType implements SyntaxNode {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
+        buffer.append(" "+tab+parameterName);
+        buffer.append("\n");
+
+        if(ArrayBrackets!=null)
+            buffer.append(ArrayBrackets.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
         buffer.append(tab);
-        buffer.append(") [ConstDeclType]");
+        buffer.append(") [FormalParameterDeclaration]");
         return buffer.toString();
     }
 }

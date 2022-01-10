@@ -135,13 +135,17 @@ nonterminal ConstructorVarDecl; /* local variables for constructor, there error 
 nonterminal ConstructorBody; /* constructor body contains any statement */
 
 nonterminal MethodDeclList; /* list of all methods' declarations */
-nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl; /* returnType methodName "(" ")" localVariables "{" methodBody "}", (first) error handling for formal parameters will be here: all tokens except "{" should be consumed */
+nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl; /* returnType methodName "(" (.4.) localVariables "{" methodBody "}" */
 nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodTypeName; /* this will represent return type and methodName */
 nonterminal MethodReturnType; /* this will represent all possible return types */
 nonterminal MethodVarDecl; /* local variables for method, there error handling is as same as VarDecl */
 
-nonterminal FormPars; /* this will say if the formal parameter list is empty or not*/
-nonterminal FormalParamList; /* this will represent the whole optional formal parameters list, (second) error handling for formal parameters will be here: all tokens except "," should be consumed */
+nonterminal FormPars; /* this will say if the formal parameter list is empty or not (.4.) and match ")" if the formal parameters do not exists*/
+nonterminal FormalParamList; /* this will represent the whole optional formal parameters list, and match ")" after the last formal parameter. */ 
+/* error handling for formal parameters will be in FormalParamList: 
+   all tokens except "," (when the mathcing of the formal parameters is continued) 
+   and ")" (no more formal parameters) should be consumed 
+   */
 nonterminal FormalParameterDeclaration; /* one formal parameter name, it can be like parName or parName[] */
 
 
@@ -278,10 +282,7 @@ MethodDeclList ::= (NonEmptyMethodDeclList) MethodDeclList MethodDecl
 				   (EmptyMethodDeclList) /* epsilon */
 				   ;
 
-MethodDecl ::= (CorrectMethodDecl) MethodTypeName LEFT_ROUND_BRACKET FormPars RIGHT_ROUND_BRACKET MethodVarDecl LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET
-			   |
-			   (ErrorInFormalParametersMethodDecl) MethodTypeName LEFT_ROUND_BRACKET error RIGHT_ROUND_BRACKET MethodVarDecl LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET
-			   ;
+MethodDecl ::= (CorrectMethodDecl) MethodTypeName LEFT_ROUND_BRACKET FormPars MethodVarDecl LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET;
 
 MethodTypeName ::= (MethodTypeName) MethodReturnType IDENT:methName;
 
@@ -298,14 +299,16 @@ MethodVarDecl ::= (MethodHasVariables) MethodVarDecl VarDecl
 
 FormPars ::= (FormalParameters) FormalParamList
 			 |
-			 (NoFormalParameters) /* epsilon */
+			 (NoFormalParameters) RIGHT_ROUND_BRACKET
 			 ;
 			
-FormalParamList ::= (MultipleFormalParameters) FormalParamList COMMA FormalParameterDeclaration
+FormalParamList ::= (MultipleFormalParameters) FormalParameterDeclaration COMMA FormalParamList
 	 				|
-					(SingleFormalParameter) FormalParameterDeclaration
-					|
-					(ErrorInSingleFormalParameter) error COMMA FormalParameterDeclaration
+					(SingleFormalParameter) FormalParameterDeclaration RIGHT_ROUND_BRACKET
+	 				|
+					(ErrorInOneFormalParameter) error COMMA FormalParamList
+	 				|
+					(ErrorInListOfFormalParameters) error RIGHT_ROUND_BRACKET
 					;
 
 FormalParameterDeclaration ::= (FormalParameterDeclaration) Type:parameterType IDENT:parameterName ArrayBrackets;

@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ErrorInVarFromLastPart extends LastVarDecl {
+public class ErrorInListOfFormalParameters extends FormalParamList {
 
-    public ErrorInVarFromLastPart () {
+    public ErrorInListOfFormalParameters () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class ErrorInVarFromLastPart extends LastVarDecl {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ErrorInVarFromLastPart(\n");
+        buffer.append("ErrorInListOfFormalParameters(\n");
 
         buffer.append(tab);
-        buffer.append(") [ErrorInVarFromLastPart]");
+        buffer.append(") [ErrorInListOfFormalParameters]");
         return buffer.toString();
     }
 }

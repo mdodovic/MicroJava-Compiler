@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 12:52:58
+// 10/0/2022 17:5:24
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,9 +9,9 @@ public interface Visitor {
 
     public void visit(Unmatched Unmatched);
     public void visit(ArrayBrackets ArrayBrackets);
+    public void visit(MethodDecl MethodDecl);
     public void visit(ConstructorDecl ConstructorDecl);
     public void visit(Matched Matched);
-    public void visit(FormalParamDecl FormalParamDecl);
     public void visit(ClassFieldsVariables ClassFieldsVariables);
     public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations);
     public void visit(StatementList StatementList);
@@ -63,16 +63,19 @@ public interface Visitor {
     public void visit(MatchedStmt MatchedStmt);
     public void visit(NoStmt NoStmt);
     public void visit(Statements Statements);
-    public void visit(SingleFormalParamDecls SingleFormalParamDecls);
-    public void visit(FormalParamDecls FormalParamDecls);
-    public void visit(NoFormParam NoFormParam);
-    public void visit(FormParams FormParams);
+    public void visit(FormalParameterDeclaration FormalParameterDeclaration);
+    public void visit(ErrorInListOfFormalParameters ErrorInListOfFormalParameters);
+    public void visit(ErrorInOneFormalParameter ErrorInOneFormalParameter);
+    public void visit(SingleFormalParameter SingleFormalParameter);
+    public void visit(MultipleFormalParameters MultipleFormalParameters);
+    public void visit(NoFormalParameters NoFormalParameters);
+    public void visit(FormalParameters FormalParameters);
     public void visit(MethodHasNotVariables MethodHasNotVariables);
     public void visit(MethodHasVariables MethodHasVariables);
     public void visit(VoidType VoidType);
     public void visit(ConcreteType ConcreteType);
     public void visit(MethodTypeName MethodTypeName);
-    public void visit(MethodDecl MethodDecl);
+    public void visit(CorrectMethodDecl CorrectMethodDecl);
     public void visit(EmptyMethodDeclList EmptyMethodDeclList);
     public void visit(NonEmptyMethodDeclList NonEmptyMethodDeclList);
     public void visit(Type Type);

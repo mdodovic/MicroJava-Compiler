@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 10/0/2022 12:52:58
+// 10/0/2022 17:5:24
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,9 +9,9 @@ public abstract class VisitorAdaptor implements Visitor {
 
     public void visit(Unmatched Unmatched) { }
     public void visit(ArrayBrackets ArrayBrackets) { }
+    public void visit(MethodDecl MethodDecl) { }
     public void visit(ConstructorDecl ConstructorDecl) { }
     public void visit(Matched Matched) { }
-    public void visit(FormalParamDecl FormalParamDecl) { }
     public void visit(ClassFieldsVariables ClassFieldsVariables) { }
     public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations) { }
     public void visit(StatementList StatementList) { }
@@ -63,16 +63,19 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(MatchedStmt MatchedStmt) { visit(); }
     public void visit(NoStmt NoStmt) { visit(); }
     public void visit(Statements Statements) { visit(); }
-    public void visit(SingleFormalParamDecls SingleFormalParamDecls) { visit(); }
-    public void visit(FormalParamDecls FormalParamDecls) { visit(); }
-    public void visit(NoFormParam NoFormParam) { visit(); }
-    public void visit(FormParams FormParams) { visit(); }
+    public void visit(FormalParameterDeclaration FormalParameterDeclaration) { visit(); }
+    public void visit(ErrorInListOfFormalParameters ErrorInListOfFormalParameters) { visit(); }
+    public void visit(ErrorInOneFormalParameter ErrorInOneFormalParameter) { visit(); }
+    public void visit(SingleFormalParameter SingleFormalParameter) { visit(); }
+    public void visit(MultipleFormalParameters MultipleFormalParameters) { visit(); }
+    public void visit(NoFormalParameters NoFormalParameters) { visit(); }
+    public void visit(FormalParameters FormalParameters) { visit(); }
     public void visit(MethodHasNotVariables MethodHasNotVariables) { visit(); }
     public void visit(MethodHasVariables MethodHasVariables) { visit(); }
     public void visit(VoidType VoidType) { visit(); }
     public void visit(ConcreteType ConcreteType) { visit(); }
     public void visit(MethodTypeName MethodTypeName) { visit(); }
-    public void visit(MethodDecl MethodDecl) { visit(); }
+    public void visit(CorrectMethodDecl CorrectMethodDecl) { visit(); }
     public void visit(EmptyMethodDeclList EmptyMethodDeclList) { visit(); }
     public void visit(NonEmptyMethodDeclList NonEmptyMethodDeclList) { visit(); }
     public void visit(Type Type) { visit(); }

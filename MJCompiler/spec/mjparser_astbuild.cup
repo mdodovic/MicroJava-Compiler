@@ -138,14 +138,18 @@ nonterminal ConstructorVarDecl ConstructorVarDecl; /* local variables for constr
 nonterminal ConstructorBody ConstructorBody; /* constructor body contains any statement */
 
 nonterminal MethodDeclList MethodDeclList; /* list of all methods' declarations */
-nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl; /* returnType methodName "(" ")" */
+nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl; /* returnType methodName "(" (.4.) localVariables "{" methodBody "}" */
 nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodTypeName; /* this will represent return type and methodName */
 nonterminal MethodReturnType MethodReturnType; /* this will represent all possible return types */
 nonterminal MethodVarDecl MethodVarDecl; /* local variables for method, there error handling is as same as VarDecl */
 
-nonterminal FormPars FormPars;
-nonterminal FormalParamList FormalParamList;
-nonterminal FormalParamDecl FormalParamDecl;
+nonterminal FormPars FormPars; /* this will say if the formal parameter list is empty or not (.4.) and match ")" if the formal parameters do not exists*/
+nonterminal FormalParamList FormalParamList; /* this will represent the whole optional formal parameters list, and match ")" after the last formal parameter. */ 
+/* error handling for formal parameters will be in FormalParamList: 
+   all tokens except "," (when the mathcing of the formal parameters is continued) 
+   and ")" (no more formal parameters) should be consumed 
+   */
+nonterminal FormalParameterDeclaration FormalParameterDeclaration; /* one formal parameter name, it can be like parName or parName[] */
 
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
@@ -281,11 +285,7 @@ MethodDeclList ::= (NonEmptyMethodDeclList) MethodDeclList:M1 MethodDecl:M2 {: R
 				   (EmptyMethodDeclList) {: RESULT=new EmptyMethodDeclList(); :} /* epsilon */
 				   ;
 
-MethodDecl ::= (MethodDecl) MethodTypeName:M1 
-				LEFT_ROUND_BRACKET FormPars:F2 RIGHT_ROUND_BRACKET 
-				MethodVarDecl:M3 
-				LEFT_CURLY_BRACKET StatementList:S4 RIGHT_CURLY_BRACKET {: RESULT=new MethodDecl(M1, F2, M3, S4); RESULT.setLine(M1left); :}
-				;
+MethodDecl ::= (CorrectMethodDecl) MethodTypeName:M1 LEFT_ROUND_BRACKET FormPars:F2 MethodVarDecl:M3 LEFT_CURLY_BRACKET StatementList:S4 RIGHT_CURLY_BRACKET {: RESULT=new CorrectMethodDecl(M1, F2, M3, S4); RESULT.setLine(M1left); :};
 
 MethodTypeName ::= (MethodTypeName) MethodReturnType:M1 IDENT:methName {: RESULT=new MethodTypeName(M1, methName); RESULT.setLine(M1left); :};
 
@@ -300,15 +300,23 @@ MethodVarDecl ::= (MethodHasVariables) MethodVarDecl:M1 VarDecl:V2 {: RESULT=new
 				  ;
 
 
-FormPars ::= (FormParams) FormalParamList:F1 {: RESULT=new FormParams(F1); RESULT.setLine(F1left); :}
-			|
-			(NoFormParam) {: RESULT=new NoFormParam(); :} /* epsilon */
-			;
+FormPars ::= (FormalParameters) FormalParamList:F1 {: RESULT=new FormalParameters(F1); RESULT.setLine(F1left); :}
+			 |
+			 (NoFormalParameters) RIGHT_ROUND_BRACKET {: RESULT=new NoFormalParameters(); :}
+			 ;
 			
-FormalParamList ::= (FormalParamDecls) FormalParamList:F1 COMMA FormalParamDecl:F2 {: RESULT=new FormalParamDecls(F1, F2); RESULT.setLine(F1left); :}
-				|
-				(SingleFormalParamDecls) FormalParamDecl:F1 {: RESULT=new SingleFormalParamDecls(F1); RESULT.setLine(F1left); :}
-				;
+FormalParamList ::= (MultipleFormalParameters) FormalParameterDeclaration:F1 COMMA FormalParamList:F2 {: RESULT=new MultipleFormalParameters(F1, F2); RESULT.setLine(F1left); :}
+	 				|
+					(SingleFormalParameter) FormalParameterDeclaration:F1 RIGHT_ROUND_BRACKET {: RESULT=new SingleFormalParameter(F1); RESULT.setLine(F1left); :}
+	 				|
+					(ErrorInOneFormalParameter) error COMMA FormalParamList:F1 {: RESULT=new ErrorInOneFormalParameter(F1); RESULT.setLine(F1left); :}
+	 				|
+					(ErrorInListOfFormalParameters) error RIGHT_ROUND_BRACKET {: RESULT=new ErrorInListOfFormalParameters(); :}
+					;
+
+FormalParameterDeclaration ::= (FormalParameterDeclaration) Type:parameterType IDENT:parameterName ArrayBrackets:A1 {: RESULT=new FormalParameterDeclaration(parameterType, parameterName, A1); RESULT.setLine(parameterTypeleft); :};
+
+
 
 StatementList ::= (Statements) StatementList:S1 Statement:S2 {: RESULT=new Statements(S1, S2); RESULT.setLine(S1left); :}
 				|

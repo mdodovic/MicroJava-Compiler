@@ -59,11 +59,17 @@ program MJProgram
 			}
 			
 			int foo(int p1, char p2) {
-				if(p2 == 'a')
-					fa1 = p1;
-				else //{
-					fa2 = p1;
-				// return fa2;
+				if(p2 != '0')
+				{
+					if(p2 == 'a')
+						fa1 = p1;
+					else {
+						fa2 = p1;
+						return fa2;
+					}
+					return fa1;
+				}
+				return 0;
 			} 
 			void bar() {
 				// print()
@@ -80,7 +86,7 @@ program MJProgram
 			
 			int foo(int p1, char p2) {
 			do{
-				//if(x <= 0) break;
+				if(x <= 0) break;
 				if (0 <= x && x < size)
 				{
 					val.putp(val.getp(x)+1);
@@ -88,6 +94,7 @@ program MJProgram
 				else if (-size < x && x < 0)
 				{
 					val.putn(val.getn(-x)+1);
+					continue;
 				}
 				//read(x);
 			} while(true);

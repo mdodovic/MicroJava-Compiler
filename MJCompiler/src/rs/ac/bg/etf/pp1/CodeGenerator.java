@@ -10,8 +10,8 @@ import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
 import rs.ac.bg.etf.pp1.ast.PrintStmt;
-import rs.ac.bg.etf.pp1.ast.ReturnExpr;
-import rs.ac.bg.etf.pp1.ast.ReturnNoExpr;
+import rs.ac.bg.etf.pp1.ast.StatementReturnEmpty;
+import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.etf.pp1.mj.runtime.Code;
@@ -119,14 +119,14 @@ public class CodeGenerator extends VisitorAdaptor{
 
 	}
 	
-	@Override
-	public void visit(ReturnExpr returnExpr) {
+    @Override
+    public void visit(StetementReturnExpression returnExpr) {
 		Code.put(Code.exit);
 		Code.put(Code.return_);
 	}
 	
 	@Override
-	public void visit(ReturnNoExpr returnNoExpr) {
+	public void visit(StatementReturnEmpty statementReturnEmpty) {
 		Code.put(Code.exit);
 		Code.put(Code.return_);
 	}

@@ -72,6 +72,9 @@ terminal IF; /* "if" */
 terminal ELSE; /* "else" */
 terminal DO; /* "do" */
 terminal WHILE; /* "while" */
+terminal BREAK; /* "break" */
+terminal CONTINUE; /* "continue" */
+terminal RETURN; /* "return" */
 
 terminal CHAR_CONST; /* char value: 'a', ... */ 
 terminal BOOL_CONST; /* bool value: true/false*/
@@ -100,14 +103,12 @@ terminal GREATER; /* ">" */
 terminal GREATER_EQUAL; /* ">=" */
 terminal LESS_EQUAL; /* "<=" */
 
-terminal PRINT, RETURN;
+terminal PRINT;
 
 terminal READ;
 terminal GOTO;
 terminal ENUM, RECORD;
 terminal SUPER, THIS;
-
-terminal BREAK, CONTINUE;
 
 
 
@@ -403,6 +404,14 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new S
 					(StatementIfElse) IfCondition:I1 Statement:S2 ELSE Statement:S3 {: RESULT=new StatementIfElse(I1, S2, S3); RESULT.setLine(I1left); :}
 					|
 					(StatementDoWhile) DO Statement:S1 WHILE LEFT_ROUND_BRACKET Condition:C2 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementDoWhile(S1, C2); RESULT.setLine(S1left); :}
+					|
+					(StatementBreak) BREAK SEMI {: RESULT=new StatementBreak(); :}
+					|
+					(StatementContinue) CONTINUE SEMI {: RESULT=new StatementContinue(); :}
+					|
+					(StatementReturnEmpty) RETURN SEMI {: RESULT=new StatementReturnEmpty(); :}
+					|
+					(StetementReturnExpression) RETURN Expr:t SEMI {: RESULT=new StetementReturnExpression(t); RESULT.setLine(tleft); :}
 					;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition:C1 RIGHT_ROUND_BRACKET {: RESULT=new IfPart(C1); RESULT.setLine(C1left); :}
@@ -506,10 +515,6 @@ Unmatched ::= (IfStatement) IF Expr:E1 Statement:S2 {: RESULT=new IfStatement(E1
 			  ;
 
 Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr:E1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
-			  |
-			  (ReturnExpr) RETURN Expr:t SEMI {: RESULT=new ReturnExpr(t); RESULT.setLine(tleft); :}
-			  |
-			  (ReturnNoExpr) RETURN SEMI {: RESULT=new ReturnNoExpr(); :}
 			  |
 			  (MatchedStatement) IF Expr:E1 Matched:M2 ELSE Matched:M3 {: RESULT=new MatchedStatement(E1, M2, M3); RESULT.setLine(E1left); :}
 			  ;				

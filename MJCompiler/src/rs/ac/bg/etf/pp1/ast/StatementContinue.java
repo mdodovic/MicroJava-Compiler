@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ErrorInVarFromMultiplePart extends NotLastVarDecl {
+public class StatementContinue extends SingleStatement {
 
-    public ErrorInVarFromMultiplePart () {
+    public StatementContinue () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class ErrorInVarFromMultiplePart extends NotLastVarDecl {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ErrorInVarFromMultiplePart(\n");
+        buffer.append("StatementContinue(\n");
 
         buffer.append(tab);
-        buffer.append(") [ErrorInVarFromMultiplePart]");
+        buffer.append(") [StatementContinue]");
         return buffer.toString();
     }
 }

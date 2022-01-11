@@ -72,6 +72,9 @@ terminal IF; /* "if" */
 terminal ELSE; /* "else" */
 terminal DO; /* "do" */
 terminal WHILE; /* "while" */
+terminal BREAK; /* "break" */
+terminal CONTINUE; /* "continue" */
+terminal RETURN; /* "return" */
 
 terminal CHAR_CONST; /* char value: 'a', ... */ 
 terminal BOOL_CONST; /* bool value: true/false*/
@@ -100,14 +103,12 @@ terminal GREATER; /* ">" */
 terminal GREATER_EQUAL; /* ">=" */
 terminal LESS_EQUAL; /* "<=" */
 
-terminal PRINT, RETURN;
+terminal PRINT;
 
 terminal READ;
 terminal GOTO;
 terminal ENUM, RECORD;
 terminal SUPER, THIS;
-
-terminal BREAK, CONTINUE;
 
 
 
@@ -402,6 +403,14 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement
 					(StatementIfElse) IfCondition Statement ELSE Statement
 					|
 					(StatementDoWhile) DO Statement WHILE LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET SEMI
+					|
+					(StatementBreak) BREAK SEMI
+					|
+					(StatementContinue) CONTINUE SEMI
+					|
+					(StatementReturnEmpty) RETURN SEMI
+					|
+					(StetementReturnExpression) RETURN Expr:t SEMI
 					;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET
@@ -505,10 +514,6 @@ Unmatched ::= (IfStatement) IF Expr Statement
 			  ;
 
 Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr RIGHT_ROUND_BRACKET SEMI
-			  |
-			  (ReturnExpr) RETURN Expr:t SEMI
-			  |
-			  (ReturnNoExpr) RETURN SEMI
 			  |
 			  (MatchedStatement) IF Expr Matched ELSE Matched
 			  ;				

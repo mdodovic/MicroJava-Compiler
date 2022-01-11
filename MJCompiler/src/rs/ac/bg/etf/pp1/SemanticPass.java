@@ -170,7 +170,7 @@ public class SemanticPass extends VisitorAdaptor {
     }
 
     @Override
-    public void visit(ReturnExpr returnExpr){
+    public void visit(StetementReturnExpression returnExpr) {
     	returnFound = true;
     	Struct currMethType = currentMethod.getType();
     	if(!currMethType.compatibleWith(returnExpr.getExpr().struct)){

@@ -280,7 +280,28 @@ OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
 
 ClassBody ::= (ClassBodyNoConstructorNoMethod) LEFT_CURLY_BRACKET ClassFieldsVariables RIGHT_CURLY_BRACKET
 			  |
-			  (ClassFullBody) LEFT_CURLY_BRACKET ClassFieldsVariables LEFT_CURLY_BRACKET ConstructorDecl ClassMethodDeclarations RIGHT_CURLY_BRACKET RIGHT_CURLY_BRACKET
+			  (ClassFullBody1) LEFT_CURLY_BRACKET ClassFieldsVariables LEFT_CURLY_BRACKET 
+			  						
+									  IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET 
+									  
+									RIGHT_CURLY_BRACKET 
+							    RIGHT_CURLY_BRACKET
+			  |
+			  (ClassFullBody2) LEFT_CURLY_BRACKET ClassFieldsVariables LEFT_CURLY_BRACKET 
+			  						
+									  ClassMethodDeclarations 
+
+									RIGHT_CURLY_BRACKET 
+								RIGHT_CURLY_BRACKET
+			  |
+			  (ClassFullBody3) LEFT_CURLY_BRACKET ClassFieldsVariables LEFT_CURLY_BRACKET 
+			  
+			  							IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET 
+										  
+										ClassMethodDeclarations  
+
+									RIGHT_CURLY_BRACKET 
+								RIGHT_CURLY_BRACKET
 			  ;
 
 ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables ClassVarDecl
@@ -301,7 +322,7 @@ ClassVarDeclList ::= (ClassVarDeclMultiple) ClassVarDeclList COMMA ClassSingleVa
 ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:varName ArrayBrackets;
 
 
-ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl LEFT_CURLY_BRACKET ConstructorBody RIGHT_CURLY_BRACKET
+ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET
 					|
 					(NoClassConstructor) /* epsilon */
 					; 
@@ -314,9 +335,11 @@ ConstructorVarDecl ::= (ConstructorHasVariables) ConstructorVarDecl VarDecl
 ConstructorBody ::= (EmptyConstructorBody) /* epsilon */
 					; // Fill it with statement
 
-ClassMethodDeclarations ::= (NoClassMethodDecl) /* epsilon */
-							; // fill it with method
 
+ClassMethodDeclarations ::= (CLaNonEmptyMethodDeclList) ClassMethodDeclarations MethodDecl
+				   |
+				   (CLaaaEmptyMethodDeclList) MethodDecl
+				   ;
 
 
 /* methods */

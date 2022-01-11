@@ -9,7 +9,6 @@ import rs.ac.bg.etf.pp1.ast.FactorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
-import rs.ac.bg.etf.pp1.ast.PrintStmt;
 import rs.ac.bg.etf.pp1.ast.StatementReturnEmpty;
 import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
@@ -26,7 +25,7 @@ public class CodeGenerator extends VisitorAdaptor{
 		return mainPc;
 	}
 	
-	@Override
+/*	@Override
 	public void visit(PrintStmt printStmt) {	
 		if(printStmt.getExpr().struct == Tab.intType) {
 			Code.loadConst(5);
@@ -36,7 +35,7 @@ public class CodeGenerator extends VisitorAdaptor{
 			Code.put(Code.bprint);
 		}
 	}
-	
+*/	
 	@Override
 	public void visit(FactorNumConst cnst) {
 		Obj con = Tab.insert(Obj.Con, "$", cnst.struct);

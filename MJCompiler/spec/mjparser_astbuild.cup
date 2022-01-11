@@ -59,6 +59,7 @@ terminal VOID; /* "void" */
 terminal CLASS; /* "class" */
 terminal EXTENDS; /* "extends" */
 terminal NEW; /* "new" */
+terminal RECORD; /* "record" */
 
 terminal SEMI; /* ";" */
 terminal COLON; /* ":" */
@@ -75,6 +76,9 @@ terminal WHILE; /* "while" */
 terminal BREAK; /* "break" */
 terminal CONTINUE; /* "continue" */
 terminal RETURN; /* "return" */
+
+terminal PRINT; /* "print" */
+terminal READ; /* "read" */
 
 terminal CHAR_CONST; /* char value: 'a', ... */ 
 terminal BOOL_CONST; /* bool value: true/false*/
@@ -103,13 +107,11 @@ terminal GREATER; /* ">" */
 terminal GREATER_EQUAL; /* ">=" */
 terminal LESS_EQUAL; /* "<=" */
 
-terminal PRINT;
-
-terminal READ;
 terminal GOTO;
-terminal ENUM, RECORD;
-terminal SUPER, THIS;
 
+terminal ENUM;
+terminal SUPER;
+terminal THIS;
 
 
 nonterminal Matched Matched;
@@ -412,6 +414,10 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new S
 					(StatementReturnEmpty) RETURN SEMI {: RESULT=new StatementReturnEmpty(); :}
 					|
 					(StetementReturnExpression) RETURN Expr:t SEMI {: RESULT=new StetementReturnExpression(t); RESULT.setLine(tleft); :}
+					|
+					(StatementPrintNoWidth) PRINT LEFT_ROUND_BRACKET Expr:E1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementPrintNoWidth(E1); RESULT.setLine(E1left); :}
+					|
+					(StatementPrintWithWidth) PRINT LEFT_ROUND_BRACKET Expr:E1 COMMA NUMBER:N2 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementPrintWithWidth(E1, N2); RESULT.setLine(E1left); :}
 					;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition:C1 RIGHT_ROUND_BRACKET {: RESULT=new IfPart(C1); RESULT.setLine(C1left); :}
@@ -514,9 +520,7 @@ Unmatched ::= (IfStatement) IF Expr:E1 Statement:S2 {: RESULT=new IfStatement(E1
 			  (UnmatchedIfElse) IF Expr:E1 Matched:M2 ELSE Unmatched:U3 {: RESULT=new UnmatchedIfElse(E1, M2, U3); RESULT.setLine(E1left); :}
 			  ;
 
-Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr:E1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new PrintStmt(E1); RESULT.setLine(E1left); :}
-			  |
-			  (MatchedStatement) IF Expr:E1 Matched:M2 ELSE Matched:M3 {: RESULT=new MatchedStatement(E1, M2, M3); RESULT.setLine(E1left); :}
+Matched ::=   (MatchedStatement) IF Expr:E1 Matched:M2 ELSE Matched:M3 {: RESULT=new MatchedStatement(E1, M2, M3); RESULT.setLine(E1left); :}
 			  ;				
 
 

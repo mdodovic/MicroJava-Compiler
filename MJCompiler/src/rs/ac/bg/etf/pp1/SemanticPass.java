@@ -47,13 +47,22 @@ public class SemanticPass extends VisitorAdaptor {
 		// Obj varNode = Tab.insert(Obj.Var, varDecl.getVarName(), varDecl.getType().struct);
 	}
 	
-    public void visit(PrintStmt print) {
-    	
+	@Override
+	public void visit(StatementPrintNoWidth print) {
     	if(print.getExpr().struct != Tab.intType && print.getExpr().struct != Tab.charType) 
     		report_error ("Semanticka greska na liniji " + print.getLine() + ": Operand instrukcije PRINT mora biti char ili int tipa", null);
     	
     	printCallCount++;			
 	}
+
+	@Override
+	public void visit(StatementPrintWithWidth print) {
+    	if(print.getExpr().struct != Tab.intType && print.getExpr().struct != Tab.charType) 
+    		report_error ("Semanticka greska na liniji " + print.getLine() + ": Operand instrukcije PRINT mora biti char ili int tipa", null);
+    	
+    	printCallCount++;			
+	}
+
     
     @Override
     public void visit(ProgName progName) {

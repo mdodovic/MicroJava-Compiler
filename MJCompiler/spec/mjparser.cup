@@ -59,6 +59,7 @@ terminal VOID; /* "void" */
 terminal CLASS; /* "class" */
 terminal EXTENDS; /* "extends" */
 terminal NEW; /* "new" */
+terminal RECORD; /* "record" */
 
 terminal SEMI; /* ";" */
 terminal COLON; /* ":" */
@@ -75,6 +76,9 @@ terminal WHILE; /* "while" */
 terminal BREAK; /* "break" */
 terminal CONTINUE; /* "continue" */
 terminal RETURN; /* "return" */
+
+terminal PRINT; /* "print" */
+terminal READ; /* "read" */
 
 terminal CHAR_CONST; /* char value: 'a', ... */ 
 terminal BOOL_CONST; /* bool value: true/false*/
@@ -103,13 +107,11 @@ terminal GREATER; /* ">" */
 terminal GREATER_EQUAL; /* ">=" */
 terminal LESS_EQUAL; /* "<=" */
 
-terminal PRINT;
-
-terminal READ;
 terminal GOTO;
-terminal ENUM, RECORD;
-terminal SUPER, THIS;
 
+terminal ENUM;
+terminal SUPER;
+terminal THIS;
 
 
 nonterminal Matched, Unmatched;
@@ -411,6 +413,10 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement
 					(StatementReturnEmpty) RETURN SEMI
 					|
 					(StetementReturnExpression) RETURN Expr:t SEMI
+					|
+					(StatementPrintNoWidth) PRINT LEFT_ROUND_BRACKET Expr RIGHT_ROUND_BRACKET SEMI
+					|
+					(StatementPrintWithWidth) PRINT LEFT_ROUND_BRACKET Expr COMMA NUMBER RIGHT_ROUND_BRACKET SEMI
 					;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET
@@ -513,9 +519,7 @@ Unmatched ::= (IfStatement) IF Expr Statement
 			  (UnmatchedIfElse) IF Expr Matched ELSE Unmatched
 			  ;
 
-Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr RIGHT_ROUND_BRACKET SEMI
-			  |
-			  (MatchedStatement) IF Expr Matched ELSE Matched
+Matched ::=   (MatchedStatement) IF Expr Matched ELSE Matched
 			  ;				
 
 

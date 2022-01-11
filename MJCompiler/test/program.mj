@@ -72,7 +72,9 @@ program MJProgram
 				return 0;
 			} 
 			void bar() {
-				// print()
+				print(fa1);
+				print(fa2, 4);
+				
 			} 
 		} 
 	}
@@ -105,7 +107,13 @@ program MJProgram
 	class C extends B { int fc1, fc2; A theA; }
 	class D extends A { int fd1; }
 
-			
+	C c;			
 {
-
+	void main() {
+		x = new int[3];
+		c = new C;
+		//read(c.i);
+		//read(x[i]);
+			
+	}
 }

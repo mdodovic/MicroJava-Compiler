@@ -5,24 +5,15 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class FactorNewOperator extends Factor {
+public class StatementPrintWithWidth extends SingleStatement {
 
-    private Type Type;
     private Expr Expr;
+    private Integer N2;
 
-    public FactorNewOperator (Type Type, Expr Expr) {
-        this.Type=Type;
-        if(Type!=null) Type.setParent(this);
+    public StatementPrintWithWidth (Expr Expr, Integer N2) {
         this.Expr=Expr;
         if(Expr!=null) Expr.setParent(this);
-    }
-
-    public Type getType() {
-        return Type;
-    }
-
-    public void setType(Type Type) {
-        this.Type=Type;
+        this.N2=N2;
     }
 
     public Expr getExpr() {
@@ -33,23 +24,28 @@ public class FactorNewOperator extends Factor {
         this.Expr=Expr;
     }
 
+    public Integer getN2() {
+        return N2;
+    }
+
+    public void setN2(Integer N2) {
+        this.N2=N2;
+    }
+
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Type!=null) Type.accept(visitor);
         if(Expr!=null) Expr.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Type!=null) Type.traverseTopDown(visitor);
         if(Expr!=null) Expr.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Type!=null) Type.traverseBottomUp(visitor);
         if(Expr!=null) Expr.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -57,13 +53,7 @@ public class FactorNewOperator extends Factor {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("FactorNewOperator(\n");
-
-        if(Type!=null)
-            buffer.append(Type.toString("  "+tab));
-        else
-            buffer.append(tab+"  null");
-        buffer.append("\n");
+        buffer.append("StatementPrintWithWidth(\n");
 
         if(Expr!=null)
             buffer.append(Expr.toString("  "+tab));
@@ -71,8 +61,11 @@ public class FactorNewOperator extends Factor {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
+        buffer.append(" "+tab+N2);
+        buffer.append("\n");
+
         buffer.append(tab);
-        buffer.append(") [FactorNewOperator]");
+        buffer.append(") [StatementPrintWithWidth]");
         return buffer.toString();
     }
 }

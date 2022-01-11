@@ -418,6 +418,8 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new S
 					(StatementPrintNoWidth) PRINT LEFT_ROUND_BRACKET Expr:E1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementPrintNoWidth(E1); RESULT.setLine(E1left); :}
 					|
 					(StatementPrintWithWidth) PRINT LEFT_ROUND_BRACKET Expr:E1 COMMA NUMBER:N2 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementPrintWithWidth(E1, N2); RESULT.setLine(E1left); :}
+					|
+					(StatementRead) READ LEFT_ROUND_BRACKET Designator:D1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementRead(D1); RESULT.setLine(D1left); :}
 					;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition:C1 RIGHT_ROUND_BRACKET {: RESULT=new IfPart(C1); RESULT.setLine(C1left); :}
@@ -493,7 +495,9 @@ Factor ::= (FactorVariable) Designator:variableName {: RESULT=new FactorVariable
 		   |
 		   (FactorBoolConst) BOOL_CONST:constValue {: RESULT=new FactorBoolConst(); :}
 		   |
-		   (FactorNewOperator) NEW Type:arrayName LEFT_SQUARE_BRACKET Expr:arrayIndex RIGHT_SQUARE_BRACKET {: RESULT=new FactorNewOperator(arrayName, arrayIndex); RESULT.setLine(arrayNameleft); :}
+		   (FactorClassNewOperator) NEW Type:className {: RESULT=new FactorClassNewOperator(className); RESULT.setLine(classNameleft); :}
+		   |
+		   (FactorArrayNewOperator) NEW Type:arrayName LEFT_SQUARE_BRACKET Expr:arrayIndex RIGHT_SQUARE_BRACKET {: RESULT=new FactorArrayNewOperator(arrayName, arrayIndex); RESULT.setLine(arrayNameleft); :}
 		   |
 		   (FactorBracketExpression) LEFT_ROUND_BRACKET Expr:innerExpression RIGHT_ROUND_BRACKET {: RESULT=new FactorBracketExpression(innerExpression); RESULT.setLine(innerExpressionleft); :}
 		   ;

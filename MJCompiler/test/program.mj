@@ -112,8 +112,9 @@ program MJProgram
 	void main() {
 		x = new int[3];
 		c = new C;
-		//read(c.i);
-		//read(x[i]);
+		read(c.i);
+		read(x[c.i]);
+		read(a);
 			
 	}
 }

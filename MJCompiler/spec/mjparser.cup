@@ -417,6 +417,8 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement
 					(StatementPrintNoWidth) PRINT LEFT_ROUND_BRACKET Expr RIGHT_ROUND_BRACKET SEMI
 					|
 					(StatementPrintWithWidth) PRINT LEFT_ROUND_BRACKET Expr COMMA NUMBER RIGHT_ROUND_BRACKET SEMI
+					|
+					(StatementRead) READ LEFT_ROUND_BRACKET Designator RIGHT_ROUND_BRACKET SEMI
 					;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET

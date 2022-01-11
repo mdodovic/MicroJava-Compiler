@@ -5,24 +5,24 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ActualParams extends ActualParamList {
+public class FactorArrayNewOperator extends Factor {
 
-    private ActualParamList ActualParamList;
+    private Type Type;
     private Expr Expr;
 
-    public ActualParams (ActualParamList ActualParamList, Expr Expr) {
-        this.ActualParamList=ActualParamList;
-        if(ActualParamList!=null) ActualParamList.setParent(this);
+    public FactorArrayNewOperator (Type Type, Expr Expr) {
+        this.Type=Type;
+        if(Type!=null) Type.setParent(this);
         this.Expr=Expr;
         if(Expr!=null) Expr.setParent(this);
     }
 
-    public ActualParamList getActualParamList() {
-        return ActualParamList;
+    public Type getType() {
+        return Type;
     }
 
-    public void setActualParamList(ActualParamList ActualParamList) {
-        this.ActualParamList=ActualParamList;
+    public void setType(Type Type) {
+        this.Type=Type;
     }
 
     public Expr getExpr() {
@@ -38,18 +38,18 @@ public class ActualParams extends ActualParamList {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(ActualParamList!=null) ActualParamList.accept(visitor);
+        if(Type!=null) Type.accept(visitor);
         if(Expr!=null) Expr.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(ActualParamList!=null) ActualParamList.traverseTopDown(visitor);
+        if(Type!=null) Type.traverseTopDown(visitor);
         if(Expr!=null) Expr.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(ActualParamList!=null) ActualParamList.traverseBottomUp(visitor);
+        if(Type!=null) Type.traverseBottomUp(visitor);
         if(Expr!=null) Expr.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -57,10 +57,10 @@ public class ActualParams extends ActualParamList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ActualParams(\n");
+        buffer.append("FactorArrayNewOperator(\n");
 
-        if(ActualParamList!=null)
-            buffer.append(ActualParamList.toString("  "+tab));
+        if(Type!=null)
+            buffer.append(Type.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
@@ -72,7 +72,7 @@ public class ActualParams extends ActualParamList {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [ActualParams]");
+        buffer.append(") [FactorArrayNewOperator]");
         return buffer.toString();
     }
 }

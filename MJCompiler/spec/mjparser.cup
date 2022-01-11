@@ -492,7 +492,9 @@ Factor ::= (FactorVariable) Designator:variableName
 		   |
 		   (FactorBoolConst) BOOL_CONST:constValue
 		   |
-		   (FactorNewOperator) NEW Type:arrayName LEFT_SQUARE_BRACKET Expr:arrayIndex RIGHT_SQUARE_BRACKET
+		   (FactorClassNewOperator) NEW Type:className
+		   |
+		   (FactorArrayNewOperator) NEW Type:arrayName LEFT_SQUARE_BRACKET Expr:arrayIndex RIGHT_SQUARE_BRACKET
 		   |
 		   (FactorBracketExpression) LEFT_ROUND_BRACKET Expr:innerExpression RIGHT_ROUND_BRACKET
 		   ;

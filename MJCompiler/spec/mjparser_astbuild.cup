@@ -77,8 +77,8 @@ terminal LEFT_ROUND_BRACKET, RIGHT_ROUND_BRACKET; /* "("")" */
 terminal LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET; /* "[""]" */
 terminal LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET; /* "{""}" */
 
-terminal INC;
-terminal DEC;
+terminal INC; /* "++" */
+terminal DEC; /* "--" */
 terminal PLUS; /* "+" */
 terminal MINUS; /* "-" */
 terminal MULTIPLY; /* "*" */
@@ -366,6 +366,10 @@ DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT E
 					    {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :} {: RESULT=new ErrorInDesignatorAssignOperation(); :}
 						|
 						(DesignatorFunctionCall) Designator:functionName LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new DesignatorFunctionCall(functionName, A1); RESULT.setLine(functionNameleft); :}
+						|
+						(DesignatorPostIncrement) Designator:variableName INC SEMI {: RESULT=new DesignatorPostIncrement(variableName); RESULT.setLine(variableNameleft); :}
+						|
+						(DesignatorPostDecrement) Designator:variableName DEC SEMI {: RESULT=new DesignatorPostDecrement(variableName); RESULT.setLine(variableNameleft); :}
 						;
 
 Designator ::= (ClassFieldDesignator) Designator:D1 POINT IDENT:leftField {: RESULT=new ClassFieldDesignator(D1, leftField); RESULT.setLine(D1left); :}

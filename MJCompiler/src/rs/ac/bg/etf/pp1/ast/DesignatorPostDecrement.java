@@ -5,11 +5,11 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class FactorVariable extends Factor {
+public class DesignatorPostDecrement extends DesignatorStatement {
 
     private Designator Designator;
 
-    public FactorVariable (Designator Designator) {
+    public DesignatorPostDecrement (Designator Designator) {
         this.Designator=Designator;
         if(Designator!=null) Designator.setParent(this);
     }
@@ -43,7 +43,7 @@ public class FactorVariable extends Factor {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("FactorVariable(\n");
+        buffer.append("DesignatorPostDecrement(\n");
 
         if(Designator!=null)
             buffer.append(Designator.toString("  "+tab));
@@ -52,7 +52,7 @@ public class FactorVariable extends Factor {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [FactorVariable]");
+        buffer.append(") [DesignatorPostDecrement]");
         return buffer.toString();
     }
 }

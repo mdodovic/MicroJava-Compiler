@@ -124,6 +124,12 @@ program MJProgram
 		
 		c = f2(c1, arrx, arry, true, null);
 		
+		f1('a', objC.theA.fa2);
+		f2(c1, arrx, arry, true, null);
+		
+		arr1[c2]++;
+		arr1[objC.theA.fa2]--;
+		
 	//	x = 3;
 		
 	//	print(1);

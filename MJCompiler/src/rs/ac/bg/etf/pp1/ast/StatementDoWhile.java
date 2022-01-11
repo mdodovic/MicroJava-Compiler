@@ -5,24 +5,16 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class IfStatement extends Unmatched {
+public class StatementDoWhile extends SingleStatement {
 
-    private Expr Expr;
     private Statement Statement;
+    private Condition Condition;
 
-    public IfStatement (Expr Expr, Statement Statement) {
-        this.Expr=Expr;
-        if(Expr!=null) Expr.setParent(this);
+    public StatementDoWhile (Statement Statement, Condition Condition) {
         this.Statement=Statement;
         if(Statement!=null) Statement.setParent(this);
-    }
-
-    public Expr getExpr() {
-        return Expr;
-    }
-
-    public void setExpr(Expr Expr) {
-        this.Expr=Expr;
+        this.Condition=Condition;
+        if(Condition!=null) Condition.setParent(this);
     }
 
     public Statement getStatement() {
@@ -33,37 +25,39 @@ public class IfStatement extends Unmatched {
         this.Statement=Statement;
     }
 
+    public Condition getCondition() {
+        return Condition;
+    }
+
+    public void setCondition(Condition Condition) {
+        this.Condition=Condition;
+    }
+
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Expr!=null) Expr.accept(visitor);
         if(Statement!=null) Statement.accept(visitor);
+        if(Condition!=null) Condition.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Expr!=null) Expr.traverseTopDown(visitor);
         if(Statement!=null) Statement.traverseTopDown(visitor);
+        if(Condition!=null) Condition.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Expr!=null) Expr.traverseBottomUp(visitor);
         if(Statement!=null) Statement.traverseBottomUp(visitor);
+        if(Condition!=null) Condition.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("IfStatement(\n");
-
-        if(Expr!=null)
-            buffer.append(Expr.toString("  "+tab));
-        else
-            buffer.append(tab+"  null");
-        buffer.append("\n");
+        buffer.append("StatementDoWhile(\n");
 
         if(Statement!=null)
             buffer.append(Statement.toString("  "+tab));
@@ -71,8 +65,14 @@ public class IfStatement extends Unmatched {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
+        if(Condition!=null)
+            buffer.append(Condition.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
         buffer.append(tab);
-        buffer.append(") [IfStatement]");
+        buffer.append(") [StatementDoWhile]");
         return buffer.toString();
     }
 }

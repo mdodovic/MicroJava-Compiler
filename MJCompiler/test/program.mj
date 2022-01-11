@@ -79,11 +79,19 @@ program MJProgram
 			}
 			
 			int foo(int p1, char p2) {
-				if(p2 == 'a')
-					fa1 = p1;
-				else //{
-					fa2 = p1;
-				// return fa2;
+			do{
+				//if(x <= 0) break;
+				if (0 <= x && x < size)
+				{
+					val.putp(val.getp(x)+1);
+				}
+				else if (-size < x && x < 0)
+				{
+					val.putn(val.getn(-x)+1);
+				}
+				//read(x);
+			} while(true);
+
 			} 
 		} 	
 	}

@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 12:27:36
+// 11/0/2022 12:38:53
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -100,6 +100,7 @@ public interface Visitor {
     public void visit(OrOpCondTermList OrOpCondTermList);
     public void visit(ErrorInCondition ErrorInCondition);
     public void visit(IfPart IfPart);
+    public void visit(StatementDoWhile StatementDoWhile);
     public void visit(StatementIfElse StatementIfElse);
     public void visit(StatementIf StatementIf);
     public void visit(StatementDesignator StatementDesignator);

@@ -70,6 +70,8 @@ terminal ASSIGNMENT; /* "=" */
 
 terminal IF; /* "if" */
 terminal ELSE; /* "else" */
+terminal DO; /* "do" */
+terminal WHILE; /* "while" */
 
 terminal CHAR_CONST; /* char value: 'a', ... */ 
 terminal BOOL_CONST; /* bool value: true/false*/
@@ -101,8 +103,7 @@ terminal LESS_EQUAL; /* "<=" */
 terminal PRINT, RETURN;
 
 terminal READ;
-terminal GOTO, DO, WHILE;
-
+terminal GOTO;
 terminal ENUM, RECORD;
 terminal SUPER, THIS;
 
@@ -400,6 +401,8 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new S
 					(StatementIf) IfCondition:I1 Statement:S2 {: RESULT=new StatementIf(I1, S2); RESULT.setLine(I1left); :}
 					|
 					(StatementIfElse) IfCondition:I1 Statement:S2 ELSE Statement:S3 {: RESULT=new StatementIfElse(I1, S2, S3); RESULT.setLine(I1left); :}
+					|
+					(StatementDoWhile) DO Statement:S1 WHILE LEFT_ROUND_BRACKET Condition:C2 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementDoWhile(S1, C2); RESULT.setLine(S1left); :}
 					;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition:C1 RIGHT_ROUND_BRACKET {: RESULT=new IfPart(C1); RESULT.setLine(C1left); :}

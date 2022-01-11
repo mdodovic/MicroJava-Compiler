@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 10:16:32
+// 11/0/2022 12:27:36
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -9,14 +9,14 @@ public class ClassConstructor extends ConstructorDecl {
 
     private String constructorName;
     private ConstructorVarDecl ConstructorVarDecl;
-    private ConstructorBody ConstructorBody;
+    private StatementList StatementList;
 
-    public ClassConstructor (String constructorName, ConstructorVarDecl ConstructorVarDecl, ConstructorBody ConstructorBody) {
+    public ClassConstructor (String constructorName, ConstructorVarDecl ConstructorVarDecl, StatementList StatementList) {
         this.constructorName=constructorName;
         this.ConstructorVarDecl=ConstructorVarDecl;
         if(ConstructorVarDecl!=null) ConstructorVarDecl.setParent(this);
-        this.ConstructorBody=ConstructorBody;
-        if(ConstructorBody!=null) ConstructorBody.setParent(this);
+        this.StatementList=StatementList;
+        if(StatementList!=null) StatementList.setParent(this);
     }
 
     public String getConstructorName() {
@@ -35,12 +35,12 @@ public class ClassConstructor extends ConstructorDecl {
         this.ConstructorVarDecl=ConstructorVarDecl;
     }
 
-    public ConstructorBody getConstructorBody() {
-        return ConstructorBody;
+    public StatementList getStatementList() {
+        return StatementList;
     }
 
-    public void setConstructorBody(ConstructorBody ConstructorBody) {
-        this.ConstructorBody=ConstructorBody;
+    public void setStatementList(StatementList StatementList) {
+        this.StatementList=StatementList;
     }
 
     public void accept(Visitor visitor) {
@@ -49,18 +49,18 @@ public class ClassConstructor extends ConstructorDecl {
 
     public void childrenAccept(Visitor visitor) {
         if(ConstructorVarDecl!=null) ConstructorVarDecl.accept(visitor);
-        if(ConstructorBody!=null) ConstructorBody.accept(visitor);
+        if(StatementList!=null) StatementList.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(ConstructorVarDecl!=null) ConstructorVarDecl.traverseTopDown(visitor);
-        if(ConstructorBody!=null) ConstructorBody.traverseTopDown(visitor);
+        if(StatementList!=null) StatementList.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ConstructorVarDecl!=null) ConstructorVarDecl.traverseBottomUp(visitor);
-        if(ConstructorBody!=null) ConstructorBody.traverseBottomUp(visitor);
+        if(StatementList!=null) StatementList.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -78,8 +78,8 @@ public class ClassConstructor extends ConstructorDecl {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        if(ConstructorBody!=null)
-            buffer.append(ConstructorBody.toString("  "+tab));
+        if(StatementList!=null)
+            buffer.append(StatementList.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

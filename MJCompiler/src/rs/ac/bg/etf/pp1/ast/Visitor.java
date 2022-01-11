@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 10:16:32
+// 11/0/2022 12:27:36
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -35,9 +35,8 @@ public interface Visitor {
     public void visit(ActualParamList ActualParamList);
     public void visit(MethodVarDecl MethodVarDecl);
     public void visit(ClassMethodDeclarations ClassMethodDeclarations);
-    public void visit(ConstructorBody ConstructorBody);
-    public void visit(FormalParamList FormalParamList);
     public void visit(VarDeclList VarDeclList);
+    public void visit(FormalParamList FormalParamList);
     public void visit(AllDeclarationsList AllDeclarationsList);
     public void visit(Expr Expr);
     public void visit(DesignatorStatement DesignatorStatement);
@@ -125,11 +124,10 @@ public interface Visitor {
     public void visit(CorrectMethodDecl CorrectMethodDecl);
     public void visit(EmptyMethodDeclList EmptyMethodDeclList);
     public void visit(NonEmptyMethodDeclList NonEmptyMethodDeclList);
-    public void visit(NoClassMethodDecl NoClassMethodDecl);
-    public void visit(EmptyConstructorBody EmptyConstructorBody);
+    public void visit(SingleClassMethod SingleClassMethod);
+    public void visit(MultipleClassMethods MultipleClassMethods);
     public void visit(ConstructorHasNotVariables ConstructorHasNotVariables);
     public void visit(ConstructorHasVariables ConstructorHasVariables);
-    public void visit(NoClassConstructor NoClassConstructor);
     public void visit(ClassConstructor ClassConstructor);
     public void visit(ClassSingleVarDecl ClassSingleVarDecl);
     public void visit(ClassVarDeclSingle ClassVarDeclSingle);
@@ -138,7 +136,10 @@ public interface Visitor {
     public void visit(TypedListClassVarDecl TypedListClassVarDecl);
     public void visit(NoClassFields NoClassFields);
     public void visit(ClassFields ClassFields);
-    public void visit(ClassFullBody ClassFullBody);
+    public void visit(ClassBodyFull ClassBodyFull);
+    public void visit(ClassBodyMethods ClassBodyMethods);
+    public void visit(ClassBodyConstructor ClassBodyConstructor);
+    public void visit(ClassBodyBrackets ClassBodyBrackets);
     public void visit(ClassBodyNoConstructorNoMethod ClassBodyNoConstructorNoMethod);
     public void visit(ErrorInExtendingClass ErrorInExtendingClass);
     public void visit(ClassHasNoParent ClassHasNoParent);

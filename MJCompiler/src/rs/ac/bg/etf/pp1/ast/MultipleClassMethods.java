@@ -5,24 +5,24 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class NonEmptyMethodDeclList extends MethodDeclList {
+public class MultipleClassMethods extends ClassMethodDeclarations {
 
-    private MethodDeclList MethodDeclList;
+    private ClassMethodDeclarations ClassMethodDeclarations;
     private MethodDecl MethodDecl;
 
-    public NonEmptyMethodDeclList (MethodDeclList MethodDeclList, MethodDecl MethodDecl) {
-        this.MethodDeclList=MethodDeclList;
-        if(MethodDeclList!=null) MethodDeclList.setParent(this);
+    public MultipleClassMethods (ClassMethodDeclarations ClassMethodDeclarations, MethodDecl MethodDecl) {
+        this.ClassMethodDeclarations=ClassMethodDeclarations;
+        if(ClassMethodDeclarations!=null) ClassMethodDeclarations.setParent(this);
         this.MethodDecl=MethodDecl;
         if(MethodDecl!=null) MethodDecl.setParent(this);
     }
 
-    public MethodDeclList getMethodDeclList() {
-        return MethodDeclList;
+    public ClassMethodDeclarations getClassMethodDeclarations() {
+        return ClassMethodDeclarations;
     }
 
-    public void setMethodDeclList(MethodDeclList MethodDeclList) {
-        this.MethodDeclList=MethodDeclList;
+    public void setClassMethodDeclarations(ClassMethodDeclarations ClassMethodDeclarations) {
+        this.ClassMethodDeclarations=ClassMethodDeclarations;
     }
 
     public MethodDecl getMethodDecl() {
@@ -38,18 +38,18 @@ public class NonEmptyMethodDeclList extends MethodDeclList {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(MethodDeclList!=null) MethodDeclList.accept(visitor);
+        if(ClassMethodDeclarations!=null) ClassMethodDeclarations.accept(visitor);
         if(MethodDecl!=null) MethodDecl.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(MethodDeclList!=null) MethodDeclList.traverseTopDown(visitor);
+        if(ClassMethodDeclarations!=null) ClassMethodDeclarations.traverseTopDown(visitor);
         if(MethodDecl!=null) MethodDecl.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(MethodDeclList!=null) MethodDeclList.traverseBottomUp(visitor);
+        if(ClassMethodDeclarations!=null) ClassMethodDeclarations.traverseBottomUp(visitor);
         if(MethodDecl!=null) MethodDecl.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -57,10 +57,10 @@ public class NonEmptyMethodDeclList extends MethodDeclList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("NonEmptyMethodDeclList(\n");
+        buffer.append("MultipleClassMethods(\n");
 
-        if(MethodDeclList!=null)
-            buffer.append(MethodDeclList.toString("  "+tab));
+        if(ClassMethodDeclarations!=null)
+            buffer.append(ClassMethodDeclarations.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
@@ -72,7 +72,7 @@ public class NonEmptyMethodDeclList extends MethodDeclList {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [NonEmptyMethodDeclList]");
+        buffer.append(") [MultipleClassMethods]");
         return buffer.toString();
     }
 }

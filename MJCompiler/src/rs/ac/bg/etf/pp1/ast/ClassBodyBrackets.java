@@ -5,11 +5,11 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ClassBodyNoConstructorNoMethod extends ClassBody {
+public class ClassBodyBrackets extends ClassBody {
 
     private ClassFieldsVariables ClassFieldsVariables;
 
-    public ClassBodyNoConstructorNoMethod (ClassFieldsVariables ClassFieldsVariables) {
+    public ClassBodyBrackets (ClassFieldsVariables ClassFieldsVariables) {
         this.ClassFieldsVariables=ClassFieldsVariables;
         if(ClassFieldsVariables!=null) ClassFieldsVariables.setParent(this);
     }
@@ -43,7 +43,7 @@ public class ClassBodyNoConstructorNoMethod extends ClassBody {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ClassBodyNoConstructorNoMethod(\n");
+        buffer.append("ClassBodyBrackets(\n");
 
         if(ClassFieldsVariables!=null)
             buffer.append(ClassFieldsVariables.toString("  "+tab));
@@ -52,7 +52,7 @@ public class ClassBodyNoConstructorNoMethod extends ClassBody {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [ClassBodyNoConstructorNoMethod]");
+        buffer.append(") [ClassBodyBrackets]");
         return buffer.toString();
     }
 }

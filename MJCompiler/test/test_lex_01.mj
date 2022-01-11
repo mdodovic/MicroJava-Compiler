@@ -25,9 +25,10 @@ program MJProgram
 		// int y_, len, 0tt, sup_y;
 				
 		{
-			Str() {
-			
-			}
+			//Str() {
+			//
+			//}
+			int a() {}
 		}
 		
 	}
@@ -52,7 +53,10 @@ program MJProgram
 			}
 		}
 	}
-
+	
+	X arrx[];
+	Y arry[];
+	
 	
 	// class extending
 	class A { int fa1, fa2; }
@@ -71,12 +75,39 @@ program MJProgram
 	Board b;
 {
 
-	int f1(char c, bool check) char c1, c2; int l; {
-	
+	int f0() {
 	}
 
-	void f2(X xa#rr[], Y yarr[], bool ac#t, A ar##r[]) X x1; Y y1; A a; {
-	
+	int f1(char c, bool check) char c1, c2; int l; {
+		beginLabel: 
+			
+			l = 0;
+			{
+				innerLabel:
+					l = 0;
+				l = 1;	
+			}
+			outerLabel: l = 0;		
+	}
+
+	char f2(char c, X xarr[], Y yarr[], bool act, A arr[]) int cnt; X x1; Y y1; A a; {
+		cnt = 0;
+		f1();
+		
+		if (2 < 3 || 1 > 0 || a <= yarr[i] && a >= xarr[cnt] || 1 == 1 && 2 != 3 && cnt != -1)  {
+			cnt = cnt + 1;
+		}
+		
+		if(x <= 0) {
+			if (0 <= x && x < size)
+			{
+				val.putp(val.getp(x)+1);
+			}
+			else if (-size < x && x < 0)
+			{
+				val.putn(val.getn(-x)+1);
+			}
+		}		
 	}
 
 
@@ -89,7 +120,31 @@ program MJProgram
 	//	return c+2;
 	//}
 
-	//int main() {
+	int main() C objC; char retc; {
+		
+		c1 = 1;
+		objC.fc1 = 3;
+		objC.theA.fa1 = 2;
+		objC.theA.fa2 = - 2 + 7 * 11 / objC.theA.fa1 - c1 % 5;
+		objC.theA.fa2 = f0() * f1('x', false)  + 'a' * true / objC.theA.fa1 - c1 % 5;
+		
+		arr1 = new int[3];
+		
+	ArrLabel:	arr1[0] = 6;
+		arr1[1] = 5;
+		
+		arr1[c1] = 3;
+		
+		arrx = new X[f0() - 4];
+		arry = new Y[7];
+		
+		c = f2(c1, arrx, arry, true, null);
+		
+		f1('a', objC.theA.fa2);
+		f2(c1, arrx, arry, true, null);
+		
+		arr1[c2]++;
+		arr1[objC.theA.fa2]--;
 		
 	//	x = 3;
 		
@@ -104,6 +159,6 @@ program MJProgram
 				
 	//	return 0;
 
-	//}
+	}
 	
 }

@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 10:16:32
+// 11/0/2022 12:27:36
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -35,9 +35,8 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(ActualParamList ActualParamList) { }
     public void visit(MethodVarDecl MethodVarDecl) { }
     public void visit(ClassMethodDeclarations ClassMethodDeclarations) { }
-    public void visit(ConstructorBody ConstructorBody) { }
-    public void visit(FormalParamList FormalParamList) { }
     public void visit(VarDeclList VarDeclList) { }
+    public void visit(FormalParamList FormalParamList) { }
     public void visit(AllDeclarationsList AllDeclarationsList) { }
     public void visit(Expr Expr) { }
     public void visit(DesignatorStatement DesignatorStatement) { }
@@ -125,11 +124,10 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(CorrectMethodDecl CorrectMethodDecl) { visit(); }
     public void visit(EmptyMethodDeclList EmptyMethodDeclList) { visit(); }
     public void visit(NonEmptyMethodDeclList NonEmptyMethodDeclList) { visit(); }
-    public void visit(NoClassMethodDecl NoClassMethodDecl) { visit(); }
-    public void visit(EmptyConstructorBody EmptyConstructorBody) { visit(); }
+    public void visit(SingleClassMethod SingleClassMethod) { visit(); }
+    public void visit(MultipleClassMethods MultipleClassMethods) { visit(); }
     public void visit(ConstructorHasNotVariables ConstructorHasNotVariables) { visit(); }
     public void visit(ConstructorHasVariables ConstructorHasVariables) { visit(); }
-    public void visit(NoClassConstructor NoClassConstructor) { visit(); }
     public void visit(ClassConstructor ClassConstructor) { visit(); }
     public void visit(ClassSingleVarDecl ClassSingleVarDecl) { visit(); }
     public void visit(ClassVarDeclSingle ClassVarDeclSingle) { visit(); }
@@ -138,7 +136,10 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(TypedListClassVarDecl TypedListClassVarDecl) { visit(); }
     public void visit(NoClassFields NoClassFields) { visit(); }
     public void visit(ClassFields ClassFields) { visit(); }
-    public void visit(ClassFullBody ClassFullBody) { visit(); }
+    public void visit(ClassBodyFull ClassBodyFull) { visit(); }
+    public void visit(ClassBodyMethods ClassBodyMethods) { visit(); }
+    public void visit(ClassBodyConstructor ClassBodyConstructor) { visit(); }
+    public void visit(ClassBodyBrackets ClassBodyBrackets) { visit(); }
     public void visit(ClassBodyNoConstructorNoMethod ClassBodyNoConstructorNoMethod) { visit(); }
     public void visit(ErrorInExtendingClass ErrorInExtendingClass) { visit(); }
     public void visit(ClassHasNoParent ClassHasNoParent) { visit(); }

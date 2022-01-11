@@ -1,21 +1,18 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 10:16:32
+// 11/0/2022 12:27:36
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ClassFullBody extends ClassBody {
+public class ClassBodyMethods extends ClassBody {
 
     private ClassFieldsVariables ClassFieldsVariables;
-    private ConstructorDecl ConstructorDecl;
     private ClassMethodDeclarations ClassMethodDeclarations;
 
-    public ClassFullBody (ClassFieldsVariables ClassFieldsVariables, ConstructorDecl ConstructorDecl, ClassMethodDeclarations ClassMethodDeclarations) {
+    public ClassBodyMethods (ClassFieldsVariables ClassFieldsVariables, ClassMethodDeclarations ClassMethodDeclarations) {
         this.ClassFieldsVariables=ClassFieldsVariables;
         if(ClassFieldsVariables!=null) ClassFieldsVariables.setParent(this);
-        this.ConstructorDecl=ConstructorDecl;
-        if(ConstructorDecl!=null) ConstructorDecl.setParent(this);
         this.ClassMethodDeclarations=ClassMethodDeclarations;
         if(ClassMethodDeclarations!=null) ClassMethodDeclarations.setParent(this);
     }
@@ -26,14 +23,6 @@ public class ClassFullBody extends ClassBody {
 
     public void setClassFieldsVariables(ClassFieldsVariables ClassFieldsVariables) {
         this.ClassFieldsVariables=ClassFieldsVariables;
-    }
-
-    public ConstructorDecl getConstructorDecl() {
-        return ConstructorDecl;
-    }
-
-    public void setConstructorDecl(ConstructorDecl ConstructorDecl) {
-        this.ConstructorDecl=ConstructorDecl;
     }
 
     public ClassMethodDeclarations getClassMethodDeclarations() {
@@ -50,20 +39,17 @@ public class ClassFullBody extends ClassBody {
 
     public void childrenAccept(Visitor visitor) {
         if(ClassFieldsVariables!=null) ClassFieldsVariables.accept(visitor);
-        if(ConstructorDecl!=null) ConstructorDecl.accept(visitor);
         if(ClassMethodDeclarations!=null) ClassMethodDeclarations.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(ClassFieldsVariables!=null) ClassFieldsVariables.traverseTopDown(visitor);
-        if(ConstructorDecl!=null) ConstructorDecl.traverseTopDown(visitor);
         if(ClassMethodDeclarations!=null) ClassMethodDeclarations.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ClassFieldsVariables!=null) ClassFieldsVariables.traverseBottomUp(visitor);
-        if(ConstructorDecl!=null) ConstructorDecl.traverseBottomUp(visitor);
         if(ClassMethodDeclarations!=null) ClassMethodDeclarations.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -71,16 +57,10 @@ public class ClassFullBody extends ClassBody {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ClassFullBody(\n");
+        buffer.append("ClassBodyMethods(\n");
 
         if(ClassFieldsVariables!=null)
             buffer.append(ClassFieldsVariables.toString("  "+tab));
-        else
-            buffer.append(tab+"  null");
-        buffer.append("\n");
-
-        if(ConstructorDecl!=null)
-            buffer.append(ConstructorDecl.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
@@ -92,7 +72,7 @@ public class ClassFullBody extends ClassBody {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [ClassFullBody]");
+        buffer.append(") [ClassBodyMethods]");
         return buffer.toString();
     }
 }

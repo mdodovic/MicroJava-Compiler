@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 9:16:27
+// 11/0/2022 9:57:46
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -13,6 +13,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(MethodDecl MethodDecl) { }
     public void visit(ConstructorDecl ConstructorDecl) { }
     public void visit(Matched Matched) { }
+    public void visit(Relop Relop) { }
     public void visit(TermList TermList) { }
     public void visit(ClassFieldsVariables ClassFieldsVariables) { }
     public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations) { }
@@ -22,10 +23,12 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(FactorList FactorList) { }
     public void visit(Addop Addop) { }
     public void visit(Factor Factor) { }
+    public void visit(CondTerm CondTerm) { }
     public void visit(RecordVarDecl RecordVarDecl) { }
     public void visit(Designator Designator) { }
     public void visit(ClassVarDeclList ClassVarDeclList) { }
     public void visit(ClassBody ClassBody) { }
+    public void visit(Condition Condition) { }
     public void visit(NotLastVarDecl NotLastVarDecl) { }
     public void visit(ConstValue ConstValue) { }
     public void visit(ActualParamList ActualParamList) { }
@@ -41,6 +44,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(MethodReturnType MethodReturnType) { }
     public void visit(Statement Statement) { }
     public void visit(ConstructorVarDecl ConstructorVarDecl) { }
+    public void visit(CondFact CondFact) { }
     public void visit(MethodDeclList MethodDeclList) { }
     public void visit(SingleStatement SingleStatement) { }
     public void visit(FormPars FormPars) { }
@@ -50,6 +54,12 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(MultiplyOp MultiplyOp) { visit(); }
     public void visit(MinusOp MinusOp) { visit(); }
     public void visit(PlusOp PlusOp) { visit(); }
+    public void visit(LessEqualOp LessEqualOp) { visit(); }
+    public void visit(GreaterEqualOp GreaterEqualOp) { visit(); }
+    public void visit(GreaterOp GreaterOp) { visit(); }
+    public void visit(LessOp LessOp) { visit(); }
+    public void visit(NotEqualOp NotEqualOp) { visit(); }
+    public void visit(EqualOp EqualOp) { visit(); }
     public void visit(MatchedStatement MatchedStatement) { visit(); }
     public void visit(ReturnNoExpr ReturnNoExpr) { visit(); }
     public void visit(ReturnExpr ReturnExpr) { visit(); }
@@ -82,6 +92,14 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(DesignatorFunctionCall DesignatorFunctionCall) { visit(); }
     public void visit(ErrorInDesignatorAssignOperation ErrorInDesignatorAssignOperation) { visit(); }
     public void visit(DesignatorAssignOperation DesignatorAssignOperation) { visit(); }
+    public void visit(SingleExpr SingleExpr) { visit(); }
+    public void visit(RelOpExpr RelOpExpr) { visit(); }
+    public void visit(SingleCondFact SingleCondFact) { visit(); }
+    public void visit(AndOpCondFact AndOpCondFact) { visit(); }
+    public void visit(SingleCondTerm SingleCondTerm) { visit(); }
+    public void visit(OrOpCondTermList OrOpCondTermList) { visit(); }
+    public void visit(StatementIfErrorInCondition StatementIfErrorInCondition) { visit(); }
+    public void visit(StatementIf StatementIf) { visit(); }
     public void visit(StatementDesignator StatementDesignator) { visit(); }
     public void visit(Label Label) { visit(); }
     public void visit(StatementBlock StatementBlock) { visit(); }

@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 9:16:27
+// 11/0/2022 9:57:46
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -13,6 +13,7 @@ public interface Visitor {
     public void visit(MethodDecl MethodDecl);
     public void visit(ConstructorDecl ConstructorDecl);
     public void visit(Matched Matched);
+    public void visit(Relop Relop);
     public void visit(TermList TermList);
     public void visit(ClassFieldsVariables ClassFieldsVariables);
     public void visit(MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations);
@@ -22,10 +23,12 @@ public interface Visitor {
     public void visit(FactorList FactorList);
     public void visit(Addop Addop);
     public void visit(Factor Factor);
+    public void visit(CondTerm CondTerm);
     public void visit(RecordVarDecl RecordVarDecl);
     public void visit(Designator Designator);
     public void visit(ClassVarDeclList ClassVarDeclList);
     public void visit(ClassBody ClassBody);
+    public void visit(Condition Condition);
     public void visit(NotLastVarDecl NotLastVarDecl);
     public void visit(ConstValue ConstValue);
     public void visit(ActualParamList ActualParamList);
@@ -41,6 +44,7 @@ public interface Visitor {
     public void visit(MethodReturnType MethodReturnType);
     public void visit(Statement Statement);
     public void visit(ConstructorVarDecl ConstructorVarDecl);
+    public void visit(CondFact CondFact);
     public void visit(MethodDeclList MethodDeclList);
     public void visit(SingleStatement SingleStatement);
     public void visit(FormPars FormPars);
@@ -50,6 +54,12 @@ public interface Visitor {
     public void visit(MultiplyOp MultiplyOp);
     public void visit(MinusOp MinusOp);
     public void visit(PlusOp PlusOp);
+    public void visit(LessEqualOp LessEqualOp);
+    public void visit(GreaterEqualOp GreaterEqualOp);
+    public void visit(GreaterOp GreaterOp);
+    public void visit(LessOp LessOp);
+    public void visit(NotEqualOp NotEqualOp);
+    public void visit(EqualOp EqualOp);
     public void visit(MatchedStatement MatchedStatement);
     public void visit(ReturnNoExpr ReturnNoExpr);
     public void visit(ReturnExpr ReturnExpr);
@@ -82,6 +92,14 @@ public interface Visitor {
     public void visit(DesignatorFunctionCall DesignatorFunctionCall);
     public void visit(ErrorInDesignatorAssignOperation ErrorInDesignatorAssignOperation);
     public void visit(DesignatorAssignOperation DesignatorAssignOperation);
+    public void visit(SingleExpr SingleExpr);
+    public void visit(RelOpExpr RelOpExpr);
+    public void visit(SingleCondFact SingleCondFact);
+    public void visit(AndOpCondFact AndOpCondFact);
+    public void visit(SingleCondTerm SingleCondTerm);
+    public void visit(OrOpCondTermList OrOpCondTermList);
+    public void visit(StatementIfErrorInCondition StatementIfErrorInCondition);
+    public void visit(StatementIf StatementIf);
     public void visit(StatementDesignator StatementDesignator);
     public void visit(Label Label);
     public void visit(StatementBlock StatementBlock);

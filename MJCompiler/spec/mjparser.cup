@@ -68,6 +68,9 @@ terminal POINT; /* "." */
 
 terminal ASSIGNMENT; /* "=" */
 
+terminal IF; /* "if" */
+terminal ELSE; /* "else" */
+
 terminal CHAR_CONST; /* char value: 'a', ... */ 
 terminal BOOL_CONST; /* bool value: true/false*/
 terminal Integer NUMBER; /* integer value: 0, ... */
@@ -85,25 +88,36 @@ terminal MULTIPLY; /* "*" */
 terminal DIVIDE; /* "/" */
 terminal MODUO; /* "%" */
 
+terminal AND; /* "&&" */
+terminal OR; /* "||" */
+
+terminal EQUAL; /* "==" */
+terminal NOT_EQUAL; /* "!=" */
+terminal LESS; /* "<" */
+terminal GREATER; /* ">" */
+terminal GREATER_EQUAL; /* ">=" */
+terminal LESS_EQUAL; /* "<=" */
+
 terminal PRINT, RETURN;
-terminal IF, ELSE;
 
 terminal READ;
 terminal GOTO, DO, WHILE;
 
-terminal AND, OR;
 terminal ENUM, RECORD;
 terminal SUPER, THIS;
 
 terminal BREAK, CONTINUE;
-terminal EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL;
 
 
 
 nonterminal Matched, Unmatched;
 
+/* precedences */
+
+// precedence left ELSE;
 
 /* NON terminals */
+
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program; /* Program = "program" ProgName (...) part, fetch program name and save to progName */
 nonterminal AllDeclarationsList; /* this will collect all constants, (global) variables, classes and records declarations */
 
@@ -161,9 +175,9 @@ nonterminal DesignatorStatement; /* this will collect assignment, function calls
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator; /* this will represent variable, or className.someName (with arbitrary depth of indirection) or arrayName[expression]*/
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr; /* represent expressions which optionally can start with "-" */
-nonterminal TermList; /* represent list of terms with possible +/- operators because of asociativity  */
+nonterminal TermList; /* represent list of terms with possible +/- operators because of associativity  */
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Term; /* represent single term which is the list of factors */
-nonterminal FactorList; /* represent list of factors with possible mul/mod/div operators because of asociativity */
+nonterminal FactorList; /* represent list of factors with possible mul/mod/div operators because of associativity */
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor; /* represent single factor that can be variable, functionCall, number, character, true/false, creation of an array (new int[expression]) and expression surrounded with "(" ")" */
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
@@ -171,6 +185,11 @@ nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent
 nonterminal ActualPars; /* this will say if there are any actual parameters in the function call */ 
 nonterminal ActualParamList; /* this represents actual parameters in function call, that can by any expression */
 
+nonterminal Condition; /* this will represent list of conditionals separated with "||" (logically OR), conditionals between OR are matched separately because of the associativity */
+nonterminal CondTerm; /* this will represent list of conditionals separated with "&&" (logically AND), conditionals between AND are matched separately because of the associativity */
+nonterminal CondFact; /* this will represent expression with bool logical value (we do not check it here) or two expressions related with some of the relational operators (Relop is defined bellow) */
+
+nonterminal Relop; /* contains "==", "!=", ">", ">=", "<" and "<=" */
 nonterminal Addop; /* contains "+" and "-" */
 nonterminal Mulop; /* contains "*", "/" and "%" */
 
@@ -355,7 +374,30 @@ Statement ::= (LabeledSingleStatementMatch) Label COLON SingleStatement
 /* Label; usage: statement */
 Label ::= (Label) IDENT:labelName;
 
-SingleStatement ::= (StatementDesignator) DesignatorStatement;
+SingleStatement ::= (StatementDesignator) DesignatorStatement
+					|
+					(StatementIf) IF LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET Statement
+					|
+					(StatementIfErrorInCondition) IF LEFT_ROUND_BRACKET error:l {: parser.report_error("Izvrsen oporavak do ) u liniji " + lleft, null); :} RIGHT_ROUND_BRACKET Statement	
+					;
+
+/* if-else conditions */
+
+Condition ::= (OrOpCondTermList) Condition OR CondTerm
+			  |
+			  (SingleCondTerm) CondTerm:t
+			  ;
+
+CondTerm ::= (AndOpCondFact) CondTerm AND CondFact
+			 |
+ 			 (SingleCondFact) CondFact:t
+			 ;
+
+CondFact ::= (RelOpExpr) Expr:eleft Relop Expr:eright
+			 |
+			 (SingleExpr) Expr:e
+			 ;
+
 
 /* Designators */
 
@@ -447,6 +489,19 @@ Matched ::=   (PrintStmt) PRINT LEFT_ROUND_BRACKET Expr RIGHT_ROUND_BRACKET SEMI
 
 		
 /* Operations */	
+
+Relop ::= (EqualOp) EQUAL
+		  | 
+		  (NotEqualOp) NOT_EQUAL
+		  | 
+		  (LessOp) LESS
+		  | 
+		  (GreaterOp) GREATER
+		  | 
+		  (GreaterEqualOp) GREATER_EQUAL
+		  | 
+		  (LessEqualOp) LESS_EQUAL
+		  ;
 
 Addop ::= (PlusOp) PLUS
 		  |

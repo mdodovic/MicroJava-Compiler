@@ -92,6 +92,11 @@ program MJProgram
 	char f2(char c, X xarr[], Y yarr[], bool act, A arr[]) int cnt; X x1; Y y1; A a; {
 		cnt = 0;
 		f1();
+		
+		if (2 < 3 || 1 > 0 || a <= yarr[i] && a >= xarr[cnt] || 1 == 1 && 2 != 3 && cnt != -1)  {
+			cnt = cnt + 1;
+		}
+		
 	}
 
 

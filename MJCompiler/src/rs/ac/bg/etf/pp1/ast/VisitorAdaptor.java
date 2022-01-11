@@ -1,18 +1,16 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 13:4:18
+// 11/0/2022 13:7:7
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public abstract class VisitorAdaptor implements Visitor { 
 
-    public void visit(Unmatched Unmatched) { }
     public void visit(ArrayBrackets ArrayBrackets) { }
     public void visit(Mulop Mulop) { }
     public void visit(MethodDecl MethodDecl) { }
     public void visit(ConstructorDecl ConstructorDecl) { }
-    public void visit(Matched Matched) { }
     public void visit(Relop Relop) { }
     public void visit(TermList TermList) { }
     public void visit(ClassFieldsVariables ClassFieldsVariables) { }
@@ -60,9 +58,6 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(LessOp LessOp) { visit(); }
     public void visit(NotEqualOp NotEqualOp) { visit(); }
     public void visit(EqualOp EqualOp) { visit(); }
-    public void visit(MatchedStatement MatchedStatement) { visit(); }
-    public void visit(UnmatchedIfElse UnmatchedIfElse) { visit(); }
-    public void visit(IfStatement IfStatement) { visit(); }
     public void visit(ActualParam ActualParam) { visit(); }
     public void visit(ActualParams ActualParams) { visit(); }
     public void visit(NoActuals NoActuals) { visit(); }
@@ -98,6 +93,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(OrOpCondTermList OrOpCondTermList) { visit(); }
     public void visit(ErrorInCondition ErrorInCondition) { visit(); }
     public void visit(IfPart IfPart) { visit(); }
+    public void visit(StatementGoTo StatementGoTo) { visit(); }
     public void visit(StatementRead StatementRead) { visit(); }
     public void visit(StatementPrintWithWidth StatementPrintWithWidth) { visit(); }
     public void visit(StatementPrintNoWidth StatementPrintNoWidth) { visit(); }

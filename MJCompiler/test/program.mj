@@ -88,7 +88,7 @@ program MJProgram
 			
 			int foo(int p1, char p2) {
 			do{
-				if(x <= 0) break;
+			Label:	if(x <= 0) break;
 				if (0 <= x && x < size)
 				{
 					val.putp(val.getp(x)+1);
@@ -98,7 +98,7 @@ program MJProgram
 					val.putn(val.getn(-x)+1);
 					continue;
 				}
-				//read(x);
+				goto Label2;
 			} while(true);
 
 			} 
@@ -110,11 +110,11 @@ program MJProgram
 	C c;			
 {
 	void main() {
-		x = new int[3];
+	Label2:	x = new int[3];
 		c = new C;
 		read(c.i);
 		read(x[c.i]);
 		read(a);
-			
+	goto Label;	
 	}
 }

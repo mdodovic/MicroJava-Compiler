@@ -76,6 +76,7 @@ terminal WHILE; /* "while" */
 terminal BREAK; /* "break" */
 terminal CONTINUE; /* "continue" */
 terminal RETURN; /* "return" */
+terminal GOTO; /* "goto" */
 
 terminal PRINT; /* "print" */
 terminal READ; /* "read" */
@@ -107,15 +108,11 @@ terminal GREATER; /* ">" */
 terminal GREATER_EQUAL; /* ">=" */
 terminal LESS_EQUAL; /* "<=" */
 
-terminal GOTO;
-
+/* unused terminals */
 terminal ENUM;
 terminal SUPER;
 terminal THIS;
 
-
-nonterminal Matched Matched;
-nonterminal Unmatched Unmatched;
 
 /* NON terminals */
 
@@ -420,6 +417,8 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new S
 					(StatementPrintWithWidth) PRINT LEFT_ROUND_BRACKET Expr:E1 COMMA NUMBER:N2 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementPrintWithWidth(E1, N2); RESULT.setLine(E1left); :}
 					|
 					(StatementRead) READ LEFT_ROUND_BRACKET Designator:D1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementRead(D1); RESULT.setLine(D1left); :}
+					|
+					(StatementGoTo) GOTO Label:L1 SEMI {: RESULT=new StatementGoTo(L1); RESULT.setLine(L1left); :}
 					;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition:C1 RIGHT_ROUND_BRACKET {: RESULT=new IfPart(C1); RESULT.setLine(C1left); :}
@@ -512,22 +511,6 @@ ActualParamList ::= (ActualParams) ActualParamList:A1 COMMA Expr:E2 {: RESULT=ne
 				    |
 				    (ActualParam) Expr:E1 {: RESULT=new ActualParam(E1); RESULT.setLine(E1left); :}
 				    ;		
-
-
-//Statement ::= (MatchedStmt) Matched
-//			  |
-//			  (UnmatchedStmt) Unmatched
-// 			  ;
-
-Unmatched ::= (IfStatement) IF Expr:E1 Statement:S2 {: RESULT=new IfStatement(E1, S2); RESULT.setLine(E1left); :}
-			  |
-			  (UnmatchedIfElse) IF Expr:E1 Matched:M2 ELSE Unmatched:U3 {: RESULT=new UnmatchedIfElse(E1, M2, U3); RESULT.setLine(E1left); :}
-			  ;
-
-Matched ::=   (MatchedStatement) IF Expr:E1 Matched:M2 ELSE Matched:M3 {: RESULT=new MatchedStatement(E1, M2, M3); RESULT.setLine(E1left); :}
-			  ;				
-
-
 
 		
 /* Operations */	

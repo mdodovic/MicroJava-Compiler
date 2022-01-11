@@ -76,6 +76,7 @@ terminal WHILE; /* "while" */
 terminal BREAK; /* "break" */
 terminal CONTINUE; /* "continue" */
 terminal RETURN; /* "return" */
+terminal GOTO; /* "goto" */
 
 terminal PRINT; /* "print" */
 terminal READ; /* "read" */
@@ -107,14 +108,11 @@ terminal GREATER; /* ">" */
 terminal GREATER_EQUAL; /* ">=" */
 terminal LESS_EQUAL; /* "<=" */
 
-terminal GOTO;
-
+/* unused terminals */
 terminal ENUM;
 terminal SUPER;
 terminal THIS;
 
-
-nonterminal Matched, Unmatched;
 
 /* NON terminals */
 
@@ -419,6 +417,8 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement
 					(StatementPrintWithWidth) PRINT LEFT_ROUND_BRACKET Expr COMMA NUMBER RIGHT_ROUND_BRACKET SEMI
 					|
 					(StatementRead) READ LEFT_ROUND_BRACKET Designator RIGHT_ROUND_BRACKET SEMI
+					|
+					(StatementGoTo) GOTO Label SEMI
 					;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET
@@ -511,22 +511,6 @@ ActualParamList ::= (ActualParams) ActualParamList COMMA Expr
 				    |
 				    (ActualParam) Expr
 				    ;		
-
-
-//Statement ::= (MatchedStmt) Matched
-//			  |
-//			  (UnmatchedStmt) Unmatched
-// 			  ;
-
-Unmatched ::= (IfStatement) IF Expr Statement
-			  |
-			  (UnmatchedIfElse) IF Expr Matched ELSE Unmatched
-			  ;
-
-Matched ::=   (MatchedStatement) IF Expr Matched ELSE Matched
-			  ;				
-
-
 
 		
 /* Operations */	

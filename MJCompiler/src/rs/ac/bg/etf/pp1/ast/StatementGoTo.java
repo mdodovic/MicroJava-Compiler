@@ -5,21 +5,21 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class FactorBracketExpression extends Factor {
+public class StatementGoTo extends SingleStatement {
 
-    private Expr Expr;
+    private Label Label;
 
-    public FactorBracketExpression (Expr Expr) {
-        this.Expr=Expr;
-        if(Expr!=null) Expr.setParent(this);
+    public StatementGoTo (Label Label) {
+        this.Label=Label;
+        if(Label!=null) Label.setParent(this);
     }
 
-    public Expr getExpr() {
-        return Expr;
+    public Label getLabel() {
+        return Label;
     }
 
-    public void setExpr(Expr Expr) {
-        this.Expr=Expr;
+    public void setLabel(Label Label) {
+        this.Label=Label;
     }
 
     public void accept(Visitor visitor) {
@@ -27,32 +27,32 @@ public class FactorBracketExpression extends Factor {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Expr!=null) Expr.accept(visitor);
+        if(Label!=null) Label.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Expr!=null) Expr.traverseTopDown(visitor);
+        if(Label!=null) Label.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Expr!=null) Expr.traverseBottomUp(visitor);
+        if(Label!=null) Label.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("FactorBracketExpression(\n");
+        buffer.append("StatementGoTo(\n");
 
-        if(Expr!=null)
-            buffer.append(Expr.toString("  "+tab));
+        if(Label!=null)
+            buffer.append(Label.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [FactorBracketExpression]");
+        buffer.append(") [StatementGoTo]");
         return buffer.toString();
     }
 }

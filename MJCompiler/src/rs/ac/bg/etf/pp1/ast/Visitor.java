@@ -1,18 +1,16 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 13:4:18
+// 11/0/2022 13:7:7
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public interface Visitor { 
 
-    public void visit(Unmatched Unmatched);
     public void visit(ArrayBrackets ArrayBrackets);
     public void visit(Mulop Mulop);
     public void visit(MethodDecl MethodDecl);
     public void visit(ConstructorDecl ConstructorDecl);
-    public void visit(Matched Matched);
     public void visit(Relop Relop);
     public void visit(TermList TermList);
     public void visit(ClassFieldsVariables ClassFieldsVariables);
@@ -60,9 +58,6 @@ public interface Visitor {
     public void visit(LessOp LessOp);
     public void visit(NotEqualOp NotEqualOp);
     public void visit(EqualOp EqualOp);
-    public void visit(MatchedStatement MatchedStatement);
-    public void visit(UnmatchedIfElse UnmatchedIfElse);
-    public void visit(IfStatement IfStatement);
     public void visit(ActualParam ActualParam);
     public void visit(ActualParams ActualParams);
     public void visit(NoActuals NoActuals);
@@ -98,6 +93,7 @@ public interface Visitor {
     public void visit(OrOpCondTermList OrOpCondTermList);
     public void visit(ErrorInCondition ErrorInCondition);
     public void visit(IfPart IfPart);
+    public void visit(StatementGoTo StatementGoTo);
     public void visit(StatementRead StatementRead);
     public void visit(StatementPrintWithWidth StatementPrintWithWidth);
     public void visit(StatementPrintNoWidth StatementPrintNoWidth);

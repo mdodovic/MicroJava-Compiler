@@ -5,20 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class SimpleDesignator extends Designator {
+public class ErrorInCondition extends IfCondition {
 
-    private String name;
-
-    public SimpleDesignator (String name) {
-        this.name=name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name=name;
+    public ErrorInCondition () {
     }
 
     public void accept(Visitor visitor) {
@@ -39,13 +28,10 @@ public class SimpleDesignator extends Designator {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("SimpleDesignator(\n");
-
-        buffer.append(" "+tab+name);
-        buffer.append("\n");
+        buffer.append("ErrorInCondition(\n");
 
         buffer.append(tab);
-        buffer.append(") [SimpleDesignator]");
+        buffer.append(") [ErrorInCondition]");
         return buffer.toString();
     }
 }

@@ -93,10 +93,20 @@ program MJProgram
 		cnt = 0;
 		f1();
 		
-		if (2 < 3 || 1 > 0 || a <= yarr[i] && a >= xarr[cnt] || 1 == 1 && 2 != 3 && cnt != -1)  {
+		if (2 < 3 || 1 > 0 || a <= ya#rr[i] && a >= xarr[cnt] || 1 == 1 && 2 != 3 && cnt != -1)  {
 			cnt = cnt + 1;
 		}
 		
+		if(x <= 0) {
+			if (0 <= x && x < size)
+			{
+				val.putp(val.getp(x)+1);
+			}
+			else if (-size < x && x < 0)
+			{
+				val.putn(val.getn(-x)+1);
+			}
+		}		
 	}
 
 

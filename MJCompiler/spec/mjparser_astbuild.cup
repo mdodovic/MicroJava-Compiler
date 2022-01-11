@@ -113,10 +113,6 @@ terminal BREAK, CONTINUE;
 nonterminal Matched Matched;
 nonterminal Unmatched Unmatched;
 
-/* precedences */
-
-// precedence left ELSE;
-
 /* NON terminals */
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program; /* Program = "program" ProgName (...) part, fetch program name and save to progName */
@@ -186,6 +182,7 @@ nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent
 nonterminal ActualPars ActualPars; /* this will say if there are any actual parameters in the function call */ 
 nonterminal ActualParamList ActualParamList; /* this represents actual parameters in function call, that can by any expression */
 
+nonterminal IfCondition IfCondition; /* this will represent if"(" condition ")" part because of error handling in condition: all tokens except ")" should be consumed */
 nonterminal Condition Condition; /* this will represent list of conditionals separated with "||" (logically OR), conditionals between OR are matched separately because of the associativity */
 nonterminal CondTerm CondTerm; /* this will represent list of conditionals separated with "&&" (logically AND), conditionals between AND are matched separately because of the associativity */
 nonterminal CondFact CondFact; /* this will represent expression with bool logical value (we do not check it here) or two expressions related with some of the relational operators (Relop is defined bellow) */
@@ -194,6 +191,9 @@ nonterminal Relop Relop; /* contains "==", "!=", ">", ">=", "<" and "<=" */
 nonterminal Addop Addop; /* contains "+" and "-" */
 nonterminal Mulop Mulop; /* contains "*", "/" and "%" */
 
+/* precedences */
+
+precedence left ELSE;
 
 /* Grammar */
 
@@ -377,10 +377,15 @@ Label ::= (Label) IDENT:labelName {: RESULT=new Label(labelName); RESULT.setLine
 
 SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new StatementDesignator(D1); RESULT.setLine(D1left); :}
 					|
-					(StatementIf) IF LEFT_ROUND_BRACKET Condition:C1 RIGHT_ROUND_BRACKET Statement:S2 {: RESULT=new StatementIf(C1, S2); RESULT.setLine(C1left); :}
+					(StatementIf) IfCondition:I1 Statement:S2 {: RESULT=new StatementIf(I1, S2); RESULT.setLine(I1left); :}
 					|
-					(StatementIfErrorInCondition) IF LEFT_ROUND_BRACKET error:l {: parser.report_error("Izvrsen oporavak do ) u liniji " + lleft, null); :} RIGHT_ROUND_BRACKET Statement:S1 {: RESULT=new StatementIfErrorInCondition(S1); RESULT.setLine(S1left); :}	
+					(StatementIfElse) IfCondition:I1 Statement:S2 ELSE Statement:S3 {: RESULT=new StatementIfElse(I1, S2, S3); RESULT.setLine(I1left); :}
 					;
+
+IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition:C1 RIGHT_ROUND_BRACKET {: RESULT=new IfPart(C1); RESULT.setLine(C1left); :}
+				|
+				(ErrorInCondition) IF LEFT_ROUND_BRACKET error:l {: parser.report_error("Izvrsen oporavak do ) u liniji " + lleft, null); :} RIGHT_ROUND_BRACKET {: RESULT=new ErrorInCondition(); :}
+				;
 
 /* if-else conditions */
 

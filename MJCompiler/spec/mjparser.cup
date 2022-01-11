@@ -112,10 +112,6 @@ terminal BREAK, CONTINUE;
 
 nonterminal Matched, Unmatched;
 
-/* precedences */
-
-// precedence left ELSE;
-
 /* NON terminals */
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName, Program; /* Program = "program" ProgName (...) part, fetch program name and save to progName */
@@ -185,6 +181,7 @@ nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent
 nonterminal ActualPars; /* this will say if there are any actual parameters in the function call */ 
 nonterminal ActualParamList; /* this represents actual parameters in function call, that can by any expression */
 
+nonterminal IfCondition; /* this will represent if"(" condition ")" part because of error handling in condition: all tokens except ")" should be consumed */
 nonterminal Condition; /* this will represent list of conditionals separated with "||" (logically OR), conditionals between OR are matched separately because of the associativity */
 nonterminal CondTerm; /* this will represent list of conditionals separated with "&&" (logically AND), conditionals between AND are matched separately because of the associativity */
 nonterminal CondFact; /* this will represent expression with bool logical value (we do not check it here) or two expressions related with some of the relational operators (Relop is defined bellow) */
@@ -193,6 +190,9 @@ nonterminal Relop; /* contains "==", "!=", ">", ">=", "<" and "<=" */
 nonterminal Addop; /* contains "+" and "-" */
 nonterminal Mulop; /* contains "*", "/" and "%" */
 
+/* precedences */
+
+precedence left ELSE;
 
 /* Grammar */
 
@@ -376,10 +376,15 @@ Label ::= (Label) IDENT:labelName;
 
 SingleStatement ::= (StatementDesignator) DesignatorStatement
 					|
-					(StatementIf) IF LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET Statement
+					(StatementIf) IfCondition Statement
 					|
-					(StatementIfErrorInCondition) IF LEFT_ROUND_BRACKET error:l {: parser.report_error("Izvrsen oporavak do ) u liniji " + lleft, null); :} RIGHT_ROUND_BRACKET Statement	
+					(StatementIfElse) IfCondition Statement ELSE Statement
 					;
+
+IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET
+				|
+				(ErrorInCondition) IF LEFT_ROUND_BRACKET error:l {: parser.report_error("Izvrsen oporavak do ) u liniji " + lleft, null); :} RIGHT_ROUND_BRACKET
+				;
 
 /* if-else conditions */
 

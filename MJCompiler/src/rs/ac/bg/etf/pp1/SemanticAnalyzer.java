@@ -65,18 +65,25 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	
 	public void report_error(String message, SyntaxNode info) {
 		errorDetected = true;
-		StringBuilder msg = new StringBuilder(message);
+		StringBuilder msg = new StringBuilder("Greska");
 		int line = (info == null) ? 0: info.getLine();
 		if (line != 0)
-			msg.append (" na liniji ").append(line);
+			msg.append(" na liniji ").append(line).append(": ");
+		else 
+			msg.append(": ");
+		msg.append(message);
 		log.error(msg.toString());
 	}
 
 	public void report_info(String message, SyntaxNode info) {
-		StringBuilder msg = new StringBuilder(message); 
+
+		StringBuilder msg = new StringBuilder("Info");
 		int line = (info == null) ? 0: info.getLine();
 		if (line != 0)
-			msg.append (" na liniji ").append(line);
+			msg.append(" na liniji ").append(line).append(": ");
+		else 
+			msg.append(": ");
+		msg.append(message);
 		log.info(msg.toString());
 	}
 	
@@ -118,7 +125,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		if(Obj.Type == typeNode.getKind()) {
     			type.struct = typeNode.getType();
     		} else {
-    			report_error("Greska: Ime " + type.getTypeName() + " ne predstavlja tip!", type);
+    			report_error("Ime " + type.getTypeName() + " ne predstavlja tip!", type);
         		type.struct = Tab.noType;
     		}
     	}
@@ -140,7 +147,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	Obj constNameNode = Tab.find(constantName);
     	if(constNameNode != Tab.noObj) {
         	// constant name exists in symbol table: indicates error
-			report_error("Greska: Ime " + constantName + " je vec deklarisano!", info);    		
+			report_error("Ime " + constantName + " je vec deklarisano!", info);    		
 			return false;
     	}
     	// constant name does not exists in symbol table
@@ -152,7 +159,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	// Check if the declared constant type is the predefined type of constant value (inc, char, double)
     	if(!constantType.equals(currentType)) {
-			report_error("Greska: Deklarisani tip konstante " + constantName + " nije isti kao tip vrednosti koja se dodeljuje!", info);    		    		
+			report_error("Deklarisani tip konstante '" + structDescription(currentType) + "' nije isti kao tip vrednosti koja se dodeljuje '" + structDescription(constantType) + "'!", info);    		    		
     		return false;
     	}
     	
@@ -162,7 +169,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     private void insertConstantIntoSymbolTable(String constantName, Struct constantType, int constantValue, SyntaxNode info) {
 
     	Obj constNode = Tab.insert(Obj.Con, constantName, constantType);
-		report_info("Info: Kreirana je konstanta " + structDescription(constantType) + " " + constantName + " = " + constantValue, info);
+		report_info("Kreirana je konstanta " + structDescription(constantType) + " " + constantName + " = " + constantValue + ".", info);
 		constNode.setAdr(constantValue);
 	}
     

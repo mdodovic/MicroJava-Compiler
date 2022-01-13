@@ -2,6 +2,7 @@ package rs.ac.bg.etf.pp1;
 
 import org.apache.log4j.Logger;
 
+import rs.ac.bg.etf.pp1.ast.ArrayBrackets;
 import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
 import rs.ac.bg.etf.pp1.ast.ConstDecl;
@@ -13,6 +14,9 @@ import rs.ac.bg.etf.pp1.ast.ProgName;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.Type;
+import rs.ac.bg.etf.pp1.ast.VarFromLastPart;
+import rs.ac.bg.etf.pp1.ast.VarFromMultiplePart;
+import rs.ac.bg.etf.pp1.ast.VariableIsArray;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 
 import rs.etf.pp1.symboltable.Tab;
@@ -34,13 +38,15 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
 	private Struct currentType; // this will represent type of variable that is declaring
 	
-	public SemanticAnalyzer() {
-		Tab.currentScope.addToLocals(new Obj(Obj.Type, "bool", boolType));
-	}
+	private boolean isVariableArray = false;	
 	
 	/* Global utility functions */
+
+	public SemanticAnalyzer() {
+		Tab.currentScope.addToLocals(new Obj(Obj.Type, "bool", boolType));
+	}	
 	
-	// return number of global variables (for the purpose of code generating)
+	// return name of struct type for the given object
 	
 	public String structDescription(Struct s) {
 		switch (s.getKind()) {
@@ -57,6 +63,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	
 	}
 	
+	// return number of global variables (for the purpose of code generating)
+
 	public int getProgramVariablesNumber() {
 		return programVariablesNumber;
 	}
@@ -131,7 +139,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	}
     	
     	currentType = type.struct; // type of variable that is declaring 
-    	System.out.println("Type: " + currentType.getKind());
+    	System.out.println("Type: " + structDescription(currentType));
     	
     	
     }
@@ -175,8 +183,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(BooleanValue booleanValue) {
-    	System.out.println("Obilazak vreadnost: " + booleanValue.getConstName() + " = " + booleanValue.getBoolConstValue());
-    	
     	if(!checkConstantNameConstraint(booleanValue.getConstName(), booleanValue)) {
     		// error happened
     		return;
@@ -196,8 +202,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(IntegerValue integerValue) {
-    	System.out.println("Obilazak vreadnost: " + integerValue.getConstName() + " = " + integerValue.getNumberConstValue());
-
     	if(!checkConstantNameConstraint(integerValue.getConstName(), integerValue)) {
     		// error happened
     		return;
@@ -213,8 +217,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(CharValue charValue) {
-    	System.out.println("Obilazak vreadnost: " + charValue.getConstName() + " = " + charValue.getCharConstValue());
-
     	if(!checkConstantNameConstraint(charValue.getConstName(), charValue)) {
     		// error happened
     		return;
@@ -228,9 +230,28 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     }
     
+    /* Variables processing */
     
+    @Override
+    public void visit(VariableIsArray VariableIsArray) {
+    	System.out.println("Array?");
+    	isVariableArray = true;
+    }
     
-	// End of parsing
+    @Override
+    public void visit(VarFromLastPart varFromLastPart) {
+    	System.out.println("dec");
+
+    }
+    
+    @Override
+    public void visit(VarFromMultiplePart varFromMultiplePart) {
+    	System.out.println("dec");
+    }
+    
+
+    
+    /* End of parsing */
 	public boolean passed() {
     	return !errorDetected;
     }

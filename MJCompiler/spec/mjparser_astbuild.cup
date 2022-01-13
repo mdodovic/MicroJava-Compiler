@@ -81,8 +81,8 @@ terminal GOTO; /* "goto" */
 terminal PRINT; /* "print" */
 terminal READ; /* "read" */
 
-terminal CHAR_CONST; /* char value: 'a', ... */ 
-terminal BOOL_CONST; /* bool value: true/false*/
+terminal Character CHAR_CONST; /* char value: 'a', ... */ 
+terminal Boolean BOOL_CONST; /* bool value: true/false */
 terminal Integer NUMBER; /* integer value: 0, ... */
 terminal String IDENT; /* string value: varName, ... */
 
@@ -121,8 +121,8 @@ nonterminal AllDeclarationsList AllDeclarationsList; /* this will collect all co
 
 nonterminal ConstDecl ConstDecl; /* "const" (...) this will collect all ConstDecls */
 nonterminal ConstDeclType ConstDeclType; /* type of constant */
-nonterminal ConstValue ConstValue; /* value of constant */
-nonterminal MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations; /* this will collect all constants between initial constant and ; `"const" Type ident "=" value` (. "," ident "=" value .) `";"` */
+nonterminal ConstValueAssignment ConstValueAssignment; /* assignment of constant: constName = constValue */
+nonterminal MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations; /* this will collect all constant assignments between initial constant */
 
 nonterminal VarDecl VarDecl; /* this will collect all global variables */
 nonterminal VarDeclType VarDeclType; /* type of global variables, this will be common type for all variables in the row */ 
@@ -218,18 +218,18 @@ AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList:A1 VarDecl:V2 {: R
 
 /* constants */
 
-ConstDecl ::= (ConstDecl) CONST ConstDeclType:C1 IDENT:constName ASSIGNMENT ConstValue:constValue MoreSingleLineConstDeclarations:M2 SEMI {: RESULT=new ConstDecl(C1, constName, constValue, M2); RESULT.setLine(C1left); :};
+ConstDecl ::= (ConstDecl) CONST ConstDeclType:C1 ConstValueAssignment:C2 MoreSingleLineConstDeclarations:M3 SEMI {: RESULT=new ConstDecl(C1, C2, M3); RESULT.setLine(C1left); :};
 
 ConstDeclType ::= (ConstDeclType) Type:constType {: RESULT=new ConstDeclType(constType); RESULT.setLine(constTypeleft); :};
 
-ConstValue ::= (BooleanValue) BOOL_CONST:constValue {: RESULT=new BooleanValue(); :}
-			   |
-			   (IntegerValue) NUMBER:constValue {: RESULT=new IntegerValue(constValue); RESULT.setLine(constValueleft); :}
-			   |
-			   (CharValue) CHAR_CONST:constValue {: RESULT=new CharValue(); :}
-			   ;
+ConstValueAssignment ::= (BooleanValue) IDENT:constName ASSIGNMENT BOOL_CONST:boolConstValue {: RESULT=new BooleanValue(constName, boolConstValue); RESULT.setLine(constNameleft); :}
+			   			 |
+					     (IntegerValue) IDENT:constName ASSIGNMENT NUMBER:numberConstValue {: RESULT=new IntegerValue(constName, numberConstValue); RESULT.setLine(constNameleft); :}
+					     |
+			   		 	 (CharValue) IDENT:constName ASSIGNMENT CHAR_CONST:charConstValue {: RESULT=new CharValue(constName, charConstValue); RESULT.setLine(constNameleft); :}
+			   		 	 ;
 
-MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstDeclarations:M1 COMMA IDENT:constName ASSIGNMENT ConstValue:constValue {: RESULT=new MoreConstDeclarations(M1, constName, constValue); RESULT.setLine(M1left); :}
+MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstDeclarations:M1 COMMA ConstValueAssignment:C2 {: RESULT=new MoreConstDeclarations(M1, C2); RESULT.setLine(M1left); :}
 									|
 									(NoMoreConstDeclarations) {: RESULT=new NoMoreConstDeclarations(); :} /* epsilon */
 									;
@@ -490,9 +490,9 @@ Factor ::= (FactorVariable) Designator:variableName {: RESULT=new FactorVariable
 		   |
 		   (FactorNumConst) NUMBER:constValue {: RESULT=new FactorNumConst(constValue); RESULT.setLine(constValueleft); :}
 		   |
-		   (FactorCharConst) CHAR_CONST:constValue {: RESULT=new FactorCharConst(); :}
+		   (FactorCharConst) CHAR_CONST:constValue {: RESULT=new FactorCharConst(constValue); RESULT.setLine(constValueleft); :}
 		   |
-		   (FactorBoolConst) BOOL_CONST:constValue {: RESULT=new FactorBoolConst(); :}
+		   (FactorBoolConst) BOOL_CONST:constValue {: RESULT=new FactorBoolConst(constValue); RESULT.setLine(constValueleft); :}
 		   |
 		   (FactorClassNewOperator) NEW Type:className {: RESULT=new FactorClassNewOperator(className); RESULT.setLine(classNameleft); :}
 		   |

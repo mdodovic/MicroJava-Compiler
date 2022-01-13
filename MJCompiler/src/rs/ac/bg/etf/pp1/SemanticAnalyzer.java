@@ -5,9 +5,13 @@ import org.apache.log4j.Logger;
 import rs.ac.bg.etf.pp1.ast.ArrayBrackets;
 import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
+import rs.ac.bg.etf.pp1.ast.ConcreteType;
 import rs.ac.bg.etf.pp1.ast.ConstDecl;
 import rs.ac.bg.etf.pp1.ast.ConstDeclType;
+import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.IntegerValue;
+import rs.ac.bg.etf.pp1.ast.MethodDecl;
+import rs.ac.bg.etf.pp1.ast.MethodTypeName;
 import rs.ac.bg.etf.pp1.ast.MoreConstDeclarations;
 import rs.ac.bg.etf.pp1.ast.MoreSingleLineConstDeclarations;
 import rs.ac.bg.etf.pp1.ast.ProgName;
@@ -18,7 +22,7 @@ import rs.ac.bg.etf.pp1.ast.VarFromLastPart;
 import rs.ac.bg.etf.pp1.ast.VarFromMultiplePart;
 import rs.ac.bg.etf.pp1.ast.VariableIsArray;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
-
+import rs.ac.bg.etf.pp1.ast.VoidType;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Scope;
@@ -34,11 +38,14 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
 	private boolean errorDetected = false;	
 	
-	private int programVariablesNumber;
+	private int programVariablesNumber = 0;
 
-	private Struct currentType; // this will represent type of variable that is declaring
+	private Struct currentType = null; // this will represent type of variable that is declaring
 	
 	private boolean isVariableArray = false;	
+	
+	private Obj currentMethod = null;
+	private boolean returnFound = false;
 	
 	/* Global utility functions */
 
@@ -254,6 +261,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     private Obj insertVariableIntoSymbolTable(String variableName, SyntaxNode info) {
     	
+    	// *** Uncomment when find the reason!
     	// if(currentType == Tab.noType) {    	
     	//	return Tab.noObj;
     	//}
@@ -278,8 +286,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(VarFromLastPart varFromLastPart) {
-    	System.out.println("dec " + isVariableArray);
-
     	if(!checkVariableNameConstraint(varFromLastPart.getVarName(), varFromLastPart)) {
     		return;
     	}
@@ -292,8 +298,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(VarFromMultiplePart varFromMultiplePart) {
-    	System.out.println("dec " + isVariableArray);
-
     	if(!checkVariableNameConstraint(varFromMultiplePart.getVarName(), varFromMultiplePart)) {
     		return;
     	}
@@ -304,7 +308,48 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     }
     
+    /* Methods processing */
+    
+    @Override
+    public void visit(ConcreteType concreteType) {
+    	// return type is one of, allready declared types
+    	concreteType.struct = currentType;
+    }
+    
+    @Override
+    public void visit(VoidType voidType) {
+    	// return type is void
+    	voidType.struct = Tab.noType;
+    }
+    
+    @Override
+    public void visit(MethodTypeName methodTypeName) {
+    	
+    	System.out.println(structDescription(methodTypeName.getMethodReturnType().struct));
+    	// methodTypeName.getMethodReturnType().struct is filled in return type visit methods (ConcreteType and VoidType)
+    	
+    	currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethName(), methodTypeName.getMethodReturnType().struct);
+    	methodTypeName.obj = currentMethod;
+    	
+    	Tab.openScope(); // open new scope for method. 
+    	// All variables declared after is in this (inner) scope and can overdeclared global variables.
+		report_info("Definicija funkcije " + methodTypeName.getMethName(), methodTypeName);
+    }
 
+    @Override
+    public void visit(CorrectMethodDecl correctMethodDecl) {
+    	
+    	if(!returnFound && currentMethod.getType() != Tab.noType) {
+			report_error("Funkcija " + currentMethod.getName() + " nema return iskaz!", correctMethodDecl);    		
+    	}
+    	
+    	Tab.chainLocalSymbols(currentMethod);
+    	Tab.closeScope();
+
+    	returnFound = false;
+    	currentMethod = null;
+
+    }
     
     /* End of parsing */
 	public boolean passed() {

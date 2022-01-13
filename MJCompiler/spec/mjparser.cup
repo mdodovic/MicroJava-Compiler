@@ -156,7 +156,7 @@ nonterminal ConstructorVarDecl; /* local variables for constructor, there error 
 nonterminal MethodDeclList; /* list of all methods' declarations */
 nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodDecl; /* returnType methodName "(" (.4.) localVariables "{" methodBody "}" */
 nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodTypeName; /* this will represent return type and methodName */
-nonterminal MethodReturnType; /* this will represent all possible return types */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct MethodReturnType; /* this will represent all possible return types */
 nonterminal MethodVarDecl; /* local variables for method, there error handling is as same as VarDecl */
 
 nonterminal FormPars; /* this will say if the formal parameter list is empty or not (.4.) and match ")" if the formal parameters do not exists*/

@@ -18,7 +18,14 @@ program p
 	
 	
 {
-	void main() int x, xa[]; {
+	void f1(int x1, int x2, char z) int a; {
+	
+	}
+
+	void f1(int x1, int x2, char z) int a; {
+	
+	}
+	void main() int arr1, sum[]; {
 	
 	}
 }

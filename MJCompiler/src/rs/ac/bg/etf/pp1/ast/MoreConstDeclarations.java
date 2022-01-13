@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 13:7:7
+// 13/0/2022 9:30:15
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,15 +8,13 @@ package rs.ac.bg.etf.pp1.ast;
 public class MoreConstDeclarations extends MoreSingleLineConstDeclarations {
 
     private MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations;
-    private String constName;
-    private ConstValue ConstValue;
+    private ConstValueAssignment ConstValueAssignment;
 
-    public MoreConstDeclarations (MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations, String constName, ConstValue ConstValue) {
+    public MoreConstDeclarations (MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations, ConstValueAssignment ConstValueAssignment) {
         this.MoreSingleLineConstDeclarations=MoreSingleLineConstDeclarations;
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.setParent(this);
-        this.constName=constName;
-        this.ConstValue=ConstValue;
-        if(ConstValue!=null) ConstValue.setParent(this);
+        this.ConstValueAssignment=ConstValueAssignment;
+        if(ConstValueAssignment!=null) ConstValueAssignment.setParent(this);
     }
 
     public MoreSingleLineConstDeclarations getMoreSingleLineConstDeclarations() {
@@ -27,20 +25,12 @@ public class MoreConstDeclarations extends MoreSingleLineConstDeclarations {
         this.MoreSingleLineConstDeclarations=MoreSingleLineConstDeclarations;
     }
 
-    public String getConstName() {
-        return constName;
+    public ConstValueAssignment getConstValueAssignment() {
+        return ConstValueAssignment;
     }
 
-    public void setConstName(String constName) {
-        this.constName=constName;
-    }
-
-    public ConstValue getConstValue() {
-        return ConstValue;
-    }
-
-    public void setConstValue(ConstValue ConstValue) {
-        this.ConstValue=ConstValue;
+    public void setConstValueAssignment(ConstValueAssignment ConstValueAssignment) {
+        this.ConstValueAssignment=ConstValueAssignment;
     }
 
     public void accept(Visitor visitor) {
@@ -49,18 +39,18 @@ public class MoreConstDeclarations extends MoreSingleLineConstDeclarations {
 
     public void childrenAccept(Visitor visitor) {
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.accept(visitor);
-        if(ConstValue!=null) ConstValue.accept(visitor);
+        if(ConstValueAssignment!=null) ConstValueAssignment.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.traverseTopDown(visitor);
-        if(ConstValue!=null) ConstValue.traverseTopDown(visitor);
+        if(ConstValueAssignment!=null) ConstValueAssignment.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.traverseBottomUp(visitor);
-        if(ConstValue!=null) ConstValue.traverseBottomUp(visitor);
+        if(ConstValueAssignment!=null) ConstValueAssignment.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -75,11 +65,8 @@ public class MoreConstDeclarations extends MoreSingleLineConstDeclarations {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        buffer.append(" "+tab+constName);
-        buffer.append("\n");
-
-        if(ConstValue!=null)
-            buffer.append(ConstValue.toString("  "+tab));
+        if(ConstValueAssignment!=null)
+            buffer.append(ConstValueAssignment.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

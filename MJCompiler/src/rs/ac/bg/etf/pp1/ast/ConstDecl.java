@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 13:7:7
+// 13/0/2022 9:30:15
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -10,16 +10,14 @@ public class ConstDecl implements SyntaxNode {
     private SyntaxNode parent;
     private int line;
     private ConstDeclType ConstDeclType;
-    private String constName;
-    private ConstValue ConstValue;
+    private ConstValueAssignment ConstValueAssignment;
     private MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations;
 
-    public ConstDecl (ConstDeclType ConstDeclType, String constName, ConstValue ConstValue, MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations) {
+    public ConstDecl (ConstDeclType ConstDeclType, ConstValueAssignment ConstValueAssignment, MoreSingleLineConstDeclarations MoreSingleLineConstDeclarations) {
         this.ConstDeclType=ConstDeclType;
         if(ConstDeclType!=null) ConstDeclType.setParent(this);
-        this.constName=constName;
-        this.ConstValue=ConstValue;
-        if(ConstValue!=null) ConstValue.setParent(this);
+        this.ConstValueAssignment=ConstValueAssignment;
+        if(ConstValueAssignment!=null) ConstValueAssignment.setParent(this);
         this.MoreSingleLineConstDeclarations=MoreSingleLineConstDeclarations;
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.setParent(this);
     }
@@ -32,20 +30,12 @@ public class ConstDecl implements SyntaxNode {
         this.ConstDeclType=ConstDeclType;
     }
 
-    public String getConstName() {
-        return constName;
+    public ConstValueAssignment getConstValueAssignment() {
+        return ConstValueAssignment;
     }
 
-    public void setConstName(String constName) {
-        this.constName=constName;
-    }
-
-    public ConstValue getConstValue() {
-        return ConstValue;
-    }
-
-    public void setConstValue(ConstValue ConstValue) {
-        this.ConstValue=ConstValue;
+    public void setConstValueAssignment(ConstValueAssignment ConstValueAssignment) {
+        this.ConstValueAssignment=ConstValueAssignment;
     }
 
     public MoreSingleLineConstDeclarations getMoreSingleLineConstDeclarations() {
@@ -78,20 +68,20 @@ public class ConstDecl implements SyntaxNode {
 
     public void childrenAccept(Visitor visitor) {
         if(ConstDeclType!=null) ConstDeclType.accept(visitor);
-        if(ConstValue!=null) ConstValue.accept(visitor);
+        if(ConstValueAssignment!=null) ConstValueAssignment.accept(visitor);
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(ConstDeclType!=null) ConstDeclType.traverseTopDown(visitor);
-        if(ConstValue!=null) ConstValue.traverseTopDown(visitor);
+        if(ConstValueAssignment!=null) ConstValueAssignment.traverseTopDown(visitor);
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ConstDeclType!=null) ConstDeclType.traverseBottomUp(visitor);
-        if(ConstValue!=null) ConstValue.traverseBottomUp(visitor);
+        if(ConstValueAssignment!=null) ConstValueAssignment.traverseBottomUp(visitor);
         if(MoreSingleLineConstDeclarations!=null) MoreSingleLineConstDeclarations.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -107,11 +97,8 @@ public class ConstDecl implements SyntaxNode {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        buffer.append(" "+tab+constName);
-        buffer.append("\n");
-
-        if(ConstValue!=null)
-            buffer.append(ConstValue.toString("  "+tab));
+        if(ConstValueAssignment!=null)
+            buffer.append(ConstValueAssignment.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

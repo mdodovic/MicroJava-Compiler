@@ -1,13 +1,34 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 13:7:7
+// 13/0/2022 9:30:15
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class BooleanValue extends ConstValue {
+public class BooleanValue extends ConstValueAssignment {
 
-    public BooleanValue () {
+    private String constName;
+    private Boolean boolConstValue;
+
+    public BooleanValue (String constName, Boolean boolConstValue) {
+        this.constName=constName;
+        this.boolConstValue=boolConstValue;
+    }
+
+    public String getConstName() {
+        return constName;
+    }
+
+    public void setConstName(String constName) {
+        this.constName=constName;
+    }
+
+    public Boolean getBoolConstValue() {
+        return boolConstValue;
+    }
+
+    public void setBoolConstValue(Boolean boolConstValue) {
+        this.boolConstValue=boolConstValue;
     }
 
     public void accept(Visitor visitor) {
@@ -29,6 +50,12 @@ public class BooleanValue extends ConstValue {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
         buffer.append("BooleanValue(\n");
+
+        buffer.append(" "+tab+constName);
+        buffer.append("\n");
+
+        buffer.append(" "+tab+boolConstValue);
+        buffer.append("\n");
 
         buffer.append(tab);
         buffer.append(") [BooleanValue]");

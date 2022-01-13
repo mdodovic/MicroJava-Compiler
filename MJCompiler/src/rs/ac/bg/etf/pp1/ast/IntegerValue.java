@@ -1,24 +1,34 @@
 // generated with ast extension for cup
 // version 0.8
-// 11/0/2022 13:7:7
+// 13/0/2022 9:30:15
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class IntegerValue extends ConstValue {
+public class IntegerValue extends ConstValueAssignment {
 
-    private Integer constValue;
+    private String constName;
+    private Integer numberConstValue;
 
-    public IntegerValue (Integer constValue) {
-        this.constValue=constValue;
+    public IntegerValue (String constName, Integer numberConstValue) {
+        this.constName=constName;
+        this.numberConstValue=numberConstValue;
     }
 
-    public Integer getConstValue() {
-        return constValue;
+    public String getConstName() {
+        return constName;
     }
 
-    public void setConstValue(Integer constValue) {
-        this.constValue=constValue;
+    public void setConstName(String constName) {
+        this.constName=constName;
+    }
+
+    public Integer getNumberConstValue() {
+        return numberConstValue;
+    }
+
+    public void setNumberConstValue(Integer numberConstValue) {
+        this.numberConstValue=numberConstValue;
     }
 
     public void accept(Visitor visitor) {
@@ -41,7 +51,10 @@ public class IntegerValue extends ConstValue {
         buffer.append(tab);
         buffer.append("IntegerValue(\n");
 
-        buffer.append(" "+tab+constValue);
+        buffer.append(" "+tab+constName);
+        buffer.append("\n");
+
+        buffer.append(" "+tab+numberConstValue);
         buffer.append("\n");
 
         buffer.append(tab);

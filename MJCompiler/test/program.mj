@@ -1,5 +1,15 @@
 program p
 
+	const int pi = 3, e = 2;
+	const bool flag1 = true;
+	const bool flag2 = false;
+	const int n_1 = 1, n_2 = 2, n_3 = 3;	
+	const char a = 'a';	
+	const int b = 'a', x = false;	
+	
+	const char n_1 = 7;
+	const char n_2 = 'b';
+	
 {
 
 }

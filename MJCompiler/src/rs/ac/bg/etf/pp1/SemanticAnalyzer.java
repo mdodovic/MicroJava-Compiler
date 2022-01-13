@@ -232,21 +232,76 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     /* Variables processing */
     
+    // utility functions for constant processing
+    
+    private boolean checkVariableNameConstraint(String variableName, SyntaxNode info) {
+    	
+    	// Check if this is multiple declaration
+    	
+    	Obj constNameNode = Tab.find(variableName);
+    	if(constNameNode != Tab.noObj) {
+        	// variable name exists in symbol table: indicates error if they are in the same scope
+    		if(Tab.currentScope.findSymbol(variableName) != null) {
+    			// If it is declared in current scope, then it is multiple declaration
+    			// Otherwise, this variable hides the outer-scoped variable, which is allowed
+				report_error("Ime " + variableName + " je vec deklarisano!", info);    		
+				return false;
+    		}
+    	}
+    	// variable name does not exists in symbol table
+    	return true; 
+    }
+    
+    private Obj insertVariableIntoSymbolTable(String variableName, SyntaxNode info) {
+    	
+    	// if(currentType == Tab.noType) {    	
+    	//	return Tab.noObj;
+    	//}
+    	
+    	Struct variableType = currentType;
+    	if(isVariableArray == true) {
+    		// struct node for Array should be created
+    		variableType = new Struct(Struct.Array, currentType);
+    	}
+    	
+    	Obj variableNode = Tab.insert(Obj.Var, variableName, variableType);
+    	// Obj.Var should be checked, now it is Var, but maybe it will become Obj.Fld
+		report_info("Kreirana je promenjiva " + structDescription(variableType) + " " + variableName + (isVariableArray ? "[]" : "") +".", info);
+		return variableNode;
+	}
+	
+    
     @Override
     public void visit(VariableIsArray VariableIsArray) {
-    	System.out.println("Array?");
     	isVariableArray = true;
     }
     
     @Override
     public void visit(VarFromLastPart varFromLastPart) {
-    	System.out.println("dec");
+    	System.out.println("dec " + isVariableArray);
+
+    	if(!checkVariableNameConstraint(varFromLastPart.getVarName(), varFromLastPart)) {
+    		return;
+    	}
+    	
+    	insertVariableIntoSymbolTable(varFromLastPart.getVarName(), varFromLastPart);
+    	
+    	isVariableArray = false;
 
     }
     
     @Override
     public void visit(VarFromMultiplePart varFromMultiplePart) {
-    	System.out.println("dec");
+    	System.out.println("dec " + isVariableArray);
+
+    	if(!checkVariableNameConstraint(varFromMultiplePart.getVarName(), varFromMultiplePart)) {
+    		return;
+    	}
+    	
+    	insertVariableIntoSymbolTable(varFromMultiplePart.getVarName(), varFromMultiplePart);
+    	
+    	isVariableArray = false;
+
     }
     
 

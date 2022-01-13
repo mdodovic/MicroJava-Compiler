@@ -10,11 +10,15 @@ program p
 	//const char n_1 = 7;
 	//const char n_2 = 'b';
 	
+	//int flag1;
+	
 		int arr1[];
 	
 	int len, arr2[], sum;
 	
 	
 {
-
+	void main() int x, xa[]; {
+	
+	}
 }

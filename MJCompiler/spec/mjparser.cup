@@ -81,8 +81,8 @@ terminal GOTO; /* "goto" */
 terminal PRINT; /* "print" */
 terminal READ; /* "read" */
 
-terminal CHAR_CONST; /* char value: 'a', ... */ 
-terminal BOOL_CONST; /* bool value: true/false*/
+terminal Character CHAR_CONST; /* char value: 'a', ... */ 
+terminal Boolean BOOL_CONST; /* bool value: true/false */
 terminal Integer NUMBER; /* integer value: 0, ... */
 terminal String IDENT; /* string value: varName, ... */
 
@@ -121,8 +121,8 @@ nonterminal AllDeclarationsList; /* this will collect all constants, (global) va
 
 nonterminal ConstDecl; /* "const" (...) this will collect all ConstDecls */
 nonterminal ConstDeclType; /* type of constant */
-nonterminal ConstValue; /* value of constant */
-nonterminal MoreSingleLineConstDeclarations; /* this will collect all constants between initial constant and ; `"const" Type ident "=" value` (. "," ident "=" value .) `";"` */
+nonterminal ConstValueAssignment; /* assignment of constant: constName = constValue */
+nonterminal MoreSingleLineConstDeclarations; /* this will collect all constant assignments between initial constant */
 
 nonterminal VarDecl; /* this will collect all global variables */
 nonterminal VarDeclType; /* type of global variables, this will be common type for all variables in the row */ 
@@ -218,18 +218,18 @@ AllDeclarationsList ::= (VarDeclarations) AllDeclarationsList VarDecl
 
 /* constants */
 
-ConstDecl ::= (ConstDecl) CONST ConstDeclType IDENT:constName ASSIGNMENT ConstValue:constValue MoreSingleLineConstDeclarations SEMI;
+ConstDecl ::= (ConstDecl) CONST ConstDeclType ConstValueAssignment MoreSingleLineConstDeclarations SEMI;
 
 ConstDeclType ::= (ConstDeclType) Type:constType;
 
-ConstValue ::= (BooleanValue) BOOL_CONST:constValue
-			   |
-			   (IntegerValue) NUMBER:constValue
-			   |
-			   (CharValue) CHAR_CONST:constValue
-			   ;
+ConstValueAssignment ::= (BooleanValue) IDENT:constName ASSIGNMENT BOOL_CONST:boolConstValue
+			   			 |
+					     (IntegerValue) IDENT:constName ASSIGNMENT NUMBER:numberConstValue
+					     |
+			   		 	 (CharValue) IDENT:constName ASSIGNMENT CHAR_CONST:charConstValue
+			   		 	 ;
 
-MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstDeclarations COMMA IDENT:constName ASSIGNMENT ConstValue:constValue
+MoreSingleLineConstDeclarations ::= (MoreConstDeclarations) MoreSingleLineConstDeclarations COMMA ConstValueAssignment
 									|
 									(NoMoreConstDeclarations) /* epsilon */
 									;

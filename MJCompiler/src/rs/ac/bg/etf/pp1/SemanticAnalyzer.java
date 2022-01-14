@@ -17,6 +17,7 @@ import rs.ac.bg.etf.pp1.ast.MoreConstDeclarations;
 import rs.ac.bg.etf.pp1.ast.MoreSingleLineConstDeclarations;
 import rs.ac.bg.etf.pp1.ast.ProgName;
 import rs.ac.bg.etf.pp1.ast.Program;
+import rs.ac.bg.etf.pp1.ast.StatementReturnEmpty;
 import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.Type;
@@ -436,13 +437,14 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     }
        
+    
     @Override
     public void visit(StetementReturnExpression stetementReturnExpression) {
     	returnFound = true;
     	Struct declaredMethodType = currentMethod.getType();
     	// expression which is written in the return statement has to be compatible with the method type (from declaration)
     	// TODO: struct of the espression is not set yet
-    	//if(!declaredMethodType.compatibleWith(stetementReturnExpression.getExpr().struct)){
+    	//if(!declaredMethodType.equals(stetementReturnExpression.getExpr().struct)){
 		//	report_error("Tip izraza u return naredbi (" + structDescription(stetementReturnExpression.getExpr().struct) + ") nije kompatibilan sa tipom povratne vrednosti funkcije " + structDescription(declaredMethodType), stetementReturnExpression);
     	//}
     }
@@ -452,7 +454,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     public void visit(CorrectMethodDecl correctMethodDecl) {
     	
     	if(!returnFound && currentMethod.getType() != Tab.noType) {
-			report_error("Funkcija " + currentMethod.getName() + " nema return iskaz!", correctMethodDecl);    		
+			report_error("Funkcija " + currentMethod.getName() + " nema (adekvatan) return iskaz!", correctMethodDecl);    		
     	}
 
     	currentMethod.setLevel(methodFormalParametersCount);

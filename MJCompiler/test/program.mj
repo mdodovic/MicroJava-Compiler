@@ -20,7 +20,7 @@ program p
 	
 	
 {
-	
+
 	int f0(int z0, char ss) {
 		if(ss == 'a')
 			z0 = 1;
@@ -30,7 +30,7 @@ program p
 	}
 	
 	int f1(int x1, int x2, char z) int a; {
-	
+		return;
 	}
 	void main() int arr1, sum[]; {
 	

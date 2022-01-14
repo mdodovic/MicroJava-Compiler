@@ -9,6 +9,7 @@ import rs.ac.bg.etf.pp1.ast.ConcreteType;
 import rs.ac.bg.etf.pp1.ast.ConstDecl;
 import rs.ac.bg.etf.pp1.ast.ConstDeclType;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
+import rs.ac.bg.etf.pp1.ast.FormalParameterDeclaration;
 import rs.ac.bg.etf.pp1.ast.IntegerValue;
 import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
@@ -39,13 +40,20 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	private boolean errorDetected = false;	
 	
 	private int programVariablesNumber = 0;
-
+	private boolean mainMethodFound = false;
+	
 	private Struct currentType = null; // this will represent type of variable that is declaring
 	
 	private boolean isVariableArray = false;	
 	
 	private Obj currentMethod = null;
 	private boolean returnFound = false;
+	private int methodFormalParametersCount = 0;
+
+	private Struct currentClass = null;
+	private Obj overridedMethod = null;
+
+	
 	
 	/* Global utility functions */
 
@@ -116,7 +124,12 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// complete syntax tree visiting is finished!
     	
     	programVariablesNumber = Tab.currentScope.getnVars();
+    	
+		if(mainMethodFound == false){
+			report_error("glavni metod sa potpisom: void main() {...} metod nije pronadjen!", null);
+		}
 
+    	
     	Tab.chainLocalSymbols(program.getProgName().obj); // chain variables for program scope
     	Tab.closeScope();
     }
@@ -310,6 +323,58 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     /* Methods processing */
     
+    private boolean checkMethodNameRedefinition(String methodName, SyntaxNode info) {
+    	
+    	// Check if this is multiple definition: return false if it is not redefinition or it is not problem i this redefinition (overriding)
+    	
+    	Obj methodNameNode = Tab.find(methodName);
+    	
+    	if(methodNameNode == Tab.noObj) {
+    		// No method name in symbol table
+    		return false;
+    	} else {
+    		// This name exists in symbol table
+    		if(Tab.currentScope.findSymbol(methodName) != null) {
+    			// and this name is in current scope: name clashing
+    			if(currentClass == null) {
+    				// this name is not in class, so it is not overriding
+    				report_error("Ime metode " + methodName + " je ranije vec deklarisano!", info);    		
+    				overridedMethod = null;
+    				return true;
+    			} else {
+    				// save method from parent class
+    				overridedMethod = methodNameNode;
+    				return false;
+    			}
+    			
+    		} else {
+    			// This name exists is in the outer scope, so it is correct redefinition
+    			return false;
+    		}
+    		
+    	}
+    	
+    }
+    
+    private boolean checkMethodFormalParameterConstraint(String formalParameterName, SyntaxNode info) {
+
+    	Obj formalParameterNode = Tab.find(formalParameterName);
+
+    	// check if formal parameter exists in symbol table
+		if(formalParameterNode != Tab.noObj){
+
+			// this name exists in symbol table. 
+			// method scope has been opened on MethodTypeName visiting so if it is in this scope it is an error
+
+			if (Tab.currentScope.findSymbol(formalParameterName) != null){
+				report_error("Ime formalnog parametra " + formalParameterName + " je vec deklarisano u listi formalnih parametara!", info);    		
+				return false;
+			}
+		}
+		return true;
+	}
+    
+    
     @Override
     public void visit(ConcreteType concreteType) {
     	// return type is one of, allready declared types
@@ -325,27 +390,73 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     @Override
     public void visit(MethodTypeName methodTypeName) {
     	
-    	System.out.println(structDescription(methodTypeName.getMethodReturnType().struct));
+    	
+    	if(checkMethodNameRedefinition(methodTypeName.getMethName(), methodTypeName)) {
+    		currentMethod = Tab.noObj;
+    		methodTypeName.obj = Tab.noObj;
+    		Tab.openScope();
+    		return;
+    	}
+    	
     	// methodTypeName.getMethodReturnType().struct is filled in return type visit methods (ConcreteType and VoidType)
     	
     	currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethName(), methodTypeName.getMethodReturnType().struct);
     	methodTypeName.obj = currentMethod;
     	
+
     	Tab.openScope(); // open new scope for method. 
     	// All variables declared after is in this (inner) scope and can overdeclared global variables.
 		report_info("Definicija funkcije " + methodTypeName.getMethName(), methodTypeName);
+		
+		if(currentClass != null) {
+			// this method belongs to the class:
+			// there is an implicit parameter this
+			methodFormalParametersCount++;
+			Tab.insert(Obj.Meth, "this", currentClass);
+		}
+		
     }
 
+    @Override
+    public void visit(FormalParameterDeclaration formalParameterDeclaration) {
+		methodFormalParametersCount++;
+
+		if(!checkMethodFormalParameterConstraint(formalParameterDeclaration.getParameterName(), formalParameterDeclaration)) {
+    		return;
+    	}
+    	
+    	Struct parameterType = currentType;
+    	if(isVariableArray == true) {
+    		// struct node for Array should be created
+    		parameterType = new Struct(Struct.Array, currentType);
+    	}
+    	
+    	Tab.insert(Obj.Var, formalParameterDeclaration.getParameterName(), parameterType);
+    	
+    }
+       
+    
+    
     @Override
     public void visit(CorrectMethodDecl correctMethodDecl) {
     	
     	if(!returnFound && currentMethod.getType() != Tab.noType) {
 			report_error("Funkcija " + currentMethod.getName() + " nema return iskaz!", correctMethodDecl);    		
     	}
+
+    	currentMethod.setLevel(methodFormalParametersCount);
+
+		if("main".equals(currentMethod.getName()) && (currentMethod.getLevel() == 0)){
+			mainMethodFound = true;
+		}
+
     	
     	Tab.chainLocalSymbols(currentMethod);
-    	Tab.closeScope();
 
+    	Tab.closeScope();
+    	
+    	// reset 
+    	methodFormalParametersCount = 0;
     	returnFound = false;
     	currentMethod = null;
 

@@ -134,7 +134,8 @@ nonterminal NotLastVarDecl; /* this will collect all variable names until the la
 nonterminal LastVarDecl; /* this will collect the last variable name, it can be like varName or varName[]  */
 nonterminal ArrayBrackets; /* this will represent [] declaration like int a[], and will contain the info about if the variable is array or not */
 
-nonterminal RecordDecl; /* "record" recordName "{" (...) "}" */
+nonterminal RecordDecl; /* this is the representation of Record = recordDeclName "{" RecordVarDecl "}" */
+nonterminal rs.etf.pp1.symboltable.concepts.Obj RecordDeclName; /* this will represent "record" recordName */
 nonterminal RecordVarDecl; /* this will represent variable declarations in record */
 
 nonterminal ClassDecl; /* "class" className (.1.) (.2.) */
@@ -265,7 +266,9 @@ ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET
 
 /* records */
 
-RecordDecl ::= (RecordDecl) RECORD IDENT:recordName LEFT_CURLY_BRACKET RecordVarDecl RIGHT_CURLY_BRACKET;
+RecordDecl ::= (RecordDecl) RecordDeclName LEFT_CURLY_BRACKET RecordVarDecl RIGHT_CURLY_BRACKET;
+
+RecordDeclName ::= (RecordDeclName) RECORD IDENT:recordName;
 
 RecordVarDecl ::= (RecordHasVariables) RecordVarDecl VarDecl
 				  |

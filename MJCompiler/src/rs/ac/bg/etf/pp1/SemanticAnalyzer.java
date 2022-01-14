@@ -1,23 +1,21 @@
 package rs.ac.bg.etf.pp1;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
-import rs.ac.bg.etf.pp1.ast.ArrayBrackets;
 import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
 import rs.ac.bg.etf.pp1.ast.ConcreteType;
-import rs.ac.bg.etf.pp1.ast.ConstDecl;
-import rs.ac.bg.etf.pp1.ast.ConstDeclType;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.FormalParameterDeclaration;
 import rs.ac.bg.etf.pp1.ast.IntegerValue;
-import rs.ac.bg.etf.pp1.ast.MethodDecl;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
-import rs.ac.bg.etf.pp1.ast.MoreConstDeclarations;
-import rs.ac.bg.etf.pp1.ast.MoreSingleLineConstDeclarations;
 import rs.ac.bg.etf.pp1.ast.ProgName;
 import rs.ac.bg.etf.pp1.ast.Program;
-import rs.ac.bg.etf.pp1.ast.StatementReturnEmpty;
+import rs.ac.bg.etf.pp1.ast.RecordDecl;
+import rs.ac.bg.etf.pp1.ast.RecordDeclName;
 import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.Type;
@@ -28,7 +26,6 @@ import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.ac.bg.etf.pp1.ast.VoidType;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
-import rs.etf.pp1.symboltable.concepts.Scope;
 import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class SemanticAnalyzer extends VisitorAdaptor{
@@ -52,10 +49,13 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	private boolean returnFound = false;
 	private int methodFormalParametersCount = 0;
 
+	private Struct currentRecord = null;
+	private boolean classOrRecordScope = false; // When variable is declared, if it is in class or record, it's type is Obj.Fld, othervise it is Obj.Var
+	
 	private Struct currentClass = null;
 	private Obj overridedMethod = null;
 
-	
+	private List<Struct> listOfRecords = new ArrayList<Struct>(); // list of record for further check if some class extends any record
 	
 	/* Global utility functions */
 
@@ -146,7 +146,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// Hence typeName of that variable must be in symbol table
     	
     	if(typeNode == Tab.noObj) {
-    		report_error("Tip " + type.getTypeName() + " nije pronadjen u tabeli simbola", null);
+    		report_error("Tip " + type.getTypeName() + " nije pronadjen u tabeli simbola", type);
     		type.struct = Tab.noType; // noType represent further compatibility
     		// This allow us to use field type.struct without any check if it is null in further nodes in tree
     	} else {
@@ -286,8 +286,14 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		// struct node for Array should be created
     		variableType = new Struct(Struct.Array, currentType);
     	}
+
+    	Obj variableNode;
+    	if(classOrRecordScope == true) {
+    		variableNode = Tab.insert(Obj.Fld, variableName, variableType);
+    	} else {
+    		variableNode = Tab.insert(Obj.Var, variableName, variableType);
+    	}
     	
-    	Obj variableNode = Tab.insert(Obj.Var, variableName, variableType);
     	// Obj.Var should be checked, now it is Var, but maybe it will become Obj.Fld
 		report_info("Kreirana je promenjiva " + structDescription(variableType) + " " + variableName + (isVariableArray ? "[]" : "") +".", info);
 		return variableNode;
@@ -321,6 +327,51 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	isVariableArray = false;
 
+    }
+    
+    /* Records processing */
+    
+    private boolean checkRecordNameConstraint(String recordName, SyntaxNode info) {
+    	
+    	// Check if this is multiple declaration
+    	
+    	Obj recordNameNode = Tab.find(recordName);
+    	if(recordNameNode != Tab.noObj) {
+    		// records can only be declared in program scope
+			report_error("Ime rekorda " + recordName + " je vec deklarisano!", info);    		
+			return false;
+
+    	}
+    	// variable name does not exists in symbol table
+    	return true; 
+    }
+    
+    @Override
+    public void visit(RecordDeclName recordDeclName) {
+    	
+    	if(!checkRecordNameConstraint(recordDeclName.getRecordName(), recordDeclName)) {
+    		recordDeclName.obj = Tab.noObj;
+    		currentRecord = Tab.noType;
+    		Tab.openScope();
+    		return;
+    	}
+    	
+    	currentRecord = new Struct(Struct.Class);
+    	currentRecord.setElementType(Tab.noType);
+    	
+    	recordDeclName.obj = Tab.insert(Obj.Type, recordDeclName.getRecordName(), currentRecord);
+		report_info("Kreiran je record (" + structDescription(currentRecord) + ") " + recordDeclName.getRecordName() + ".", recordDeclName);
+        Tab.openScope();
+        classOrRecordScope = true;
+    }
+    
+    @Override
+    public void visit(RecordDecl recordDecl) {
+    	listOfRecords.add(currentRecord);
+    	Tab.chainLocalSymbols(currentRecord);
+    	Tab.closeScope();
+    	classOrRecordScope = false;
+    	currentRecord = null;
     }
     
     /* Methods processing */

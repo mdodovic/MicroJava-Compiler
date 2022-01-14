@@ -18,10 +18,16 @@ program p
 	
 	//char a;
 	
+	record Board {
+	int rows, columns;
+	}
+
+	//Table val;
+	Board board1, board2;
 	
 {
 
-	int f0(int z0, char ss) {
+	int f0(int z0, char ss) Board bb; {
 		if(ss == 'a')
 			z0 = 1;
 		else 
@@ -30,7 +36,7 @@ program p
 	}
 	
 	int f1(int x1, int x2, char z) int a; {
-		return;
+		return e;
 	}
 	void main() int arr1, sum[]; {
 	

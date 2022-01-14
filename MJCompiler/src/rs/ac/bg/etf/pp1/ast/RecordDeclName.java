@@ -5,23 +5,24 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class VarDeclType implements SyntaxNode {
+public class RecordDeclName implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    private Type Type;
+    public rs.etf.pp1.symboltable.concepts.Obj obj = null;
 
-    public VarDeclType (Type Type) {
-        this.Type=Type;
-        if(Type!=null) Type.setParent(this);
+    private String recordName;
+
+    public RecordDeclName (String recordName) {
+        this.recordName=recordName;
     }
 
-    public Type getType() {
-        return Type;
+    public String getRecordName() {
+        return recordName;
     }
 
-    public void setType(Type Type) {
-        this.Type=Type;
+    public void setRecordName(String recordName) {
+        this.recordName=recordName;
     }
 
     public SyntaxNode getParent() {
@@ -45,32 +46,26 @@ public class VarDeclType implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Type!=null) Type.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Type!=null) Type.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Type!=null) Type.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("VarDeclType(\n");
+        buffer.append("RecordDeclName(\n");
 
-        if(Type!=null)
-            buffer.append(Type.toString("  "+tab));
-        else
-            buffer.append(tab+"  null");
+        buffer.append(" "+tab+recordName);
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [VarDeclType]");
+        buffer.append(") [RecordDeclName]");
         return buffer.toString();
     }
 }

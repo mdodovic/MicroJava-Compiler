@@ -134,7 +134,8 @@ nonterminal NotLastVarDecl NotLastVarDecl; /* this will collect all variable nam
 nonterminal LastVarDecl LastVarDecl; /* this will collect the last variable name, it can be like varName or varName[]  */
 nonterminal ArrayBrackets ArrayBrackets; /* this will represent [] declaration like int a[], and will contain the info about if the variable is array or not */
 
-nonterminal RecordDecl RecordDecl; /* "record" recordName "{" (...) "}" */
+nonterminal RecordDecl RecordDecl; /* this is the representation of Record = recordDeclName "{" RecordVarDecl "}" */
+nonterminal rs.etf.pp1.symboltable.concepts.Obj RecordDeclName; /* this will represent "record" recordName */
 nonterminal RecordVarDecl RecordVarDecl; /* this will represent variable declarations in record */
 
 nonterminal ClassDecl ClassDecl; /* "class" className (.1.) (.2.) */
@@ -265,7 +266,9 @@ ArrayBrackets ::= (VariableIsArray) LEFT_SQUARE_BRACKET RIGHT_SQUARE_BRACKET {: 
 
 /* records */
 
-RecordDecl ::= (RecordDecl) RECORD IDENT:recordName LEFT_CURLY_BRACKET RecordVarDecl:R1 RIGHT_CURLY_BRACKET {: RESULT=new RecordDecl(recordName, R1); RESULT.setLine(recordNameleft); :};
+RecordDecl ::= (RecordDecl) RecordDeclName:R1 LEFT_CURLY_BRACKET RecordVarDecl:R2 RIGHT_CURLY_BRACKET {: RESULT=new RecordDecl(R1, R2); RESULT.setLine(R1left); :};
+
+RecordDeclName ::= (RecordDeclName) RECORD IDENT:recordName {: RESULT=new RecordDeclName(recordName); RESULT.setLine(recordNameleft); :};
 
 RecordVarDecl ::= (RecordHasVariables) RecordVarDecl:R1 VarDecl:V2 {: RESULT=new RecordHasVariables(R1, V2); RESULT.setLine(R1left); :}
 				  |

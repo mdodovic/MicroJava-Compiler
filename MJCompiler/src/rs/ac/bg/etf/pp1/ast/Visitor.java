@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 13/0/2022 12:50:25
+// 14/0/2022 18:38:8
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -149,6 +149,7 @@ public interface Visitor {
     public void visit(ClassDecl ClassDecl);
     public void visit(RecordHasNotVariables RecordHasNotVariables);
     public void visit(RecordHasVariables RecordHasVariables);
+    public void visit(RecordDeclName RecordDeclName);
     public void visit(RecordDecl RecordDecl);
     public void visit(VariableIsNotArray VariableIsNotArray);
     public void visit(VariableIsArray VariableIsArray);

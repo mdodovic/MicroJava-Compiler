@@ -21,7 +21,7 @@ program p
 	
 {
 	
-	void f0(int z0, char ss) {
+	int f0(int z0, char ss) {
 		if(ss == 'a')
 			z0 = 1;
 		else 
@@ -29,7 +29,7 @@ program p
 		return z0;
 	}
 	
-	void f1(int x1, int x2, char z) int a; {
+	int f1(int x1, int x2, char z) int a; {
 	
 	}
 	void main() int arr1, sum[]; {

@@ -43,8 +43,14 @@ program p
 		board1.rows = 1;
 		board1.columns = 2 * 4;
 		
-		board2.rows = 2 + 3 * 4;
-		board2.columns = 1 + 2 * 4 % 5 / 3;
+		board2.rows = (2 + 3) * 4;
+		board2.columns = (1 + 2 * 4) % 2 / 3;
+
+		board2.rows = 'a' % 2;
+		board2.rows = true;
+		board2.rows = -( (1 + 2 * 4) % 2 / 3 + 4);
+		board2.rows = -( (1 + 2 * 4) % 2 / 3 + 4) + ( (1 + 2 * true) % 2 / 3 + 4);
+
 		
 //			c1 = 1;
 //		objC.fc1 = 3;

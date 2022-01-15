@@ -577,6 +577,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     // TODO: function call
     // TODO: variable
     
+    // Types passing
+    
     @Override
     public void visit(SingleFactor singleFactor) {
     	// send type (FactorType) to the Term
@@ -586,7 +588,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     @Override
     public void visit(MulOpFactorList mulOpFactorList) {
     	if(mulOpFactorList.getFactor().struct != Tab.intType || mulOpFactorList.getFactorList().struct != Tab.intType) {
-    	    // ! Specification constraint: Term and Factor should be the int type
+    	    // ! Specification constraint: Term and Factor have to be the int type
     		report_error("Tip svih cinilaca treba da bude int", mulOpFactorList);        	
     		mulOpFactorList.struct = Tab.noType;
     		return;
@@ -609,14 +611,14 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(AddOpTermList addOpTermList) {
-    	if(addOpTermList.getTerm().struct.compatibleWith(addOpTermList.getTermList().struct)) {
-    	    // ! Specification constraint: Expr and Term types should be compatible
-    		report_error("Tip svih sabiraka moraju biti kompatibilni", addOpTermList);        	
+    	if(!addOpTermList.getTerm().struct.compatibleWith(addOpTermList.getTermList().struct)) {
+    	    // ! Specification constraint: Expr and Term types have to be compatible
+    		report_error("Tip svih sabiraka moraju biti kompatibilni (" + structDescription(addOpTermList.getTerm().struct) + "," + structDescription(addOpTermList.getTermList().struct) + ")", addOpTermList);        	
     		addOpTermList.struct = Tab.noType;
     		return;
     	}
     	if(addOpTermList.getTerm().struct != Tab.intType || addOpTermList.getTermList().struct != Tab.intType) {
-    	    // ! Specification constraint: Expr and Term should be the int type
+    	    // ! Specification constraint: Expr and Term have to be the int type
     		report_error("Tip svih sabiraka treba da bude int", addOpTermList);        	
     		addOpTermList.struct = Tab.noType;
     		return;
@@ -626,15 +628,21 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     }
     
     @Override
-    public void visit(PositiveExpr PositiveExpr) {
-    	// TODO Auto-generated method stub
-    	super.visit(PositiveExpr);
+    public void visit(PositiveExpr positiveExpr) {
+        // expression without "-" should only pass its type
+    	positiveExpr.struct = positiveExpr.getTermList().struct;
     }
     
     @Override
-    public void visit(NegativeExpr NegativeExpr) {
-    	// TODO Auto-generated method stub
-    	super.visit(NegativeExpr);
+    public void visit(NegativeExpr negativeExpr) {
+    	if(negativeExpr.getTermList().struct != Tab.intType) {
+    	    // ! Specification constraint: Expr has to be the int type
+    		report_error("Tip negiranog izraza treba da bude int", negativeExpr);        	
+    		negativeExpr.struct = Tab.noType;
+    		return;
+    	}
+    	// send cumulative type (intType) to the Expr
+    	negativeExpr.struct = Tab.intType;    	
     }
     
     /* End of parsing */

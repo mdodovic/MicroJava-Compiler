@@ -767,6 +767,28 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     public void visit(StatementContinue statementContinue) {
     	checkBreakContinueConstraint("continue", statementContinue);
     }
+
+    /* print processing */
+    
+    // ! Specification constraint: first argument of the print statement has to be one of the following types: int, char or bool
+    private boolean checkPrintConstraint(Struct expressionType, SyntaxNode info) {
+    	if(expressionType != Tab.intType && expressionType != Tab.charType && expressionType != boolType) {
+    		report_error("Funkcija print se mora pozvati sa prvim argumentom tipa int, a ne " + structDescription(expressionType), info);        	
+			return false;
+    	}
+    	return true;
+    }
+    
+    @Override
+    public void visit(StatementPrintNoWidth statementPrintNoWidth) {
+    	checkPrintConstraint(statementPrintNoWidth.getExpr().struct, statementPrintNoWidth);
+    }
+    
+    @Override
+    public void visit(StatementPrintWithWidth statementPrintWithWidth) {
+    	checkPrintConstraint(statementPrintWithWidth.getExpr().struct, statementPrintWithWidth);
+    }
+    
     
     /* End of parsing */
 	public boolean passed() {

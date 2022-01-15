@@ -26,10 +26,14 @@ program p
 		c1 = arr2[7 * index];
 		c1 = sum[sum[arr2[index]]];
 		
-		if(c1 == 7)
-			continue;
 		
+		print(i);
+		print(arr2[i]);
+		print(arr1);
+		print(ibool);
+		print(i + 4);
 		i = 0;
+		
 		do{
 			if(i == 2) ibool = true;
 			
@@ -47,7 +51,7 @@ program p
 			
 		}while(i < 5);
 		
-		break;
+
 	
 	}
 }

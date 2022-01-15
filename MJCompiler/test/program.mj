@@ -15,14 +15,15 @@ program p
 {
 
 	
-	void main() int c1; {
+	void main() int c1; char arr1; {
 	
 
-		//c1 = arr1;
-		//c1 = arr2; // ovo nije problem arr2 nego problem c1 tip int nije dodeljivo sa arr2
+		c1 = arr1;
+		c1 = arr2; // ovo nije problem arr2 nego problem c1 tip int nije dodeljivo sa arr2
 		
-		//c1 = arr2[0];
-		//c1 = arr2[index];
+		c1 = arr2[0];
+		c1 = arr2[index];
+		c1 = arr2[7 * index];
 		c1 = sum[sum[arr2[index]]];
 		
 	

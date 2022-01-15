@@ -714,7 +714,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// (FactorVariable, ArrayDesignator, ClassFieldDesignator, DesignatorAssignOperation, DesignatorPostIncrement, DesignatorPostDecrement, StatementRead)
     	// key is to send the type of array's elements, not the type Array
     	arrayDesignator.obj = new Obj(Obj.Elem, arrayDesignator.getDesignator().obj.getName(), arrayDesignator.getDesignator().obj.getType().getElemType());
-    			
     
     }
     

@@ -76,6 +76,8 @@ program p
 		//arrx = new X[f0() - 4];
 		//arry = new Y[7];
 		
+		arr2[arr2[2]] = 4;
+		
 //		c = f2(c1, arrx, arry, true, null);
 		
 //		f1('a', objC.theA.fa2);

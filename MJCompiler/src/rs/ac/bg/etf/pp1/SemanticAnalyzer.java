@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import rs.ac.bg.etf.pp1.ast.AddOpTermList;
 import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
 import rs.ac.bg.etf.pp1.ast.ConcreteType;
@@ -17,13 +18,17 @@ import rs.ac.bg.etf.pp1.ast.FormalParameterDeclaration;
 import rs.ac.bg.etf.pp1.ast.IntegerValue;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
 import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
+import rs.ac.bg.etf.pp1.ast.NegativeExpr;
+import rs.ac.bg.etf.pp1.ast.PositiveExpr;
 import rs.ac.bg.etf.pp1.ast.ProgName;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.ast.RecordDecl;
 import rs.ac.bg.etf.pp1.ast.RecordDeclName;
 import rs.ac.bg.etf.pp1.ast.SingleFactor;
+import rs.ac.bg.etf.pp1.ast.SingleTerm;
 import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
+import rs.ac.bg.etf.pp1.ast.Term;
 import rs.ac.bg.etf.pp1.ast.Type;
 import rs.ac.bg.etf.pp1.ast.VarFromLastPart;
 import rs.ac.bg.etf.pp1.ast.VarFromMultiplePart;
@@ -543,27 +548,28 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     /* Factors processing */
     
     // constants - number, char, bool
-
-    // send type (boolType, intType, charType) to FactorList and then to Term
     
     @Override
     public void visit(FactorBoolConst factorBoolConst) {
+        // send type (boolType) to FactorList and then to Term
     	factorBoolConst.struct = boolType;
     }
     
     @Override
     public void visit(FactorNumConst factorNumConst) {
+        // send type (intType) to FactorList and then to Term
     	factorNumConst.struct = Tab.intType;
     }
 
     @Override
     public void visit(FactorCharConst factorCharConst) {
+        // send type (charType) to FactorList and then to Term
     	factorCharConst.struct = Tab.charType;
     }
     
-    // expression type of bracketed expression is exactly the inner expression type
     @Override
     public void visit(FactorBracketExpression factorBracketExpression) {
+        // expression type of bracketed expression is exactly the inner expression type
     	factorBracketExpression.struct = factorBracketExpression.getExpr().struct;
     }
     
@@ -571,23 +577,65 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     // TODO: function call
     // TODO: variable
     
-    // single 
     @Override
     public void visit(SingleFactor singleFactor) {
+    	// send type (FactorType) to the Term
     	singleFactor.struct = singleFactor.getFactor().struct;
     }
     
     @Override
     public void visit(MulOpFactorList mulOpFactorList) {
-    	System.out.println("Mul");
     	if(mulOpFactorList.getFactor().struct != Tab.intType || mulOpFactorList.getFactorList().struct != Tab.intType) {
+    	    // ! Specification constraint: Term and Factor should be the int type
     		report_error("Tip svih cinilaca treba da bude int", mulOpFactorList);        	
     		mulOpFactorList.struct = Tab.noType;
     		return;
     	}
+    	// send cumulative type (intType) to the Term
     	mulOpFactorList.struct = Tab.intType;
     }
     
+    @Override
+    public void visit(Term term) {
+        // single factor should only pass its type
+    	term.struct = term.getFactorList().struct;
+    }
+    
+    @Override
+    public void visit(SingleTerm singleTerm) {
+    	// send type (TermType) to the Expr
+    	singleTerm.struct = singleTerm.getTerm().struct;
+    }
+    
+    @Override
+    public void visit(AddOpTermList addOpTermList) {
+    	if(addOpTermList.getTerm().struct.compatibleWith(addOpTermList.getTermList().struct)) {
+    	    // ! Specification constraint: Expr and Term types should be compatible
+    		report_error("Tip svih sabiraka moraju biti kompatibilni", addOpTermList);        	
+    		addOpTermList.struct = Tab.noType;
+    		return;
+    	}
+    	if(addOpTermList.getTerm().struct != Tab.intType || addOpTermList.getTermList().struct != Tab.intType) {
+    	    // ! Specification constraint: Expr and Term should be the int type
+    		report_error("Tip svih sabiraka treba da bude int", addOpTermList);        	
+    		addOpTermList.struct = Tab.noType;
+    		return;
+    	}
+    	// send cumulative type (intType) to the Expr
+    	addOpTermList.struct = Tab.intType;
+    }
+    
+    @Override
+    public void visit(PositiveExpr PositiveExpr) {
+    	// TODO Auto-generated method stub
+    	super.visit(PositiveExpr);
+    }
+    
+    @Override
+    public void visit(NegativeExpr NegativeExpr) {
+    	// TODO Auto-generated method stub
+    	super.visit(NegativeExpr);
+    }
     
     /* End of parsing */
 	public boolean passed() {

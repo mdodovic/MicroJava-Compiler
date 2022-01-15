@@ -9,13 +9,19 @@ import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
 import rs.ac.bg.etf.pp1.ast.ConcreteType;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
+import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
+import rs.ac.bg.etf.pp1.ast.FactorBracketExpression;
+import rs.ac.bg.etf.pp1.ast.FactorCharConst;
+import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.FormalParameterDeclaration;
 import rs.ac.bg.etf.pp1.ast.IntegerValue;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
+import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
 import rs.ac.bg.etf.pp1.ast.ProgName;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.ast.RecordDecl;
 import rs.ac.bg.etf.pp1.ast.RecordDeclName;
+import rs.ac.bg.etf.pp1.ast.SingleFactor;
 import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.Type;
@@ -374,6 +380,10 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	currentRecord = null;
     }
     
+    /* Classes processing */
+    
+    
+    
     /* Methods processing */
     
     private boolean checkMethodNameRedefinition(String methodName, SyntaxNode info) {
@@ -525,6 +535,59 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	currentMethod = null;
 
     }
+    
+    /* Expressions processing */
+    
+    /* Terms processing */
+    
+    /* Factors processing */
+    
+    // constants - number, char, bool
+
+    // send type (boolType, intType, charType) to FactorList and then to Term
+    
+    @Override
+    public void visit(FactorBoolConst factorBoolConst) {
+    	factorBoolConst.struct = boolType;
+    }
+    
+    @Override
+    public void visit(FactorNumConst factorNumConst) {
+    	factorNumConst.struct = Tab.intType;
+    }
+
+    @Override
+    public void visit(FactorCharConst factorCharConst) {
+    	factorCharConst.struct = Tab.charType;
+    }
+    
+    // expression type of bracketed expression is exactly the inner expression type
+    @Override
+    public void visit(FactorBracketExpression factorBracketExpression) {
+    	factorBracketExpression.struct = factorBracketExpression.getExpr().struct;
+    }
+    
+    // TODO: new operator
+    // TODO: function call
+    // TODO: variable
+    
+    // single 
+    @Override
+    public void visit(SingleFactor singleFactor) {
+    	singleFactor.struct = singleFactor.getFactor().struct;
+    }
+    
+    @Override
+    public void visit(MulOpFactorList mulOpFactorList) {
+    	System.out.println("Mul");
+    	if(mulOpFactorList.getFactor().struct != Tab.intType || mulOpFactorList.getFactorList().struct != Tab.intType) {
+    		report_error("Tip svih cinilaca treba da bude int", mulOpFactorList);        	
+    		mulOpFactorList.struct = Tab.noType;
+    		return;
+    	}
+    	mulOpFactorList.struct = Tab.intType;
+    }
+    
     
     /* End of parsing */
 	public boolean passed() {

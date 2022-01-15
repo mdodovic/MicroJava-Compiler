@@ -177,9 +177,9 @@ nonterminal DesignatorStatement; /* this will collect assignment, function calls
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator; /* this will represent variable, or className.someName (with arbitrary depth of indirection) or arrayName[expression]*/
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr; /* represent expressions which optionally can start with "-" */
-nonterminal TermList; /* represent list of terms with possible +/- operators because of associativity  */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct TermList; /* represent list of terms with possible +/- operators because of associativity  */
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Term; /* represent single term which is the list of factors */
-nonterminal FactorList; /* represent list of factors with possible mul/mod/div operators because of associativity */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct FactorList; /* represent list of factors with possible mul/mod/div operators because of associativity */
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor; /* represent single factor that can be variable, functionCall, number, character, true/false, creation of an array (new int[expression]) and expression surrounded with "(" ")" */
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
@@ -477,14 +477,14 @@ Expr ::= (PositiveExpr) TermList:t
 
 TermList ::= (AddOpTermList) TermList Addop Term
 			 |
-			 (SingleTerm) Term:t
+			 (SingleTerm) Term
 			 ;
 
-Term ::= (Term) FactorList:t;
+Term ::= (Term) FactorList;
 
-FactorList ::= (MulOpFactorList) FactorList:t Mulop Factor
+FactorList ::= (MulOpFactorList) FactorList Mulop Factor
 			   |
-			   (SingleFactor) Factor:t
+			   (SingleFactor) Factor
 			   ;
 
 Factor ::= (FactorVariable) Designator:variableName

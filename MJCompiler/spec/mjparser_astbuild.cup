@@ -177,9 +177,9 @@ nonterminal DesignatorStatement DesignatorStatement; /* this will collect assign
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator; /* this will represent variable, or className.someName (with arbitrary depth of indirection) or arrayName[expression]*/
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr; /* represent expressions which optionally can start with "-" */
-nonterminal TermList TermList; /* represent list of terms with possible +/- operators because of associativity  */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct TermList; /* represent list of terms with possible +/- operators because of associativity  */
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Term; /* represent single term which is the list of factors */
-nonterminal FactorList FactorList; /* represent list of factors with possible mul/mod/div operators because of associativity */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct FactorList; /* represent list of factors with possible mul/mod/div operators because of associativity */
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor; /* represent single factor that can be variable, functionCall, number, character, true/false, creation of an array (new int[expression]) and expression surrounded with "(" ")" */
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
@@ -477,14 +477,14 @@ Expr ::= (PositiveExpr) TermList:t {: RESULT=new PositiveExpr(t); RESULT.setLine
 
 TermList ::= (AddOpTermList) TermList:T1 Addop:A2 Term:T3 {: RESULT=new AddOpTermList(T1, A2, T3); RESULT.setLine(T1left); :}
 			 |
-			 (SingleTerm) Term:t {: RESULT=new SingleTerm(t); RESULT.setLine(tleft); :}
+			 (SingleTerm) Term:T1 {: RESULT=new SingleTerm(T1); RESULT.setLine(T1left); :}
 			 ;
 
-Term ::= (Term) FactorList:t {: RESULT=new Term(t); RESULT.setLine(tleft); :};
+Term ::= (Term) FactorList:F1 {: RESULT=new Term(F1); RESULT.setLine(F1left); :};
 
-FactorList ::= (MulOpFactorList) FactorList:t Mulop:M1 Factor:F2 {: RESULT=new MulOpFactorList(t, M1, F2); RESULT.setLine(tleft); :}
+FactorList ::= (MulOpFactorList) FactorList:F1 Mulop:M2 Factor:F3 {: RESULT=new MulOpFactorList(F1, M2, F3); RESULT.setLine(F1left); :}
 			   |
-			   (SingleFactor) Factor:t {: RESULT=new SingleFactor(t); RESULT.setLine(tleft); :}
+			   (SingleFactor) Factor:F1 {: RESULT=new SingleFactor(F1); RESULT.setLine(F1left); :}
 			   ;
 
 Factor ::= (FactorVariable) Designator:variableName {: RESULT=new FactorVariable(variableName); RESULT.setLine(variableNameleft); :}

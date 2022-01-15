@@ -38,7 +38,38 @@ program p
 	int f1(int x1, int x2, char z) int a; {
 		return e;
 	}
-	void main() int arr1, sum[]; {
+	void main() int arr1, sum[]; Board board2; {
+	
+		board1.rows = 1;
+		board1.columns = 2 * 4;
+		
+		board2.rows = 2 + 3 * 4;
+		board2.columns = 1 + 2 * 4 % 5 / 3;
+		
+//			c1 = 1;
+//		objC.fc1 = 3;
+//		objC.theA.fa1 = 2;
+//		objC.theA.fa2 = - 2 + 7 * 11 / objC.theA.fa1 - c1 % 5;
+//		objC.theA.fa2 = f0() * f1('x', false)  + 'a' * true / objC.theA.fa1 - c1 % 5;
+		
+//		arr1 = new int[3];
+		
+	ArrLabel:	arr1[0] = 6;
+		arr1[1] = 5;
+		
+		arr1[c1] = 3;
+		
+		//arrx = new X[f0() - 4];
+		//arry = new Y[7];
+		
+//		c = f2(c1, arrx, arry, true, null);
+		
+//		f1('a', objC.theA.fa2);
+//		f2(c1, arrx, arry, true, null);
+		
+//		arr1[c2]++;
+//		arr1[objC.theA.fa2]--;
+		
 	
 	}
 }

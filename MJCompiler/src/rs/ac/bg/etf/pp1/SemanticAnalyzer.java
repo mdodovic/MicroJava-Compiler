@@ -11,6 +11,7 @@ import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
 import rs.ac.bg.etf.pp1.ast.ConcreteType;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
+import rs.ac.bg.etf.pp1.ast.DoWhileDummyStart;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorBracketExpression;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
@@ -29,6 +30,11 @@ import rs.ac.bg.etf.pp1.ast.RecordDeclName;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
 import rs.ac.bg.etf.pp1.ast.SingleFactor;
 import rs.ac.bg.etf.pp1.ast.SingleTerm;
+import rs.ac.bg.etf.pp1.ast.StatementBreak;
+import rs.ac.bg.etf.pp1.ast.StatementContinue;
+import rs.ac.bg.etf.pp1.ast.StatementDoWhile;
+import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
+import rs.ac.bg.etf.pp1.ast.StatementPrintWithWidth;
 import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.Term;
@@ -70,6 +76,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	private Obj overridedMethod = null;
 
 	private List<Struct> listOfRecords = new ArrayList<Struct>(); // list of record for further check if some class extends any record
+
+	private int doWhileDepthCounter = 0; // depth of the do-while statement; it cannot be boolean because we do not know when to reset it to the false value
 	
 	/* Global utility functions */
 
@@ -198,7 +206,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	return true; 
     }
     
-    // ! Specification constraint
+    // ! Specification constraint: constant type has to be equivalent to one of the three predefined types of terminals numConst, charConst, boolConst
     private boolean checkConstantTypeConstraint(String constantName, Struct constantType, SyntaxNode info) {
     	
     	// Check if the declared constant type is the predefined type of constant value (inc, char, double)
@@ -719,11 +727,46 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     /* do-while processing */
     
-    // break
+    // do-while beginning
+    @Override
+    public void visit(DoWhileDummyStart doWhileDummyStart) {
+    	// go into next do-while
+    	doWhileDepthCounter++;
+    }
     
-    // continue
+    // do-while end    
+    @Override
+    public void visit(StatementDoWhile statementDoWhile) {
+    	// finish the current do-while
+    	doWhileDepthCounter--;
+    	
+    	// TODO: check the condition
+    }
     
+    // ! Specification constraint: break/continue statement has to be in surrounding do-while
+    private boolean checkBreakContinueConstraint(String operation, SyntaxNode info) {
+    	// check the depth of do-while (if it is >= 1, then we are into do-while)
+    	if(doWhileDepthCounter == 0) {
+    		// otherwise it is an error
+			report_error("Naredba " + operation + " mora biti unutar do-while kontrole toka!", info);        	
+			return false;
+		}
+		return true;
+	}
     
+    /* break */
+    
+    @Override
+    public void visit(StatementBreak statementBreak) {
+    	checkBreakContinueConstraint("break", statementBreak);
+    }
+        
+    /* continue */
+
+    @Override
+    public void visit(StatementContinue statementContinue) {
+    	checkBreakContinueConstraint("continue", statementContinue);
+    }
     
     /* End of parsing */
 	public boolean passed() {

@@ -710,7 +710,11 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		report_info("Pristup elementu niza " + arrayDesignator.getDesignator().obj.getName(), arrayDesignator);
     	}
     	
-    	arrayDesignator.obj = arrayDesignator.getDesignator().obj;
+    	// Obj.Elem is used to send info about array element to the upper classes:
+    	// (FactorVariable, ArrayDesignator, ClassFieldDesignator, DesignatorAssignOperation, DesignatorPostIncrement, DesignatorPostDecrement, StatementRead)
+    	// key is to send the type of array's elements, not the type Array
+    	arrayDesignator.obj = new Obj(Obj.Elem, arrayDesignator.getDesignator().obj.getName(), arrayDesignator.getDesignator().obj.getType().getElemType());
+    			
     
     }
     

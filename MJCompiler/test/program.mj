@@ -70,6 +70,8 @@ program p
 		//arr2[true] = 3;
 		//arr2['s'] = 3;
 		//arr2[board2] = 3;
+		arr2[-( (1 + 2 * 4) % 2 / 3 + 4)] = 4;
+		//arr1[-( (1 + 2 * 4) % 2 / 3 + 4) + ( (1 + 2 * true) % 2 / 3 + 4)] = 4;
 		
 		//arrx = new X[f0() - 4];
 		//arry = new Y[7];

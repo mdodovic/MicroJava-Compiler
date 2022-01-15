@@ -5,7 +5,7 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class ConstructorVarDecl implements SyntaxNode {
+public abstract class DoWhileDummyStart implements SyntaxNode {
 
     private SyntaxNode parent;
 

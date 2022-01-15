@@ -15,7 +15,7 @@ program p
 {
 
 	
-	void main() int c1; char arr1; {
+	void main() int c1; char arr1; int i; bool ibool; {
 	
 
 		c1 = arr1;
@@ -26,6 +26,11 @@ program p
 		c1 = arr2[7 * index];
 		c1 = sum[sum[arr2[index]]];
 		
+		i = 0;
+		do{
+			if(i == 2) ibool = true;
+			i++;
+		}while(i < 5);
 	
 	}
 }

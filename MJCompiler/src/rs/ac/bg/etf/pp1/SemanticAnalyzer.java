@@ -717,6 +717,13 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     }
     
+    /* do-while processing */
+    
+    // break
+    
+    // continue
+    
+    
     
     /* End of parsing */
 	public boolean passed() {

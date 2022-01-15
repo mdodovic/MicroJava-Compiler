@@ -5,9 +5,9 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class NoFormalParameters extends FormPars {
+public class DoWhileDummyStartDerived1 extends DoWhileDummyStart {
 
-    public NoFormalParameters () {
+    public DoWhileDummyStartDerived1 () {
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +28,10 @@ public class NoFormalParameters extends FormPars {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("NoFormalParameters(\n");
+        buffer.append("DoWhileDummyStartDerived1(\n");
 
         buffer.append(tab);
-        buffer.append(") [NoFormalParameters]");
+        buffer.append(") [DoWhileDummyStartDerived1]");
         return buffer.toString();
     }
 }

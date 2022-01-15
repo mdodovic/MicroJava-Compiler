@@ -194,6 +194,9 @@ nonterminal Relop Relop; /* contains "==", "!=", ">", ">=", "<" and "<=" */
 nonterminal Addop Addop; /* contains "+" and "-" */
 nonterminal Mulop Mulop; /* contains "*", "/" and "%" */
 
+/* Dummy productions has just purpose to be first visited in Abstract Syntax Tree */
+nonterminal DoWhileDummyStart DoWhileDummyStart; /* this will represent the beginning of the do-while construction */
+
 /* precedences */
 
 precedence left ELSE;
@@ -403,7 +406,7 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new S
 					|
 					(StatementIfElse) IfCondition:I1 Statement:S2 ELSE Statement:S3 {: RESULT=new StatementIfElse(I1, S2, S3); RESULT.setLine(I1left); :}
 					|
-					(StatementDoWhile) DO Statement:S1 WHILE LEFT_ROUND_BRACKET Condition:C2 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementDoWhile(S1, C2); RESULT.setLine(S1left); :}
+					(StatementDoWhile) DO DoWhileDummyStart:D1 Statement:S2 WHILE LEFT_ROUND_BRACKET Condition:C3 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementDoWhile(D1, S2, C3); RESULT.setLine(D1left); :}
 					|
 					(StatementBreak) BREAK SEMI {: RESULT=new StatementBreak(); :}
 					|
@@ -421,6 +424,8 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new S
 					|
 					(StatementGoTo) GOTO Label:L1 SEMI {: RESULT=new StatementGoTo(L1); RESULT.setLine(L1left); :}
 					;
+
+DoWhileDummyStart ::= {: RESULT=new DoWhileDummyStartDerived1(); :} /* epsilon */;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition:C1 RIGHT_ROUND_BRACKET {: RESULT=new IfPart(C1); RESULT.setLine(C1left); :}
 				|

@@ -194,6 +194,9 @@ nonterminal Relop; /* contains "==", "!=", ">", ">=", "<" and "<=" */
 nonterminal Addop; /* contains "+" and "-" */
 nonterminal Mulop; /* contains "*", "/" and "%" */
 
+/* Dummy productions has just purpose to be first visited in Abstract Syntax Tree */
+nonterminal DoWhileDummyStart; /* this will represent the beginning of the do-while construction */
+
 /* precedences */
 
 precedence left ELSE;
@@ -403,7 +406,7 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement
 					|
 					(StatementIfElse) IfCondition Statement ELSE Statement
 					|
-					(StatementDoWhile) DO Statement WHILE LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET SEMI
+					(StatementDoWhile) DO DoWhileDummyStart Statement WHILE LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET SEMI
 					|
 					(StatementBreak) BREAK SEMI
 					|
@@ -421,6 +424,8 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement
 					|
 					(StatementGoTo) GOTO Label SEMI
 					;
+
+DoWhileDummyStart ::= /* epsilon */;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET
 				|

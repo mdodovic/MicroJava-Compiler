@@ -29,6 +29,7 @@ public class Compiler {
 		
 		Reader br = null;
 		try {
+//			File sourceCode = new File("test/program.mj");
 			File sourceCode = new File("test/program.mj");
 			log.info("Compiling source file: " + sourceCode.getAbsolutePath());
 			

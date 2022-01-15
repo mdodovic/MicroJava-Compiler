@@ -110,8 +110,6 @@ terminal LESS_EQUAL; /* "<=" */
 
 /* unused terminals */
 terminal ENUM;
-terminal SUPER;
-terminal THIS;
 
 
 /* NON terminals */

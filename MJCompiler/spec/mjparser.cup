@@ -425,7 +425,7 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement
 					(StatementGoTo) GOTO Label SEMI
 					;
 
-DoWhileDummyStart ::= /* epsilon */;
+DoWhileDummyStart ::= (DoWhileDummyStart) /* epsilon */;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET
 				|

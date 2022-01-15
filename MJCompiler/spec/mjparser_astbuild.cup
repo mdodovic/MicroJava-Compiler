@@ -425,7 +425,7 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new S
 					(StatementGoTo) GOTO Label:L1 SEMI {: RESULT=new StatementGoTo(L1); RESULT.setLine(L1left); :}
 					;
 
-DoWhileDummyStart ::= {: RESULT=new DoWhileDummyStartDerived1(); :} /* epsilon */;
+DoWhileDummyStart ::= (DoWhileDummyStart) {: RESULT=new DoWhileDummyStart(); :} /* epsilon */;
 
 IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition:C1 RIGHT_ROUND_BRACKET {: RESULT=new IfPart(C1); RESULT.setLine(C1left); :}
 				|

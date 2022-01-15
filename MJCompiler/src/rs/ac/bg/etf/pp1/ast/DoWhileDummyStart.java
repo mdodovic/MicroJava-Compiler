@@ -1,15 +1,16 @@
 // generated with ast extension for cup
 // version 0.8
-// 15/0/2022 21:24:54
+// 15/0/2022 21:27:12
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public abstract class DoWhileDummyStart implements SyntaxNode {
+public class DoWhileDummyStart implements SyntaxNode {
 
     private SyntaxNode parent;
-
     private int line;
+    public DoWhileDummyStart () {
+    }
 
     public SyntaxNode getParent() {
         return parent;
@@ -27,11 +28,28 @@ public abstract class DoWhileDummyStart implements SyntaxNode {
         this.line=line;
     }
 
-    public abstract void accept(Visitor visitor);
-    public abstract void childrenAccept(Visitor visitor);
-    public abstract void traverseTopDown(Visitor visitor);
-    public abstract void traverseBottomUp(Visitor visitor);
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 
-    public String toString() { return toString(""); }
-    public abstract String toString(String tab);
+    public void childrenAccept(Visitor visitor) {
+    }
+
+    public void traverseTopDown(Visitor visitor) {
+        accept(visitor);
+    }
+
+    public void traverseBottomUp(Visitor visitor) {
+        accept(visitor);
+    }
+
+    public String toString(String tab) {
+        StringBuffer buffer=new StringBuffer();
+        buffer.append(tab);
+        buffer.append("DoWhileDummyStart(\n");
+
+        buffer.append(tab);
+        buffer.append(") [DoWhileDummyStart]");
+        return buffer.toString();
+    }
 }

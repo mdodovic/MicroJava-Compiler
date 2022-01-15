@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import rs.ac.bg.etf.pp1.ast.AddOpTermList;
+import rs.ac.bg.etf.pp1.ast.ArrayDesignator;
 import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
 import rs.ac.bg.etf.pp1.ast.ConcreteType;
@@ -14,6 +15,7 @@ import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorBracketExpression;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
+import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.FormalParameterDeclaration;
 import rs.ac.bg.etf.pp1.ast.IntegerValue;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
@@ -24,6 +26,7 @@ import rs.ac.bg.etf.pp1.ast.ProgName;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.ast.RecordDecl;
 import rs.ac.bg.etf.pp1.ast.RecordDeclName;
+import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
 import rs.ac.bg.etf.pp1.ast.SingleFactor;
 import rs.ac.bg.etf.pp1.ast.SingleTerm;
 import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
@@ -547,7 +550,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     /* Factors processing */
     
-    // constants - number, char, bool
+    //  Factor -> constants - number, char, bool
     
     @Override
     public void visit(FactorBoolConst factorBoolConst) {
@@ -567,15 +570,44 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	factorCharConst.struct = Tab.charType;
     }
     
+    // Factor -> expression in brackets () processing
+    
     @Override
     public void visit(FactorBracketExpression factorBracketExpression) {
         // expression type of bracketed expression is exactly the inner expression type
     	factorBracketExpression.struct = factorBracketExpression.getExpr().struct;
     }
     
+    // Factor -> designator processing
+    
+    @Override
+    public void visit(FactorVariable factorVariable) {
+    	// factorVariable can be
+    	// - simple designator (local/global variable)
+    	// - class field or method name (method arguments are processed in FactorFunctionCall production)
+    	// - array element access
+    	
+    	factorVariable.struct = factorVariable.getDesignator().obj.getType();
+    	
+    	if(factorVariable.getDesignator().obj.getKind() == Obj.Var) {
+    		if(factorVariable.getDesignator().obj.getType().getKind() == Struct.Class) {
+    	    	// - class field or method name (method arguments are processed in FactorFunctionCall production)
+    		} else if(factorVariable.getDesignator().obj.getType().getKind() == Struct.Array) {
+    	    	// - array element access: usage is reported on array[index] mathcing
+    		} else {    			
+		    	// - simple designator (local/global variable) : just report usage
+    			// this has to be here because if it is in Designator->SimpleDesignator
+    			// this x.y.z will report 3 variables x, y and z instead of accessing class fields
+				report_info("Pristup promenjivoj " + factorVariable.getDesignator().obj.getName(), factorVariable);
+    		}
+    			
+
+    	} 
+    	
+    }
+    
     // TODO: new operator
     // TODO: function call
-    // TODO: variable
     
     // Types passing
     
@@ -644,6 +676,44 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// send cumulative type (intType) to the Expr
     	negativeExpr.struct = Tab.intType;    	
     }
+    
+    /* Designators processing */
+    
+    @Override
+    public void visit(SimpleDesignator simpleDesignator) {
+    	// designator in form of simple variable
+    	Obj designatorNode = Tab.find(simpleDesignator.getName()); // This will find variable in the nearest scope
+    	
+    	if(designatorNode == Tab.noObj) {
+    		report_error("Promenjiva " + simpleDesignator.getName() + " nije deklarisana!", simpleDesignator);
+    	} 
+    	
+    	simpleDesignator.obj = designatorNode;
+    }
+    
+    @Override
+    public void visit(ArrayDesignator arrayDesignator) {
+    	
+    	// Obj arrayDesignatorNode = Tab.find(arrayDesignator.getDesignator().obj.getName());
+    	boolean errorHappened = false;
+    	if(arrayDesignator.getDesignator().obj.getType().getKind() != Struct.Array) {
+    	    // ! Specification constraint: Designator has to be Array
+    		report_error("Promenjiva " + arrayDesignator.getDesignator().obj.getName() + " mora biti nizovskog tipa" , arrayDesignator);        	
+        	errorHappened = true;
+    	}
+    	if(arrayDesignator.getExpr().struct != Tab.intType) {
+    	    // ! Specification constraint: array index expression has to be intType
+    		report_error("Indeks niza mora biti tipa int a ne tipa " + structDescription(arrayDesignator.getExpr().struct), arrayDesignator);        	
+        	errorHappened = true;
+    	}
+    	if(errorHappened == false) {
+    		report_info("Pristup elementu niza " + arrayDesignator.getDesignator().obj.getName(), arrayDesignator);
+    	}
+    	
+    	arrayDesignator.obj = arrayDesignator.getDesignator().obj;
+    
+    }
+    
     
     /* End of parsing */
 	public boolean passed() {

@@ -38,7 +38,7 @@ program p
 	int f1(int x1, int x2, char z) int a; {
 		return e;
 	}
-	void main() int arr1, sum[]; Board board2; {
+	void main() int arr1, sum[]; Board board2; int c1; {
 	
 		board1.rows = 1;
 		board1.columns = 2 * 4;
@@ -46,11 +46,14 @@ program p
 		board2.rows = (2 + 3) * 4;
 		board2.columns = (1 + 2 * 4) % 2 / 3;
 
-		board2.rows = 'a' % 2;
+		//board2.rows = 'a' % 2;
 		board2.rows = true;
 		board2.rows = -( (1 + 2 * 4) % 2 / 3 + 4);
-		board2.rows = -( (1 + 2 * 4) % 2 / 3 + 4) + ( (1 + 2 * true) % 2 / 3 + 4);
+		//board2.rows = -( (1 + 2 * 4) % 2 / 3 + 4) + ( (1 + 2 * true) % 2 / 3 + 4);
 
+		c1 = arr1;
+		//c1 = arrx;
+		c1 = arr2; // ovo nije problem arr2 nego problem c1 tip int nije dodeljivo sa arr2
 		
 //			c1 = 1;
 //		objC.fc1 = 3;
@@ -58,12 +61,15 @@ program p
 //		objC.theA.fa2 = - 2 + 7 * 11 / objC.theA.fa1 - c1 % 5;
 //		objC.theA.fa2 = f0() * f1('x', false)  + 'a' * true / objC.theA.fa1 - c1 % 5;
 		
-//		arr1 = new int[3];
+//		arr2 = new int[3];
 		
-	ArrLabel:	arr1[0] = 6;
-		arr1[1] = 5;
+	ArrLabel:	arr2[0] = 6;
+		arr2[1] = 5;
 		
-		arr1[c1] = 3;
+		arr2[c1] = 3;
+		//arr2[true] = 3;
+		//arr2['s'] = 3;
+		//arr2[board2] = 3;
 		
 		//arrx = new X[f0() - 4];
 		//arry = new Y[7];

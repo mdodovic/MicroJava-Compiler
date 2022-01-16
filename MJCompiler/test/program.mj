@@ -6,6 +6,10 @@ program p
 	int rows, columns;
 	}
 	
+	record Board2 {
+	int rows, columns;
+	}
+	
 	record Table {
 		int cnt;
 		Board b;
@@ -85,8 +89,9 @@ program p
 		
 		
 		board1 = new Board;
+		board1 = new Board2;
 		val = new Table;
-		nta = new int;
+		//nta = new int;
 		
 		arr1 = new int[10];
 		

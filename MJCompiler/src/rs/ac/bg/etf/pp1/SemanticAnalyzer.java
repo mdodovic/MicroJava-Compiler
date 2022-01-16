@@ -88,12 +88,13 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	private int methodFormalParametersCount = 0;
 
 	private Struct currentRecord = null;
-	private boolean classOrRecordScope = false; // When variable is declared, if it is in class or record, it's type is Obj.Fld, othervise it is Obj.Var
+	private boolean classOrRecordScope = false; // When variable is declared, if it is in class or record, it's type is Obj.Fld, otherwise it is Obj.Var
 	
 	private Struct currentClass = null;
 	private Obj overridedMethod = null;
 
-	private List<Struct> listOfRecords = new ArrayList<Struct>(); // list of record for further check if some class extends any record
+	private List<Struct> listOfRecords = new ArrayList<Struct>(); // list of user defined records; Usage: check if some type (struct) is user defined; check if some class extends any record
+	private List<Struct> listOfClasses = new ArrayList<Struct>(); // list of user defined classes; Usage: check if some type (struct) is user defined
 
 	private int doWhileDepthCounter = 0; // depth of the do-while statement; it cannot be boolean because we do not know when to reset it to the false value
 	
@@ -228,7 +229,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// Hence typeName of that variable must be in symbol table
     	
     	if(typeNode == Tab.noObj) {
-    		report_error("Tip " + type.getTypeName() + " nije pronadjen u tabeli simbola", type);
+    		report_error("Tip " + type.getTypeName() + " nije pronadjen u tabeli simbola!", type);
     		type.struct = Tab.noType; // noType represent further compatibility
     		// This allow us to use field type.struct without any check if it is null in further nodes in tree
     	} else {
@@ -692,7 +693,33 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(FactorClassNewOperator factorClassNewOperator) {
-
+    	factorClassNewOperator.getType();
+    	// TODO: check this, equals iis ekvivalentan 
+    	// ! Specification constraint: type of created object has to be user defined class (or record)
+    	for(Struct userDefinedRecord: listOfRecords) {
+    		if(/*userDefinedRecors.equals(factorClassNewOperator.getType().struct)*/
+    				userDefinedRecord == factorClassNewOperator.getType().struct	
+    				) {
+    			// user defined record
+    			factorClassNewOperator.struct = userDefinedRecord;
+    			return;
+    		}
+    	}
+    	for(Struct userDefinedClass: listOfClasses) {
+    		if(/*userDefinedRecors.equals(factorClassNewOperator.getType().struct)*/
+        			userDefinedClass == factorClassNewOperator.getType().struct	
+        				) {
+    			// user defined class
+    			factorClassNewOperator.struct = userDefinedClass;
+    			return;
+    		}
+    	}
+    	
+    	// type is not among the user defined classes or records
+		factorClassNewOperator.struct = Tab.noType;
+		report_error("Tip kreiranog objekta mora biti korisnicki definisana klasa (class) ili rekord (record), a ne " + structDescription(factorClassNewOperator.getType().struct) + "!", factorClassNewOperator);    		    		
+	
+    	
     }
     
     

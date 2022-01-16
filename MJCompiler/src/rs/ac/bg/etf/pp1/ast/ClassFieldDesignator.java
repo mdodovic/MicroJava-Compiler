@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 16/0/2022 12:56:59
+// 16/0/2022 14:52:0
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,12 +8,12 @@ package rs.ac.bg.etf.pp1.ast;
 public class ClassFieldDesignator extends Designator {
 
     private Designator Designator;
-    private String leftField;
+    private String rightField;
 
-    public ClassFieldDesignator (Designator Designator, String leftField) {
+    public ClassFieldDesignator (Designator Designator, String rightField) {
         this.Designator=Designator;
         if(Designator!=null) Designator.setParent(this);
-        this.leftField=leftField;
+        this.rightField=rightField;
     }
 
     public Designator getDesignator() {
@@ -24,12 +24,12 @@ public class ClassFieldDesignator extends Designator {
         this.Designator=Designator;
     }
 
-    public String getLeftField() {
-        return leftField;
+    public String getRightField() {
+        return rightField;
     }
 
-    public void setLeftField(String leftField) {
-        this.leftField=leftField;
+    public void setRightField(String rightField) {
+        this.rightField=rightField;
     }
 
     public void accept(Visitor visitor) {
@@ -61,7 +61,7 @@ public class ClassFieldDesignator extends Designator {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
-        buffer.append(" "+tab+leftField);
+        buffer.append(" "+tab+rightField);
         buffer.append("\n");
 
         buffer.append(tab);

@@ -5,18 +5,27 @@ program p
 	record Board {
 	int rows, columns;
 	}
-
-	//Table val;
+	
+	record Table {
+		int cnt;
+		Board b;
+	}
+	
+	Table val;
 	Board board1, board2;
 	
 	int arr2[];
 	int sum[];
 	int index;
 	char x;
+	
+	Table nta[];
+	
+	
 {
 
 	
-	void main() int c1; char arr1; int i, j; bool ibool; bool bar[]; {
+	void main() int c1; char arr1; int i, j; bool ibool; bool bar[]; Board barr[]; {
 	
 
 		c1 = arr1;
@@ -27,7 +36,7 @@ program p
 		c1 = arr2[7 * index];
 		c1 = sum[sum[arr2[index]]];
 		
-		
+				
 		print(i);
 		print(arr2[i]);
 		print(arr1);
@@ -60,7 +69,31 @@ program p
 			
 		}while(i < 5);
 		
-
-	
+		//c1 = sum.rre;
+		c1 = board1.rows;
+		
+		print(board1.rows);
+		c1 = val.b.columns;
+		
+		c1 = val.b.columns + board1.rows;
+		
+			do{
+			if(val.b.columns == 2) val.b.columns = true;
+			
+			
+		}while(val.b == board1);
+		
+		
+		board1 = new Board;
+		val = new Table;
+		nta = new int;
+		
+		arr1 = new int[10];
+		
+		nta = new Table[val.b.columns + board1.rows];
+		barr = new Board[4];
+		
+		
+		//nta  = new int[true];
 	}
 }

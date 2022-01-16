@@ -9,15 +9,18 @@ import rs.ac.bg.etf.pp1.ast.AddOpTermList;
 import rs.ac.bg.etf.pp1.ast.ArrayDesignator;
 import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
+import rs.ac.bg.etf.pp1.ast.ClassFieldDesignator;
 import rs.ac.bg.etf.pp1.ast.ConcreteType;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.DoWhileDummyStart;
 import rs.ac.bg.etf.pp1.ast.EqualOp;
 import rs.ac.bg.etf.pp1.ast.Expr;
+import rs.ac.bg.etf.pp1.ast.FactorArrayNewOperator;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorBracketExpression;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
+import rs.ac.bg.etf.pp1.ast.FactorClassNewOperator;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.FormalParameterDeclaration;
@@ -671,7 +674,29 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     }
     
-    // TODO: new operator
+    // Factor -> new operator processing
+
+    @Override
+    public void visit(FactorArrayNewOperator factorArrayNewOperator) {
+    	
+    	if(factorArrayNewOperator.getExpr().struct != Tab.intType) {
+    		// ! Specification constraint: Expression that represents array's size has to be int type
+    		factorArrayNewOperator.struct = Tab.noType;
+			report_error("Broj elemenata kreiranog niza mora biti izraz konacnog tipa int, a ne " + structDescription(factorArrayNewOperator.getExpr().struct) + "!", factorArrayNewOperator);    		    		
+    		return;
+    	}
+    	    	
+    	factorArrayNewOperator.struct = new Struct(Struct.Array, factorArrayNewOperator.getType().struct);
+    
+    }
+    
+    @Override
+    public void visit(FactorClassNewOperator factorClassNewOperator) {
+
+    }
+    
+    
+    
     // TODO: function call
     
     // Types passing
@@ -781,6 +806,71 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	arrayDesignator.obj = new Obj(Obj.Elem, arrayDesignator.getDesignator().obj.getName(), arrayDesignator.getDesignator().obj.getType().getElemType());
     
     }
+    
+    private boolean chechClassReferenceConstraints(Obj classReference, SyntaxNode info) {
+
+    	if(classReference == Tab.noObj) {
+    		// error from SimpleDesignator visit, no object in symbol table
+    		return false;
+    	}
+    	// classReference is an object registered in SimpleDesignator
+    	if(classReference.getType().getKind() != Struct.Class) {
+    		// ! Specification constraint: classReference has to be an Class
+    		report_error(classReference.getName() + " ne predstavlja referencu na klasu, vec je tipa " + structDescription(classReference.getType()) + "!", info);   
+        	return false;
+    	}
+		
+    	return true;
+	}
+    
+    // ! Specification constraint: classField has to be the member of the classReference (either its field or its method)
+    private Obj checkFieldConstraintAndReturnItsObjec(Obj classReference, String classField, SyntaxNode info) {
+    	
+    	if(currentClass == classReference.getType()) {
+    		// TODO: ...
+    		// context is class method, 
+    		// this.x
+    		// x
+    		// () int x; { this.x = x} 
+    		report_info("Pristup polju klase tekuce klase, this." + classField, info);   
+    	} else {
+    		// access to the field or method using reference on the created class object
+    		for(Obj classMember: classReference.getType().getMembers()) {
+    			if(classMember.getName().equals(classField)) {
+    				// classField is one of the class members
+    	    		report_info("Pristup polju " + classReference.getName() + "." + classField + " reference na klasu "  + classReference.getName() + ".", info);   
+    				return classMember;
+    			}
+    		}
+    	}
+    	
+    	// classField is neither field nor method 
+    	report_error(classField + " ne predstavlja polje na klase " + classReference.getName() + "!", info);   
+        
+    	return Tab.noObj;
+    	
+	}
+    
+    
+    @Override
+    public void visit(ClassFieldDesignator classFieldDesignator) {
+    	
+    	Obj classReference = classFieldDesignator.getDesignator().obj;
+    	String classField = classFieldDesignator.getRightField();
+    	// classReference.classField statement is processing
+    	
+    	if(!chechClassReferenceConstraints(classReference, classFieldDesignator)) {
+    		classFieldDesignator.obj = Tab.noObj;
+    		return;
+    	}
+    	
+    	// classReference is Class, check its field
+    	// pass to the upper visiting filed object (for the purpose of type comparisons)
+    	classFieldDesignator.obj = checkFieldConstraintAndReturnItsObjec(classReference, classField, classFieldDesignator);
+    	
+    }
+    
+    
     
     /* do-while processing */
     

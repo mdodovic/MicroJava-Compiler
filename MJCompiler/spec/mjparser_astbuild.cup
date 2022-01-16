@@ -464,7 +464,7 @@ DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT E
 						(DesignatorPostDecrement) Designator:variableName DEC SEMI {: RESULT=new DesignatorPostDecrement(variableName); RESULT.setLine(variableNameleft); :}
 						;
 
-Designator ::= (ClassFieldDesignator) Designator:D1 POINT IDENT:leftField {: RESULT=new ClassFieldDesignator(D1, leftField); RESULT.setLine(D1left); :}
+Designator ::= (ClassFieldDesignator) Designator:D1 POINT IDENT:rightField {: RESULT=new ClassFieldDesignator(D1, rightField); RESULT.setLine(D1left); :}
 			   |
 			   (ArrayDesignator) Designator:D1 LEFT_SQUARE_BRACKET Expr:arrayIndex RIGHT_SQUARE_BRACKET {: RESULT=new ArrayDesignator(D1, arrayIndex); RESULT.setLine(D1left); :}
 			   |

@@ -464,7 +464,7 @@ DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT E
 						(DesignatorPostDecrement) Designator:variableName DEC SEMI
 						;
 
-Designator ::= (ClassFieldDesignator) Designator POINT IDENT:leftField
+Designator ::= (ClassFieldDesignator) Designator POINT IDENT:rightField
 			   |
 			   (ArrayDesignator) Designator LEFT_SQUARE_BRACKET Expr:arrayIndex RIGHT_SQUARE_BRACKET
 			   |

@@ -436,12 +436,12 @@ IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition:C1 RIGHT_ROUND_BRACKET 
 
 Condition ::= (OrOpTermListCondition) Condition:C1 OR CondTerm:C2 {: RESULT=new OrOpTermListCondition(C1, C2); RESULT.setLine(C1left); :}
 			  |
-			  (SingleTermCondition) CondTerm:t {: RESULT=new SingleTermCondition(t); RESULT.setLine(tleft); :}
+			  (SingleTermCondition) CondTerm:C1 {: RESULT=new SingleTermCondition(C1); RESULT.setLine(C1left); :}
 			  ;
 
 CondTerm ::= (AndOpFactCondition) CondTerm:C1 AND CondFact:C2 {: RESULT=new AndOpFactCondition(C1, C2); RESULT.setLine(C1left); :}
 			 |
- 			 (SingleFactCondition) CondFact:t {: RESULT=new SingleFactCondition(t); RESULT.setLine(tleft); :}
+ 			 (SingleFactCondition) CondFact:C1 {: RESULT=new SingleFactCondition(C1); RESULT.setLine(C1left); :}
 			 ;
 
 CondFact ::= (RelOpExprCondition) Expr:eleft Relop:R1 Expr:eright {: RESULT=new RelOpExprCondition(eleft, R1, eright); RESULT.setLine(eleftleft); :}
@@ -536,7 +536,8 @@ Relop ::= (EqualOp) EQUAL {: RESULT=new EqualOp(); :}
 
 Addop ::= (PlusOp) PLUS {: RESULT=new PlusOp(); :}
 		  |
-		  (MinusOp) MINUS {: RESULT=new MinusOp(); :};
+		  (MinusOp) MINUS {: RESULT=new MinusOp(); :}
+		  ;
 
 Mulop ::= (MultiplyOp) MULTIPLY {: RESULT=new MultiplyOp(); :}
 		  |

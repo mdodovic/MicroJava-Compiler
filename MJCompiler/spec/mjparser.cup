@@ -536,7 +536,8 @@ Relop ::= (EqualOp) EQUAL
 
 Addop ::= (PlusOp) PLUS
 		  |
-		  (MinusOp) MINUS;
+		  (MinusOp) MINUS
+		  ;
 
 Mulop ::= (MultiplyOp) MULTIPLY
 		  |

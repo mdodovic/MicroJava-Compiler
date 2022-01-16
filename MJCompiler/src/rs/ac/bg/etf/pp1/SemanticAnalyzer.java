@@ -11,17 +11,29 @@ import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
 import rs.ac.bg.etf.pp1.ast.ConcreteType;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
+import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.DoWhileDummyStart;
+import rs.ac.bg.etf.pp1.ast.EqualOp;
+import rs.ac.bg.etf.pp1.ast.Expr;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorBracketExpression;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.FormalParameterDeclaration;
+import rs.ac.bg.etf.pp1.ast.GreaterEqualOp;
+import rs.ac.bg.etf.pp1.ast.GreaterOp;
 import rs.ac.bg.etf.pp1.ast.IntegerValue;
+import rs.ac.bg.etf.pp1.ast.LessEqualOp;
+import rs.ac.bg.etf.pp1.ast.LessOp;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
+import rs.ac.bg.etf.pp1.ast.MinusOp;
+import rs.ac.bg.etf.pp1.ast.ModuoOp;
 import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
+import rs.ac.bg.etf.pp1.ast.MultiplyOp;
 import rs.ac.bg.etf.pp1.ast.NegativeExpr;
+import rs.ac.bg.etf.pp1.ast.NotEqualOp;
+import rs.ac.bg.etf.pp1.ast.PlusOp;
 import rs.ac.bg.etf.pp1.ast.PositiveExpr;
 import rs.ac.bg.etf.pp1.ast.ProgName;
 import rs.ac.bg.etf.pp1.ast.Program;
@@ -82,6 +94,15 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
 	private int doWhileDepthCounter = 0; // depth of the do-while statement; it cannot be boolean because we do not know when to reset it to the false value
 	
+	enum RelOpEnum { EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL }
+	private RelOpEnum relationalOperation = null;
+
+	enum AddOpEnum { PLUS, MINUS }
+	private AddOpEnum addLikeOperation = null;
+
+	enum MulOpEnum { MULTIPLY, DIVIDE, MODUO }
+	private MulOpEnum mulLikeOperation = null;
+
 	/* Global utility functions */
 
 	public SemanticAnalyzer() {
@@ -104,6 +125,39 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 		}
 	
 	}
+	
+	// return operation for the given enum object
+
+	 
+    private String relationalOperationDecoding(RelOpEnum relationalOp) {
+		switch (relationalOp) {
+			case EQUAL: return "==";
+			case NOT_EQUAL: return "!=";
+			case LESS: return "<";
+			case GREATER: return ">";
+			case GREATER_EQUAL: return ">=";
+			case LESS_EQUAL: return "<=";
+			default: return "";
+		}
+	}
+
+    private String addLikeOperationDecoding(AddOpEnum addLikeOp) {
+		switch (addLikeOp) {
+			case PLUS: return "+";
+			case MINUS: return "-";
+			default: return "";
+		}
+	}
+
+    private String mulLikeOperationDecoding(MulOpEnum mulLikeOp) {
+		switch (mulLikeOp) {
+			case MULTIPLY: return "*";
+			case DIVIDE: return "/";
+			case MODUO: return "%";
+			default: return "";
+		}
+	}
+
 	
 	// return number of global variables (for the purpose of code generating)
 
@@ -794,10 +848,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     
     /* if-else/do-while conditions */
-        
-    // condition has to be bool
-    // else the relation operator between two expressions will produce bool type, but those expressions have to be comparable
-    
+           
     @Override
     public void visit(SingleExprCondition singleExprCondition) {
     	// condition is just an expr
@@ -810,8 +861,85 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(RelOpExprCondition relOpExprCondition) {
-    	System.out.println("if " + structDescription(relOpExprCondition.getExpr().struct) + " . " + structDescription(relOpExprCondition.getExpr1().struct));
+    	
+    	// exprLeft relOp exprRight
+    	Expr exprLeft = relOpExprCondition.getExpr();
+    	Expr exprRight = relOpExprCondition.getExpr1();
+    	
+    	if(!exprLeft.struct.compatibleWith(exprRight.struct)) {
+    		// ! Specification constraint: left and right expressions have to be comparable
+        	report_error("Izrazi u uslovu kontrole toka moraju biti uporedivi (kompatibilni); " + structDescription(exprLeft.struct) + " i " + structDescription(exprRight.struct) + " to nisu!", relOpExprCondition);  	    		
+    	}
+    	
+    	if(exprLeft.struct.getKind() == Struct.Array
+    		|| exprRight.struct.getKind() == Struct.Array
+    		|| exprLeft.struct.getKind() == Struct.Class
+    		|| exprRight.struct.getKind() == Struct.Class) {
+    		
+    		if(!relationalOperation.equals(RelOpEnum.EQUAL) && !relationalOperation.equals(RelOpEnum.NOT_EQUAL)) {    		
+	    		// ! Specification constraint: if left or right expression is class or array, only operation between them can be the == or the !=
+	        	report_error("Jedine dve operacije poredjenja izmedju referenci mogu biti samo == ili !=, a ne " + relationalOperationDecoding(relationalOperation), relOpExprCondition);  	    		
+    		}    		
+    	}
+    	
+    }
     
+   
+	/* operations processing */
+    
+    @Override
+    public void visit(EqualOp EqualOp) {
+    	relationalOperation = RelOpEnum.EQUAL;
+    }
+    
+    @Override
+    public void visit(NotEqualOp NotEqualOp) {
+    	relationalOperation = RelOpEnum.NOT_EQUAL;
+    }
+    
+    @Override
+    public void visit(LessOp LessOp) {
+    	relationalOperation = RelOpEnum.LESS;
+    }
+    
+    @Override
+    public void visit(LessEqualOp LessEqualOp) {
+    	relationalOperation = RelOpEnum.LESS_EQUAL;
+    }
+    
+    @Override
+    public void visit(GreaterOp GreaterOp) {
+    	relationalOperation = RelOpEnum.GREATER;
+    }
+    
+    @Override
+    public void visit(GreaterEqualOp GreaterEqualOp) {
+    	relationalOperation = RelOpEnum.GREATER_EQUAL;
+    }
+
+    @Override
+    public void visit(PlusOp PlusOp) {
+    	addLikeOperation = AddOpEnum.PLUS;
+    }
+    
+    @Override
+    public void visit(MinusOp MinusOp) {
+    	addLikeOperation = AddOpEnum.MINUS;
+    }
+    
+    @Override
+    public void visit(MultiplyOp MultiplyOp) {
+    	mulLikeOperation = MulOpEnum.MULTIPLY;
+    }
+    
+    @Override
+    public void visit(DivideOp DivideOp) {
+    	mulLikeOperation = MulOpEnum.DIVIDE;
+    }
+    
+    @Override
+    public void visit(ModuoOp ModuoOp) {
+    	mulLikeOperation = MulOpEnum.MODUO;
     }
     
     

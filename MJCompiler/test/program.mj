@@ -2,16 +2,17 @@ program p
 
 
 	
-	//record Board {
-	//int rows, columns;
-	//}
+	record Board {
+	int rows, columns;
+	}
 
 	//Table val;
-	//Board board1, board2;
+	Board board1, board2;
 	
 	int arr2[];
 	int sum[];
 	int index;
+	char x;
 {
 
 	
@@ -50,8 +51,12 @@ program p
 			i++;
 			
 			if(ibool) continue;
-			if(ibool != false) break;
-			if(bar[i]) break;
+			//if(ibool != i) break;
+			
+			if(board1 == board2) break;
+			if(board1 != board1) break;
+			if(sum[i] >= arr2[i]) x++;
+			
 			
 		}while(i < 5);
 		

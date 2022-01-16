@@ -27,7 +27,10 @@ import rs.ac.bg.etf.pp1.ast.ProgName;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.ast.RecordDecl;
 import rs.ac.bg.etf.pp1.ast.RecordDeclName;
+import rs.ac.bg.etf.pp1.ast.RelOpExprCondition;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
+import rs.ac.bg.etf.pp1.ast.SingleExprCondition;
+import rs.ac.bg.etf.pp1.ast.SingleFactCondition;
 import rs.ac.bg.etf.pp1.ast.SingleFactor;
 import rs.ac.bg.etf.pp1.ast.SingleTerm;
 import rs.ac.bg.etf.pp1.ast.StatementBreak;
@@ -787,6 +790,28 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     @Override
     public void visit(StatementPrintWithWidth statementPrintWithWidth) {
     	checkPrintConstraint(statementPrintWithWidth.getExpr().struct, statementPrintWithWidth);
+    }
+    
+    
+    /* if-else/do-while conditions */
+        
+    // condition has to be bool
+    // else the relation operator between two expressions will produce bool type, but those expressions have to be comparable
+    
+    @Override
+    public void visit(SingleExprCondition singleExprCondition) {
+    	// condition is just an expr
+    	if(singleExprCondition.getExpr().struct != boolType) {
+    		// ! Specification constraint: passed type from expr has to be bool
+    		report_error("Tip izraza u uslovu kontrola toka mora biti tipa bool a ne " + structDescription(singleExprCondition.getExpr().struct), singleExprCondition);        	
+			return;    	
+    	}
+    }
+    
+    @Override
+    public void visit(RelOpExprCondition relOpExprCondition) {
+    	System.out.println("if " + structDescription(relOpExprCondition.getExpr().struct) + " . " + structDescription(relOpExprCondition.getExpr1().struct));
+    
     }
     
     

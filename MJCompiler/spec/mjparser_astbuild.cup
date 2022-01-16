@@ -434,19 +434,19 @@ IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition:C1 RIGHT_ROUND_BRACKET 
 
 /* if-else conditions */
 
-Condition ::= (OrOpCondTermList) Condition:C1 OR CondTerm:C2 {: RESULT=new OrOpCondTermList(C1, C2); RESULT.setLine(C1left); :}
+Condition ::= (OrOpTermListCondition) Condition:C1 OR CondTerm:C2 {: RESULT=new OrOpTermListCondition(C1, C2); RESULT.setLine(C1left); :}
 			  |
-			  (SingleCondTerm) CondTerm:t {: RESULT=new SingleCondTerm(t); RESULT.setLine(tleft); :}
+			  (SingleTermCondition) CondTerm:t {: RESULT=new SingleTermCondition(t); RESULT.setLine(tleft); :}
 			  ;
 
-CondTerm ::= (AndOpCondFact) CondTerm:C1 AND CondFact:C2 {: RESULT=new AndOpCondFact(C1, C2); RESULT.setLine(C1left); :}
+CondTerm ::= (AndOpFactCondition) CondTerm:C1 AND CondFact:C2 {: RESULT=new AndOpFactCondition(C1, C2); RESULT.setLine(C1left); :}
 			 |
- 			 (SingleCondFact) CondFact:t {: RESULT=new SingleCondFact(t); RESULT.setLine(tleft); :}
+ 			 (SingleFactCondition) CondFact:t {: RESULT=new SingleFactCondition(t); RESULT.setLine(tleft); :}
 			 ;
 
-CondFact ::= (RelOpExpr) Expr:eleft Relop:R1 Expr:eright {: RESULT=new RelOpExpr(eleft, R1, eright); RESULT.setLine(eleftleft); :}
+CondFact ::= (RelOpExprCondition) Expr:eleft Relop:R1 Expr:eright {: RESULT=new RelOpExprCondition(eleft, R1, eright); RESULT.setLine(eleftleft); :}
 			 |
-			 (SingleExpr) Expr:e {: RESULT=new SingleExpr(e); RESULT.setLine(eleft); :}
+			 (SingleExprCondition) Expr:e {: RESULT=new SingleExprCondition(e); RESULT.setLine(eleft); :}
 			 ;
 
 

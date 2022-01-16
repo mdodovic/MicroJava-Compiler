@@ -1,17 +1,28 @@
 // generated with ast extension for cup
 // version 0.8
-// 15/0/2022 21:27:12
+// 16/0/2022 12:4:34
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class SingleCondTerm extends Condition {
+public class OrOpTermListCondition extends Condition {
 
+    private Condition Condition;
     private CondTerm CondTerm;
 
-    public SingleCondTerm (CondTerm CondTerm) {
+    public OrOpTermListCondition (Condition Condition, CondTerm CondTerm) {
+        this.Condition=Condition;
+        if(Condition!=null) Condition.setParent(this);
         this.CondTerm=CondTerm;
         if(CondTerm!=null) CondTerm.setParent(this);
+    }
+
+    public Condition getCondition() {
+        return Condition;
+    }
+
+    public void setCondition(Condition Condition) {
+        this.Condition=Condition;
     }
 
     public CondTerm getCondTerm() {
@@ -27,15 +38,18 @@ public class SingleCondTerm extends Condition {
     }
 
     public void childrenAccept(Visitor visitor) {
+        if(Condition!=null) Condition.accept(visitor);
         if(CondTerm!=null) CondTerm.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
+        if(Condition!=null) Condition.traverseTopDown(visitor);
         if(CondTerm!=null) CondTerm.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
+        if(Condition!=null) Condition.traverseBottomUp(visitor);
         if(CondTerm!=null) CondTerm.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -43,7 +57,13 @@ public class SingleCondTerm extends Condition {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("SingleCondTerm(\n");
+        buffer.append("OrOpTermListCondition(\n");
+
+        if(Condition!=null)
+            buffer.append(Condition.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
 
         if(CondTerm!=null)
             buffer.append(CondTerm.toString("  "+tab));
@@ -52,7 +72,7 @@ public class SingleCondTerm extends Condition {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [SingleCondTerm]");
+        buffer.append(") [OrOpTermListCondition]");
         return buffer.toString();
     }
 }

@@ -15,7 +15,7 @@ program p
 {
 
 	
-	void main() int c1; char arr1; int i, j; bool ibool; {
+	void main() int c1; char arr1; int i, j; bool ibool; bool bar[]; {
 	
 
 		c1 = arr1;
@@ -48,6 +48,10 @@ program p
 			if(i + j - 1 == 7)
 				continue;			
 			i++;
+			
+			if(ibool) continue;
+			if(ibool != false) break;
+			if(bar[i]) break;
 			
 		}while(i < 5);
 		

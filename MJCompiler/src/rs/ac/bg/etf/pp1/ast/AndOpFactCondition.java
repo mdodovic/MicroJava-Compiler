@@ -1,28 +1,20 @@
 // generated with ast extension for cup
 // version 0.8
-// 15/0/2022 21:27:12
+// 16/0/2022 12:4:34
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class OrOpCondTermList extends Condition {
+public class AndOpFactCondition extends CondTerm {
 
-    private Condition Condition;
     private CondTerm CondTerm;
+    private CondFact CondFact;
 
-    public OrOpCondTermList (Condition Condition, CondTerm CondTerm) {
-        this.Condition=Condition;
-        if(Condition!=null) Condition.setParent(this);
+    public AndOpFactCondition (CondTerm CondTerm, CondFact CondFact) {
         this.CondTerm=CondTerm;
         if(CondTerm!=null) CondTerm.setParent(this);
-    }
-
-    public Condition getCondition() {
-        return Condition;
-    }
-
-    public void setCondition(Condition Condition) {
-        this.Condition=Condition;
+        this.CondFact=CondFact;
+        if(CondFact!=null) CondFact.setParent(this);
     }
 
     public CondTerm getCondTerm() {
@@ -33,37 +25,39 @@ public class OrOpCondTermList extends Condition {
         this.CondTerm=CondTerm;
     }
 
+    public CondFact getCondFact() {
+        return CondFact;
+    }
+
+    public void setCondFact(CondFact CondFact) {
+        this.CondFact=CondFact;
+    }
+
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Condition!=null) Condition.accept(visitor);
         if(CondTerm!=null) CondTerm.accept(visitor);
+        if(CondFact!=null) CondFact.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Condition!=null) Condition.traverseTopDown(visitor);
         if(CondTerm!=null) CondTerm.traverseTopDown(visitor);
+        if(CondFact!=null) CondFact.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Condition!=null) Condition.traverseBottomUp(visitor);
         if(CondTerm!=null) CondTerm.traverseBottomUp(visitor);
+        if(CondFact!=null) CondFact.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("OrOpCondTermList(\n");
-
-        if(Condition!=null)
-            buffer.append(Condition.toString("  "+tab));
-        else
-            buffer.append(tab+"  null");
-        buffer.append("\n");
+        buffer.append("AndOpFactCondition(\n");
 
         if(CondTerm!=null)
             buffer.append(CondTerm.toString("  "+tab));
@@ -71,8 +65,14 @@ public class OrOpCondTermList extends Condition {
             buffer.append(tab+"  null");
         buffer.append("\n");
 
+        if(CondFact!=null)
+            buffer.append(CondFact.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
         buffer.append(tab);
-        buffer.append(") [OrOpCondTermList]");
+        buffer.append(") [AndOpFactCondition]");
         return buffer.toString();
     }
 }

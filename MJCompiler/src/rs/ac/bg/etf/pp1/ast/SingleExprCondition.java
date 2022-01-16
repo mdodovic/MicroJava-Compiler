@@ -1,15 +1,15 @@
 // generated with ast extension for cup
 // version 0.8
-// 15/0/2022 21:27:12
+// 16/0/2022 12:4:34
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class SingleExpr extends CondFact {
+public class SingleExprCondition extends CondFact {
 
     private Expr Expr;
 
-    public SingleExpr (Expr Expr) {
+    public SingleExprCondition (Expr Expr) {
         this.Expr=Expr;
         if(Expr!=null) Expr.setParent(this);
     }
@@ -43,7 +43,7 @@ public class SingleExpr extends CondFact {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("SingleExpr(\n");
+        buffer.append("SingleExprCondition(\n");
 
         if(Expr!=null)
             buffer.append(Expr.toString("  "+tab));
@@ -52,7 +52,7 @@ public class SingleExpr extends CondFact {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [SingleExpr]");
+        buffer.append(") [SingleExprCondition]");
         return buffer.toString();
     }
 }

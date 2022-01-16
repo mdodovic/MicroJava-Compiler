@@ -1,28 +1,17 @@
 // generated with ast extension for cup
 // version 0.8
-// 15/0/2022 21:27:12
+// 16/0/2022 12:4:34
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class AndOpCondFact extends CondTerm {
+public class SingleFactCondition extends CondTerm {
 
-    private CondTerm CondTerm;
     private CondFact CondFact;
 
-    public AndOpCondFact (CondTerm CondTerm, CondFact CondFact) {
-        this.CondTerm=CondTerm;
-        if(CondTerm!=null) CondTerm.setParent(this);
+    public SingleFactCondition (CondFact CondFact) {
         this.CondFact=CondFact;
         if(CondFact!=null) CondFact.setParent(this);
-    }
-
-    public CondTerm getCondTerm() {
-        return CondTerm;
-    }
-
-    public void setCondTerm(CondTerm CondTerm) {
-        this.CondTerm=CondTerm;
     }
 
     public CondFact getCondFact() {
@@ -38,18 +27,15 @@ public class AndOpCondFact extends CondTerm {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(CondTerm!=null) CondTerm.accept(visitor);
         if(CondFact!=null) CondFact.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(CondTerm!=null) CondTerm.traverseTopDown(visitor);
         if(CondFact!=null) CondFact.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(CondTerm!=null) CondTerm.traverseBottomUp(visitor);
         if(CondFact!=null) CondFact.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -57,13 +43,7 @@ public class AndOpCondFact extends CondTerm {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("AndOpCondFact(\n");
-
-        if(CondTerm!=null)
-            buffer.append(CondTerm.toString("  "+tab));
-        else
-            buffer.append(tab+"  null");
-        buffer.append("\n");
+        buffer.append("SingleFactCondition(\n");
 
         if(CondFact!=null)
             buffer.append(CondFact.toString("  "+tab));
@@ -72,7 +52,7 @@ public class AndOpCondFact extends CondTerm {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [AndOpCondFact]");
+        buffer.append(") [SingleFactCondition]");
         return buffer.toString();
     }
 }

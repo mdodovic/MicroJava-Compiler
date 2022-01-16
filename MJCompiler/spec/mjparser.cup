@@ -434,19 +434,19 @@ IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET
 
 /* if-else conditions */
 
-Condition ::= (OrOpCondTermList) Condition OR CondTerm
+Condition ::= (OrOpTermListCondition) Condition OR CondTerm
 			  |
-			  (SingleCondTerm) CondTerm:t
+			  (SingleTermCondition) CondTerm
 			  ;
 
-CondTerm ::= (AndOpCondFact) CondTerm AND CondFact
+CondTerm ::= (AndOpFactCondition) CondTerm AND CondFact
 			 |
- 			 (SingleCondFact) CondFact:t
+ 			 (SingleFactCondition) CondFact
 			 ;
 
-CondFact ::= (RelOpExpr) Expr:eleft Relop Expr:eright
+CondFact ::= (RelOpExprCondition) Expr:eleft Relop Expr:eright
 			 |
-			 (SingleExpr) Expr:e
+			 (SingleExprCondition) Expr:e
 			 ;
 
 

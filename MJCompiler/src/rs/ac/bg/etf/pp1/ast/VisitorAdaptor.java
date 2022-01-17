@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 16/0/2022 14:52:0
+// 17/0/2022 20:11:55
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -32,8 +32,8 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(ActualParamList ActualParamList) { }
     public void visit(MethodVarDecl MethodVarDecl) { }
     public void visit(ClassMethodDeclarations ClassMethodDeclarations) { }
-    public void visit(VarDeclList VarDeclList) { }
     public void visit(FormalParamList FormalParamList) { }
+    public void visit(VarDeclList VarDeclList) { }
     public void visit(AllDeclarationsList AllDeclarationsList) { }
     public void visit(Expr Expr) { }
     public void visit(DesignatorStatement DesignatorStatement) { }
@@ -135,6 +135,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(ClassSingleVarDecl ClassSingleVarDecl) { visit(); }
     public void visit(ClassVarDeclSingle ClassVarDeclSingle) { visit(); }
     public void visit(ClassVarDeclMultiple ClassVarDeclMultiple) { visit(); }
+    public void visit(ClassVarDeclType ClassVarDeclType) { visit(); }
     public void visit(ErrorInClassVarDecl ErrorInClassVarDecl) { visit(); }
     public void visit(TypedListClassVarDecl TypedListClassVarDecl) { visit(); }
     public void visit(NoClassFields NoClassFields) { visit(); }
@@ -147,6 +148,7 @@ public abstract class VisitorAdaptor implements Visitor {
     public void visit(ErrorInExtendingClass ErrorInExtendingClass) { visit(); }
     public void visit(ClassHasNoParent ClassHasNoParent) { visit(); }
     public void visit(ClassHasParent ClassHasParent) { visit(); }
+    public void visit(ClassDeclName ClassDeclName) { visit(); }
     public void visit(ClassDecl ClassDecl) { visit(); }
     public void visit(RecordHasNotVariables RecordHasNotVariables) { visit(); }
     public void visit(RecordHasVariables RecordHasVariables) { visit(); }

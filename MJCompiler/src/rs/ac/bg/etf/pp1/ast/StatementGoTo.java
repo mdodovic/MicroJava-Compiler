@@ -1,25 +1,24 @@
 // generated with ast extension for cup
 // version 0.8
-// 16/0/2022 14:52:0
+// 17/0/2022 20:11:55
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class StatementGoTo extends SingleStatement {
 
-    private Label Label;
+    private String labelName;
 
-    public StatementGoTo (Label Label) {
-        this.Label=Label;
-        if(Label!=null) Label.setParent(this);
+    public StatementGoTo (String labelName) {
+        this.labelName=labelName;
     }
 
-    public Label getLabel() {
-        return Label;
+    public String getLabelName() {
+        return labelName;
     }
 
-    public void setLabel(Label Label) {
-        this.Label=Label;
+    public void setLabelName(String labelName) {
+        this.labelName=labelName;
     }
 
     public void accept(Visitor visitor) {
@@ -27,16 +26,13 @@ public class StatementGoTo extends SingleStatement {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Label!=null) Label.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Label!=null) Label.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Label!=null) Label.traverseBottomUp(visitor);
         accept(visitor);
     }
 
@@ -45,10 +41,7 @@ public class StatementGoTo extends SingleStatement {
         buffer.append(tab);
         buffer.append("StatementGoTo(\n");
 
-        if(Label!=null)
-            buffer.append(Label.toString("  "+tab));
-        else
-            buffer.append(tab+"  null");
+        buffer.append(" "+tab+labelName);
         buffer.append("\n");
 
         buffer.append(tab);

@@ -136,7 +136,8 @@ nonterminal RecordDecl RecordDecl; /* this is the representation of Record = rec
 nonterminal rs.etf.pp1.symboltable.concepts.Obj RecordDeclName; /* this will represent "record" recordName */
 nonterminal RecordVarDecl RecordVarDecl; /* this will represent variable declarations in record */
 
-nonterminal ClassDecl ClassDecl; /* "class" className (.1.) (.2.) */
+nonterminal ClassDecl ClassDecl; /* (.0.) (.1.) (.2.) */
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ClassDeclName; /* this will represents "class" className, which is (.0.) */
 nonterminal OptionalExtend OptionalExtend; /* "extends" superClassName, this is optional part in class declaration (.1.) */
 nonterminal ClassBody ClassBody; /* this will be the class body "{" (.2.) (.3.) "}", brackets are mandatory, and inner content is optional, and it is bellow */
 /* Because of the shift reduce conflicts class constructor and class methods needs to be in this production.
@@ -145,6 +146,7 @@ nonterminal ClassBody ClassBody; /* this will be the class body "{" (.2.) (.3.) 
   */
 nonterminal ClassFieldsVariables ClassFieldsVariables; /* class fields (.2.), this is basically VarDecl, but error handling is different: all tokens except ";" and "{" should be consumed  */
 nonterminal ClassVarDecl ClassVarDecl; /* collect one declaration: type (.2.1.) ";", there we consume symbols */
+nonterminal ClassVarDeclType ClassVarDeclType; /* declaration of the type of class variable(s) */
 nonterminal ClassVarDeclList ClassVarDeclList; /* list of variable names bounded by ",", (.2.1.) in ClassVarDecl*/
 nonterminal ClassSingleVarDecl ClassSingleVarDecl; /* one variable name, it can be like varName or varName[] */
 nonterminal ConstructorDecl ConstructorDecl; /* class constructor (.3.1.), method without type and with the same name as class. Here this constructor is default (without parameters) and has body as same as regular method. */ 
@@ -278,7 +280,9 @@ RecordVarDecl ::= (RecordHasVariables) RecordVarDecl:R1 VarDecl:V2 {: RESULT=new
 
 /* classes */
 
-ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend:O1 ClassBody:C2 {: RESULT=new ClassDecl(className, O1, C2); RESULT.setLine(classNameleft); :};
+ClassDecl ::= (ClassDecl) ClassDeclName:C1 OptionalExtend:O2 ClassBody:C3 {: RESULT=new ClassDecl(C1, O2, C3); RESULT.setLine(C1left); :};
+
+ClassDeclName ::= (ClassDeclName) CLASS IDENT:className {: RESULT=new ClassDeclName(className); RESULT.setLine(classNameleft); :};
 
 OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName {: RESULT=new ClassHasParent(parentClassName); RESULT.setLine(parentClassNameleft); :}
 				   | 
@@ -319,17 +323,19 @@ ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables:C1 ClassVarDecl:C2 {
 						 (NoClassFields) {: RESULT=new NoClassFields(); :} /* epsilon */
 						 ;
 
-ClassVarDecl ::= (TypedListClassVarDecl) Type:varType ClassVarDeclList:C1 SEMI {: RESULT=new TypedListClassVarDecl(varType, C1); RESULT.setLine(varTypeleft); :}
+ClassVarDecl ::= (TypedListClassVarDecl) ClassVarDeclType:C1 ClassVarDeclList:C2 SEMI {: RESULT=new TypedListClassVarDecl(C1, C2); RESULT.setLine(C1left); :}
 				 |
 				 (ErrorInClassVarDecl) error {: RESULT=new ErrorInClassVarDecl(); :}
     			 ;
+
+ClassVarDeclType ::= (ClassVarDeclType) Type:classFieldType {: RESULT=new ClassVarDeclType(classFieldType); RESULT.setLine(classFieldTypeleft); :};
 
 ClassVarDeclList ::= (ClassVarDeclMultiple) ClassVarDeclList:C1 COMMA ClassSingleVarDecl:C2 {: RESULT=new ClassVarDeclMultiple(C1, C2); RESULT.setLine(C1left); :} 
 				|
 				(ClassVarDeclSingle) ClassSingleVarDecl:C1 {: RESULT=new ClassVarDeclSingle(C1); RESULT.setLine(C1left); :}
 				;
 
-ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:varName ArrayBrackets:A1 {: RESULT=new ClassSingleVarDecl(varName, A1); RESULT.setLine(varNameleft); :};
+ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:classFieldName ArrayBrackets:A1 {: RESULT=new ClassSingleVarDecl(classFieldName, A1); RESULT.setLine(classFieldNameleft); :};
 
 
 ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl:C1 LEFT_CURLY_BRACKET StatementList:S2 RIGHT_CURLY_BRACKET {: RESULT=new ClassConstructor(constructorName, C1, S2); RESULT.setLine(constructorNameleft); :};
@@ -422,7 +428,7 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new S
 					|
 					(StatementRead) READ LEFT_ROUND_BRACKET Designator:D1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementRead(D1); RESULT.setLine(D1left); :}
 					|
-					(StatementGoTo) GOTO Label:L1 SEMI {: RESULT=new StatementGoTo(L1); RESULT.setLine(L1left); :}
+					(StatementGoTo) GOTO IDENT:labelName SEMI {: RESULT=new StatementGoTo(labelName); RESULT.setLine(labelNameleft); :}
 					;
 
 DoWhileDummyStart ::= (DoWhileDummyStart) {: RESULT=new DoWhileDummyStart(); :} /* epsilon */;

@@ -136,7 +136,8 @@ nonterminal RecordDecl; /* this is the representation of Record = recordDeclName
 nonterminal rs.etf.pp1.symboltable.concepts.Obj RecordDeclName; /* this will represent "record" recordName */
 nonterminal RecordVarDecl; /* this will represent variable declarations in record */
 
-nonterminal ClassDecl; /* "class" className (.1.) (.2.) */
+nonterminal ClassDecl; /* (.0.) (.1.) (.2.) */
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ClassDeclName; /* this will represents "class" className, which is (.0.) */
 nonterminal OptionalExtend; /* "extends" superClassName, this is optional part in class declaration (.1.) */
 nonterminal ClassBody; /* this will be the class body "{" (.2.) (.3.) "}", brackets are mandatory, and inner content is optional, and it is bellow */
 /* Because of the shift reduce conflicts class constructor and class methods needs to be in this production.
@@ -145,6 +146,7 @@ nonterminal ClassBody; /* this will be the class body "{" (.2.) (.3.) "}", brack
   */
 nonterminal ClassFieldsVariables; /* class fields (.2.), this is basically VarDecl, but error handling is different: all tokens except ";" and "{" should be consumed  */
 nonterminal ClassVarDecl; /* collect one declaration: type (.2.1.) ";", there we consume symbols */
+nonterminal ClassVarDeclType; /* declaration of the type of class variable(s) */
 nonterminal ClassVarDeclList; /* list of variable names bounded by ",", (.2.1.) in ClassVarDecl*/
 nonterminal ClassSingleVarDecl; /* one variable name, it can be like varName or varName[] */
 nonterminal ConstructorDecl; /* class constructor (.3.1.), method without type and with the same name as class. Here this constructor is default (without parameters) and has body as same as regular method. */ 
@@ -278,7 +280,9 @@ RecordVarDecl ::= (RecordHasVariables) RecordVarDecl VarDecl
 
 /* classes */
 
-ClassDecl ::= (ClassDecl) CLASS IDENT:className OptionalExtend ClassBody;
+ClassDecl ::= (ClassDecl) ClassDeclName OptionalExtend ClassBody;
+
+ClassDeclName ::= (ClassDeclName) CLASS IDENT:className;
 
 OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
 				   | 
@@ -319,17 +323,19 @@ ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables ClassVarDecl
 						 (NoClassFields) /* epsilon */
 						 ;
 
-ClassVarDecl ::= (TypedListClassVarDecl) Type:varType ClassVarDeclList SEMI
+ClassVarDecl ::= (TypedListClassVarDecl) ClassVarDeclType ClassVarDeclList SEMI
 				 |
 				 (ErrorInClassVarDecl) error
     			 ;
+
+ClassVarDeclType ::= (ClassVarDeclType) Type:classFieldType;
 
 ClassVarDeclList ::= (ClassVarDeclMultiple) ClassVarDeclList COMMA ClassSingleVarDecl 
 				|
 				(ClassVarDeclSingle) ClassSingleVarDecl
 				;
 
-ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:varName ArrayBrackets;
+ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:classFieldName ArrayBrackets;
 
 
 ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET;
@@ -422,7 +428,7 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement
 					|
 					(StatementRead) READ LEFT_ROUND_BRACKET Designator RIGHT_ROUND_BRACKET SEMI
 					|
-					(StatementGoTo) GOTO Label SEMI
+					(StatementGoTo) GOTO IDENT:labelName SEMI
 					;
 
 DoWhileDummyStart ::= (DoWhileDummyStart) /* epsilon */;

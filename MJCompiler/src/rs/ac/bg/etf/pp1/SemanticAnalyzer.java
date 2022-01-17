@@ -1,7 +1,9 @@
 package rs.ac.bg.etf.pp1;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -9,7 +11,12 @@ import rs.ac.bg.etf.pp1.ast.AddOpTermList;
 import rs.ac.bg.etf.pp1.ast.ArrayDesignator;
 import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
+import rs.ac.bg.etf.pp1.ast.ClassDecl;
+import rs.ac.bg.etf.pp1.ast.ClassDeclName;
 import rs.ac.bg.etf.pp1.ast.ClassFieldDesignator;
+import rs.ac.bg.etf.pp1.ast.ClassHasNoParent;
+import rs.ac.bg.etf.pp1.ast.ClassHasParent;
+import rs.ac.bg.etf.pp1.ast.ClassSingleVarDecl;
 import rs.ac.bg.etf.pp1.ast.ConcreteType;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
@@ -27,6 +34,7 @@ import rs.ac.bg.etf.pp1.ast.FormalParameterDeclaration;
 import rs.ac.bg.etf.pp1.ast.GreaterEqualOp;
 import rs.ac.bg.etf.pp1.ast.GreaterOp;
 import rs.ac.bg.etf.pp1.ast.IntegerValue;
+import rs.ac.bg.etf.pp1.ast.Label;
 import rs.ac.bg.etf.pp1.ast.LessEqualOp;
 import rs.ac.bg.etf.pp1.ast.LessOp;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
@@ -36,6 +44,7 @@ import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
 import rs.ac.bg.etf.pp1.ast.MultiplyOp;
 import rs.ac.bg.etf.pp1.ast.NegativeExpr;
 import rs.ac.bg.etf.pp1.ast.NotEqualOp;
+import rs.ac.bg.etf.pp1.ast.OptionalExtend;
 import rs.ac.bg.etf.pp1.ast.PlusOp;
 import rs.ac.bg.etf.pp1.ast.PositiveExpr;
 import rs.ac.bg.etf.pp1.ast.ProgName;
@@ -51,6 +60,7 @@ import rs.ac.bg.etf.pp1.ast.SingleTerm;
 import rs.ac.bg.etf.pp1.ast.StatementBreak;
 import rs.ac.bg.etf.pp1.ast.StatementContinue;
 import rs.ac.bg.etf.pp1.ast.StatementDoWhile;
+import rs.ac.bg.etf.pp1.ast.StatementGoTo;
 import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
 import rs.ac.bg.etf.pp1.ast.StatementPrintWithWidth;
 import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
@@ -97,6 +107,9 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	private List<Struct> listOfClasses = new ArrayList<Struct>(); // list of user defined classes; Usage: check if some type (struct) is user defined
 
 	private int doWhileDepthCounter = 0; // depth of the do-while statement; it cannot be boolean because we do not know when to reset it to the false value
+		
+//	private List<String> listOfDeclaredLabelsPerMethods = new ArrayList<String>(); // there will be collected all the labels declared in currentMethod - no constraints
+//	private List<Map<String, SyntaxNode>> listOfUsedLabelsPerMethods = new ArrayList<Map<String, SyntaxNode>>(); // there will be collected all used labels (in goto statement) - those labels have to be in list of declared labels
 	
 	enum RelOpEnum { EQUAL, NOT_EQUAL, LESS, GREATER, GREATER_EQUAL, LESS_EQUAL }
 	private RelOpEnum relationalOperation = null;
@@ -377,7 +390,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		variableNode = Tab.insert(Obj.Var, variableName, variableType);
     	}
     	
-    	// Obj.Var should be checked, now it is Var, but maybe it will become Obj.Fld
 		report_info("Kreirana je promenjiva " + structDescription(variableType) + " " + variableName + (isVariableArray ? "[]" : "") +".", info);
 		return variableNode;
 	}
@@ -425,7 +437,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 			return false;
 
     	}
-    	// variable name does not exists in symbol table
+    	// record name does not exists in symbol table
     	return true; 
     }
     
@@ -459,6 +471,124 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     /* Classes processing */
     
+    private boolean checkClassNameConstraint(String className, SyntaxNode info) {
+    	
+    	// Check if this is multiple declaration
+    	
+    	Obj classNameNode = Tab.find(className);
+    	if(classNameNode != Tab.noObj) {
+    		// classes can only be declared in program scope
+			report_error("Ime kalse " + className + " je vec deklarisano!", info);    		
+			return false;
+
+    	}
+    	// class name does not exists in symbol table
+    	return true; 
+    }
+    
+    @Override
+    public void visit(ClassDeclName classDeclName) {
+    	    	
+    	if(!checkClassNameConstraint(classDeclName.getClassName(), classDeclName)) {
+    		classDeclName.obj = Tab.noObj;
+    		currentClass = Tab.noType;
+    		Tab.openScope();
+    		return;
+    	}
+    	
+    	System.out.println("clb");
+
+    	currentClass = new Struct(Struct.Class);
+    	currentClass.setElementType(Tab.noType);
+    	
+    	classDeclName.obj = Tab.insert(Obj.Type, classDeclName.getClassName(), currentClass);
+		report_info("Kreirana je klasa (" + structDescription(currentClass) + ") " + classDeclName.getClassName() + ".", classDeclName);
+        Tab.openScope();
+ 
+// Uncomment when find purpose! 
+//        if (currentClass != SymbolTable.noType) {
+//			SymbolTable.insert(Obj.Fld, "$tvf" + className, SymbolTable.intType);
+//		}
+        
+        classOrRecordScope = true;
+    	
+    }
+        
+    // Class variables processing - very similar to the ordinary variables
+        
+    private boolean checkClassVariableNameConstraint(String classVariableName, SyntaxNode info) {
+    	
+    	// Check if this is multiple declaration
+    	
+    	Obj classVariableNameNode = Tab.find(classVariableName);
+    	if(classVariableNameNode != Tab.noObj) {
+        	// class variable name exists in symbol table: indicates error if they are in the same scope
+    		if(Tab.currentScope.findSymbol(classVariableName) != null) {
+    			// If it is declared in current scope, then it is multiple declaration
+    			// Otherwise, this class variable hides the outer-scoped variable, which is allowed
+				report_error("Ime " + classVariableName + " je vec deklarisano!", info);    		
+				return false;
+    		}
+    	}
+    	// class variable name does not exists in symbol table
+    	return true; 
+    }
+
+    
+    private Obj insertClassVariableIntoSymbolTable(String classVariableName, SyntaxNode info) {
+    	
+    	// *** Uncomment when find the reason!
+    	// if(currentType == Tab.noType) {    	
+    	//	return Tab.noObj;
+    	//}
+    	
+    	Struct classVariableType = currentType;
+    	if(isVariableArray == true) {
+    		// struct node for Array should be created
+    		classVariableType = new Struct(Struct.Array, currentType);
+    	}
+
+    	// this is class context - can only be Obj.Fld
+    	Obj classVariableNode = Tab.insert(Obj.Fld, classVariableName, classVariableType);
+
+    	report_info("Kreirano je polje klase" + structDescription(classVariableType) + " " + classVariableName + (isVariableArray ? "[]" : "") +".", info);
+		return classVariableNode;
+	}
+	
+    @Override
+    public void visit(ClassSingleVarDecl classSingleVarDecl) {
+    	if(!checkClassVariableNameConstraint(classSingleVarDecl.getClassFieldName(), classSingleVarDecl)) {
+    		return;
+    	}
+    	
+    	insertClassVariableIntoSymbolTable(classSingleVarDecl.getClassFieldName(), classSingleVarDecl);
+    	
+    	isVariableArray = false;
+    }
+    
+    // extended classes processing
+    
+    @Override
+    public void visit(ClassHasParent classHasParent) {
+    	System.out.println("parent ");
+    	    	
+    }
+    
+    @Override
+    public void visit(ClassHasNoParent classHasNoParent) {
+    	System.out.println(" NOOO parent ");
+    }
+    
+    // finish with the class declaration
+    
+    @Override
+    public void visit(ClassDecl ClassDecl) {
+		listOfClasses.add(currentClass);
+    	Tab.chainLocalSymbols(currentClass);
+    	Tab.closeScope();
+    	classOrRecordScope = false;
+    	currentClass = null;	
+    }
     
     
     /* Methods processing */
@@ -554,7 +684,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 			methodFormalParametersCount++;
 			Tab.insert(Obj.Meth, "this", currentClass);
 		}
-		
+
     }
 
     @Override
@@ -586,8 +716,20 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 		//	report_error("Tip izraza u return naredbi (" + structDescription(stetementReturnExpression.getExpr().struct) + ") nije kompatibilan sa tipom povratne vrednosti funkcije " + structDescription(declaredMethodType), stetementReturnExpression);
     	//}
     }
-    
-    
+
+    /*
+    // ! Specification constraint: classField has to be the member of the classReference (either its field or its method)
+    private boolean checkLabelUsageConstraints() {
+    	
+    	for(Map<String, SyntaxNode> usedLabel: listOfUsedLabelsPerMethods) {
+    		if(listOfDeclaredLabelsPerMethods.contains(usedLabel.))
+    			
+    			
+    	}
+    	
+    }
+    */
+
     @Override
     public void visit(CorrectMethodDecl correctMethodDecl) {
     	
@@ -606,6 +748,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     	Tab.closeScope();
     	
+    	/*checkLabelUsageConstraints();*/
+    	
     	// reset 
     	methodFormalParametersCount = 0;
     	returnFound = false;
@@ -613,6 +757,34 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     }
     
+    /* Label and goto Label procesing */
+    
+    // declaring LabelName: ...
+    /*
+    @Override
+    public void visit(Label label) {
+    	if(currentMethod == null || !listOfLabelsPerMethods.containsKey(currentMethod)) {
+    		report_error("Labela " + label.getLabelName() + " mora biti definisana unutar metoda", label);
+    		return;
+    	}
+    	// add label into currentMethod->[labels] mapping
+    	listOfLabelsPerMethods.get(currentMethod).add(label.getLabelName());
+    }
+    
+    // usage goto LabelName;
+    @Override
+    public void visit(StatementGoTo statementGoTo) {
+    	
+    	for(String labelName: listOfLabelsPerMethods.get(currentMethod)) {
+    		if(labelName.equals(statementGoTo.getLabelName())) {
+    			return;
+    		}
+    	}
+		// ! Specification constraint: label from goto statement has to be in the same function as this goto statement
+		report_error("Labela u okviru naredbe goto " + statementGoTo.getLabelName() + " mora biti definisana u okviru iste metode", statementGoTo);
+    	
+    }
+    */
     /* Expressions processing */
     
     /* Terms processing */

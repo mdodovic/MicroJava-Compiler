@@ -1,28 +1,28 @@
 // generated with ast extension for cup
 // version 0.8
-// 16/0/2022 14:52:0
+// 17/0/2022 20:11:55
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class TypedListClassVarDecl extends ClassVarDecl {
 
-    private Type Type;
+    private ClassVarDeclType ClassVarDeclType;
     private ClassVarDeclList ClassVarDeclList;
 
-    public TypedListClassVarDecl (Type Type, ClassVarDeclList ClassVarDeclList) {
-        this.Type=Type;
-        if(Type!=null) Type.setParent(this);
+    public TypedListClassVarDecl (ClassVarDeclType ClassVarDeclType, ClassVarDeclList ClassVarDeclList) {
+        this.ClassVarDeclType=ClassVarDeclType;
+        if(ClassVarDeclType!=null) ClassVarDeclType.setParent(this);
         this.ClassVarDeclList=ClassVarDeclList;
         if(ClassVarDeclList!=null) ClassVarDeclList.setParent(this);
     }
 
-    public Type getType() {
-        return Type;
+    public ClassVarDeclType getClassVarDeclType() {
+        return ClassVarDeclType;
     }
 
-    public void setType(Type Type) {
-        this.Type=Type;
+    public void setClassVarDeclType(ClassVarDeclType ClassVarDeclType) {
+        this.ClassVarDeclType=ClassVarDeclType;
     }
 
     public ClassVarDeclList getClassVarDeclList() {
@@ -38,18 +38,18 @@ public class TypedListClassVarDecl extends ClassVarDecl {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Type!=null) Type.accept(visitor);
+        if(ClassVarDeclType!=null) ClassVarDeclType.accept(visitor);
         if(ClassVarDeclList!=null) ClassVarDeclList.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Type!=null) Type.traverseTopDown(visitor);
+        if(ClassVarDeclType!=null) ClassVarDeclType.traverseTopDown(visitor);
         if(ClassVarDeclList!=null) ClassVarDeclList.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Type!=null) Type.traverseBottomUp(visitor);
+        if(ClassVarDeclType!=null) ClassVarDeclType.traverseBottomUp(visitor);
         if(ClassVarDeclList!=null) ClassVarDeclList.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -59,8 +59,8 @@ public class TypedListClassVarDecl extends ClassVarDecl {
         buffer.append(tab);
         buffer.append("TypedListClassVarDecl(\n");
 
-        if(Type!=null)
-            buffer.append(Type.toString("  "+tab));
+        if(ClassVarDeclType!=null)
+            buffer.append(ClassVarDeclType.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

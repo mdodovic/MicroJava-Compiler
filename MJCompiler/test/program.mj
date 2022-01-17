@@ -1,104 +1,60 @@
 program p
 
 
-	
-	record Board {
-	int rows, columns;
+		record F
+		{
+			 int x;
+			 int y;
+			 char z;
+		}
+		
+		int x;
+		
+		F f;
+		
+		class Predmet
+		{
+			 int tezina;
+			 int koefTezine;
+			 char vrsta;
+		
+//			{
+//				 Predmet(){
+//				   koefTezine = 1;	
+//				 }
+//				 void postaviTezinu(int tezina) {this.tezina = tezina * koefTezine;}  
+//				 void ucitajTezinu() { read(tezina); }
+//				 int zapremina() { return 0;}
+//				 int Q() {return zapremina() * tezina;}
+//				 void postaviVrstu(char vrsta) {this.vrsta = vrsta;}
+//				 char dohvVrstu() { return vrsta; }
+//				 int dohvTezinu() { return tezina; }
+//				 void ispisi() {
+//				 	print(vrsta);
+//				 	print(Q());
+//				 }
+//			}
+		}
+	class Sfera extends Predmet
+	{
+		int r;
+
 	}
 	
-	record Board2 {
-	int rows, columns;
+	class Kvadar extends Predmet
+	{
+		 int a, b, c;
 	}
 	
-	record Table {
-		int cnt;
-		Board b;
-	}
-	
-	Table val;
-	Board board1, board2;
-	
-	int arr2[];
-	int sum[];
-	int index;
-	char x;
-	
-	Table nta[];
-	
+	Predmet p1;
 	
 {
-
+	void main() int c1; Predmet p2; Kvadar k; Sfera s; {
 	
-	void main() int c1; char arr1; int i, j; bool ibool; bool bar[]; Board barr[]; {
-	
-
-		c1 = arr1;
-		c1 = arr2; // ovo nije problem arr2 nego problem c1 tip int nije dodeljivo sa arr2
+		p2 = new Predmet;
+		k = new Kvadar;
+		s = new Sfera;
 		
-		c1 = arr2[0];
-		c1 = arr2[index];
-		c1 = arr2[7 * index];
-		c1 = sum[sum[arr2[index]]];
-		
-				
-		print(i);
-		print(arr2[i]);
-		print(arr1);
-		print(ibool);
-		print(i + 4);
-		i = 0;
-		
-		do{
-			if(i == 2) ibool = true;
-			
-			if(i % 4 == 0) {
-				j = 6;
-				do {
-					j--;
-					if(j - i <= 0)
-						break;
-				}while(j > 0);
-			}
-			if(i + j - 1 == 7)
-				continue;			
-			i++;
-			
-			if(ibool) continue;
-			//if(ibool != i) break;
-			
-			if(board1 == board2) break;
-			if(board1 != board1) break;
-			if(sum[i] >= arr2[i]) x++;
-			
-			
-		}while(i < 5);
-		
-		//c1 = sum.rre;
-		c1 = board1.rows;
-		
-		print(board1.rows);
-		c1 = val.b.columns;
-		
-		c1 = val.b.columns + board1.rows;
-		
-			do{
-			if(val.b.columns == 2) val.b.columns = true;
-			
-			
-		}while(val.b == board1);
-		
-		
-		board1 = new Board;
-		board1 = new Board2;
-		val = new Table;
-		//nta = new int;
-		
-		arr1 = new int[10];
-		
-		nta = new Table[val.b.columns + board1.rows];
-		barr = new Board[4];
-		
-		
-		//nta  = new int[true];
+		p1 = new Kvadar;
 	}
 }

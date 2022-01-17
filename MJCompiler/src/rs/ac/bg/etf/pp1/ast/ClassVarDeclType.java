@@ -5,22 +5,23 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class Label implements SyntaxNode {
+public class ClassVarDeclType implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    private String labelName;
+    private Type Type;
 
-    public Label (String labelName) {
-        this.labelName=labelName;
+    public ClassVarDeclType (Type Type) {
+        this.Type=Type;
+        if(Type!=null) Type.setParent(this);
     }
 
-    public String getLabelName() {
-        return labelName;
+    public Type getType() {
+        return Type;
     }
 
-    public void setLabelName(String labelName) {
-        this.labelName=labelName;
+    public void setType(Type Type) {
+        this.Type=Type;
     }
 
     public SyntaxNode getParent() {
@@ -44,26 +45,32 @@ public class Label implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
+        if(Type!=null) Type.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
+        if(Type!=null) Type.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
+        if(Type!=null) Type.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("Label(\n");
+        buffer.append("ClassVarDeclType(\n");
 
-        buffer.append(" "+tab+labelName);
+        if(Type!=null)
+            buffer.append(Type.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [Label]");
+        buffer.append(") [ClassVarDeclType]");
         return buffer.toString();
     }
 }

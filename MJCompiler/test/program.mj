@@ -49,12 +49,22 @@ program p
 	Predmet p1;
 	
 {
-	void main() int c1; Predmet p2; Kvadar k; Sfera s; {
+	void main() int c1; Predmet p2; Kvadar k; Sfera s; Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t; {
 	
 		p2 = new Predmet;
 		k = new Kvadar;
 		s = new Sfera;
 		
 		p1 = new Kvadar;
+		
+		predmeti = new Predmet[6];
+		s1 = new Sfera;
+		s2 = new Sfera;
+		s3 = new Sfera;
+		
+		k1 = new Kvadar;
+		k2 = new Kvadar;
+		k3 = new Kvadar;
+		
 	}
 }

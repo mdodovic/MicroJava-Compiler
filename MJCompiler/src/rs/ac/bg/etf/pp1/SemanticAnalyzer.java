@@ -34,7 +34,6 @@ import rs.ac.bg.etf.pp1.ast.FormalParameterDeclaration;
 import rs.ac.bg.etf.pp1.ast.GreaterEqualOp;
 import rs.ac.bg.etf.pp1.ast.GreaterOp;
 import rs.ac.bg.etf.pp1.ast.IntegerValue;
-import rs.ac.bg.etf.pp1.ast.Label;
 import rs.ac.bg.etf.pp1.ast.LessEqualOp;
 import rs.ac.bg.etf.pp1.ast.LessOp;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
@@ -44,7 +43,6 @@ import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
 import rs.ac.bg.etf.pp1.ast.MultiplyOp;
 import rs.ac.bg.etf.pp1.ast.NegativeExpr;
 import rs.ac.bg.etf.pp1.ast.NotEqualOp;
-import rs.ac.bg.etf.pp1.ast.OptionalExtend;
 import rs.ac.bg.etf.pp1.ast.PlusOp;
 import rs.ac.bg.etf.pp1.ast.PositiveExpr;
 import rs.ac.bg.etf.pp1.ast.ProgName;
@@ -54,13 +52,11 @@ import rs.ac.bg.etf.pp1.ast.RecordDeclName;
 import rs.ac.bg.etf.pp1.ast.RelOpExprCondition;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
 import rs.ac.bg.etf.pp1.ast.SingleExprCondition;
-import rs.ac.bg.etf.pp1.ast.SingleFactCondition;
 import rs.ac.bg.etf.pp1.ast.SingleFactor;
 import rs.ac.bg.etf.pp1.ast.SingleTerm;
 import rs.ac.bg.etf.pp1.ast.StatementBreak;
 import rs.ac.bg.etf.pp1.ast.StatementContinue;
 import rs.ac.bg.etf.pp1.ast.StatementDoWhile;
-import rs.ac.bg.etf.pp1.ast.StatementGoTo;
 import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
 import rs.ac.bg.etf.pp1.ast.StatementPrintWithWidth;
 import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
@@ -97,14 +93,18 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	private boolean returnFound = false;
 	private int methodFormalParametersCount = 0;
 
-	private Struct currentRecord = null;
 	private boolean classOrRecordScope = false; // When variable is declared, if it is in class or record, it's type is Obj.Fld, otherwise it is Obj.Var
+
+	private String currentRecordName = null;
+	private Struct currentRecord = null;
 	
+	private String currentClassName = null;
 	private Struct currentClass = null;
+
 	private Obj overridedMethod = null;
 
-	private List<Struct> listOfRecords = new ArrayList<Struct>(); // list of user defined records; Usage: check if some type (struct) is user defined; check if some class extends any record
-	private List<Struct> listOfClasses = new ArrayList<Struct>(); // list of user defined classes; Usage: check if some type (struct) is user defined
+	private Map<Struct, String> mapOfRecords = new HashMap<Struct, String>(); // map of user defined records; Usage: check if some type (struct) is user defined; check if some class extends any record
+	private Map<Struct, String> mapOfClasses = new HashMap<Struct, String>();// list of user defined classes; Usage: check if some type (struct) is user defined
 
 	private int doWhileDepthCounter = 0; // depth of the do-while statement; it cannot be boolean because we do not know when to reset it to the false value
 		
@@ -447,10 +447,12 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	if(!checkRecordNameConstraint(recordDeclName.getRecordName(), recordDeclName)) {
     		recordDeclName.obj = Tab.noObj;
     		currentRecord = Tab.noType;
+    		currentRecordName = "";
     		Tab.openScope();
     		return;
     	}
     	
+    	currentRecordName = recordDeclName.getRecordName();
     	currentRecord = new Struct(Struct.Class);
     	currentRecord.setElementType(Tab.noType);
     	
@@ -462,11 +464,12 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(RecordDecl recordDecl) {
-    	listOfRecords.add(currentRecord);
+    	mapOfRecords.put(currentRecord, currentRecordName);
     	Tab.chainLocalSymbols(currentRecord);
     	Tab.closeScope();
     	classOrRecordScope = false;
     	currentRecord = null;
+    	currentRecordName = null;
     }
     
     /* Classes processing */
@@ -492,12 +495,14 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	if(!checkClassNameConstraint(classDeclName.getClassName(), classDeclName)) {
     		classDeclName.obj = Tab.noObj;
     		currentClass = Tab.noType;
+    		currentRecordName = "";
     		Tab.openScope();
     		return;
     	}
     	
     	System.out.println("clb");
 
+    	currentClassName = classDeclName.getClassName();
     	currentClass = new Struct(Struct.Class);
     	currentClass.setElementType(Tab.noType);
     	
@@ -583,11 +588,12 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(ClassDecl ClassDecl) {
-		listOfClasses.add(currentClass);
+    	mapOfClasses.put(currentClass, currentClassName);
     	Tab.chainLocalSymbols(currentClass);
     	Tab.closeScope();
     	classOrRecordScope = false;
     	currentClass = null;	
+    	currentClassName = null;	
     }
     
     
@@ -863,26 +869,30 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     }
     
+    Map<String, String> x = new HashMap<>();
+    
     @Override
     public void visit(FactorClassNewOperator factorClassNewOperator) {
-    	factorClassNewOperator.getType();
+
     	// TODO: check this, equals iis ekvivalentan 
     	// ! Specification constraint: type of created object has to be user defined class (or record)
-    	for(Struct userDefinedRecord: listOfRecords) {
+    	
+    	// in this iterrating getKey will return struct, getValue will return name
+		for (Map.Entry<Struct, String> userDefinedRecordStructName : mapOfRecords.entrySet()) {
     		if(/*userDefinedRecors.equals(factorClassNewOperator.getType().struct)*/
-    				userDefinedRecord == factorClassNewOperator.getType().struct	
+    				userDefinedRecordStructName.getKey() == factorClassNewOperator.getType().struct	
     				) {
     			// user defined record
-    			factorClassNewOperator.struct = userDefinedRecord;
+    			factorClassNewOperator.struct = userDefinedRecordStructName.getKey();
     			return;
     		}
     	}
-    	for(Struct userDefinedClass: listOfClasses) {
+		for (Map.Entry<Struct, String> userDefinedClassStructName : mapOfClasses.entrySet()) {
     		if(/*userDefinedRecors.equals(factorClassNewOperator.getType().struct)*/
-        			userDefinedClass == factorClassNewOperator.getType().struct	
+    				userDefinedClassStructName.getKey() == factorClassNewOperator.getType().struct	
         				) {
     			// user defined class
-    			factorClassNewOperator.struct = userDefinedClass;
+    			factorClassNewOperator.struct = userDefinedClassStructName.getKey();
     			return;
     		}
     	}

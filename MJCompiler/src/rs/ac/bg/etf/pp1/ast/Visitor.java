@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 17/0/2022 20:11:55
+// 17/0/2022 22:4:24
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -148,7 +148,7 @@ public interface Visitor {
     public void visit(ErrorInExtendingClass ErrorInExtendingClass);
     public void visit(ClassHasNoParent ClassHasNoParent);
     public void visit(ClassHasParent ClassHasParent);
-    public void visit(ClassDeclName ClassDeclName);
+    public void visit(ClassDeclNameOptionalExtend ClassDeclNameOptionalExtend);
     public void visit(ClassDecl ClassDecl);
     public void visit(RecordHasNotVariables RecordHasNotVariables);
     public void visit(RecordHasVariables RecordHasVariables);

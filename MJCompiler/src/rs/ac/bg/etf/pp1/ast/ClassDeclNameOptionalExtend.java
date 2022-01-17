@@ -1,20 +1,23 @@
 // generated with ast extension for cup
 // version 0.8
-// 17/0/2022 20:11:55
+// 17/0/2022 22:4:24
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ClassDeclName implements SyntaxNode {
+public class ClassDeclNameOptionalExtend implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
     public rs.etf.pp1.symboltable.concepts.Obj obj = null;
 
     private String className;
+    private OptionalExtend OptionalExtend;
 
-    public ClassDeclName (String className) {
+    public ClassDeclNameOptionalExtend (String className, OptionalExtend OptionalExtend) {
         this.className=className;
+        this.OptionalExtend=OptionalExtend;
+        if(OptionalExtend!=null) OptionalExtend.setParent(this);
     }
 
     public String getClassName() {
@@ -23,6 +26,14 @@ public class ClassDeclName implements SyntaxNode {
 
     public void setClassName(String className) {
         this.className=className;
+    }
+
+    public OptionalExtend getOptionalExtend() {
+        return OptionalExtend;
+    }
+
+    public void setOptionalExtend(OptionalExtend OptionalExtend) {
+        this.OptionalExtend=OptionalExtend;
     }
 
     public SyntaxNode getParent() {
@@ -46,26 +57,35 @@ public class ClassDeclName implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
+        if(OptionalExtend!=null) OptionalExtend.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
+        if(OptionalExtend!=null) OptionalExtend.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
+        if(OptionalExtend!=null) OptionalExtend.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ClassDeclName(\n");
+        buffer.append("ClassDeclNameOptionalExtend(\n");
 
         buffer.append(" "+tab+className);
         buffer.append("\n");
 
+        if(OptionalExtend!=null)
+            buffer.append(OptionalExtend.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
         buffer.append(tab);
-        buffer.append(") [ClassDeclName]");
+        buffer.append(") [ClassDeclNameOptionalExtend]");
         return buffer.toString();
     }
 }

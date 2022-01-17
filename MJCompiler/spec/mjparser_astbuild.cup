@@ -136,9 +136,9 @@ nonterminal RecordDecl RecordDecl; /* this is the representation of Record = rec
 nonterminal rs.etf.pp1.symboltable.concepts.Obj RecordDeclName; /* this will represent "record" recordName */
 nonterminal RecordVarDecl RecordVarDecl; /* this will represent variable declarations in record */
 
-nonterminal ClassDecl ClassDecl; /* (.0.) (.1.) (.2.) */
-nonterminal rs.etf.pp1.symboltable.concepts.Obj ClassDeclName; /* this will represents "class" className, which is (.0.) */
-nonterminal OptionalExtend OptionalExtend; /* "extends" superClassName, this is optional part in class declaration (.1.) */
+nonterminal ClassDecl ClassDecl; /* (.1.) (.2.) */
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ClassDeclNameOptionalExtend; /* this will represents "class" className and optional super class extends, this is (.1.) part in class declaration */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct OptionalExtend; /* "extends" superClassName */
 nonterminal ClassBody ClassBody; /* this will be the class body "{" (.2.) (.3.) "}", brackets are mandatory, and inner content is optional, and it is bellow */
 /* Because of the shift reduce conflicts class constructor and class methods needs to be in this production.
    There are 5 different variants: no body, only "{}", only "{" constructor "}", only "{" methods "}", both "{" constructor methods "}"  
@@ -280,9 +280,9 @@ RecordVarDecl ::= (RecordHasVariables) RecordVarDecl:R1 VarDecl:V2 {: RESULT=new
 
 /* classes */
 
-ClassDecl ::= (ClassDecl) ClassDeclName:C1 OptionalExtend:O2 ClassBody:C3 {: RESULT=new ClassDecl(C1, O2, C3); RESULT.setLine(C1left); :};
+ClassDecl ::= (ClassDecl) ClassDeclNameOptionalExtend:C1 ClassBody:C2 {: RESULT=new ClassDecl(C1, C2); RESULT.setLine(C1left); :};
 
-ClassDeclName ::= (ClassDeclName) CLASS IDENT:className {: RESULT=new ClassDeclName(className); RESULT.setLine(classNameleft); :};
+ClassDeclNameOptionalExtend ::= (ClassDeclNameOptionalExtend) CLASS IDENT:className OptionalExtend:O1 {: RESULT=new ClassDeclNameOptionalExtend(className, O1); RESULT.setLine(classNameleft); :};
 
 OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName {: RESULT=new ClassHasParent(parentClassName); RESULT.setLine(parentClassNameleft); :}
 				   | 

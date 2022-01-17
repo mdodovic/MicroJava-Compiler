@@ -18,10 +18,10 @@ program p
 			 int koefTezine;
 			 char vrsta;
 		
-//			{
-//				 Predmet(){
-//				   koefTezine = 1;	
-//				 }
+			{
+				 Predmet(){
+				   koefTezine = 1;	
+				 }
 //				 void postaviTezinu(int tezina) {this.tezina = tezina * koefTezine;}  
 //				 void ucitajTezinu() { read(tezina); }
 //				 int zapremina() { return 0;}
@@ -33,17 +33,39 @@ program p
 //				 	print(vrsta);
 //				 	print(Q());
 //				 }
-//			}
+			}
 		}
 	class Sfera extends Predmet
 	{
 		int r;
+		{
+		
+			Sfera() {
+			  // super();
+			  //vrsta = 's';
+			}
+		
 
+		}
 	}
 	
+	class X extends Sfera {
+	}
+		
 	class Kvadar extends Predmet
 	{
 		 int a, b, c;
+		{
+			Kvadar() {
+			  //super();
+			 // vrsta = 'k';
+			}
+			
+		}
+	}
+	
+	class Z extends Kvadar {
+		X x;
 	}
 	
 	Predmet p1;

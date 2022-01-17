@@ -1,8 +1,6 @@
 package rs.ac.bg.etf.pp1;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -12,7 +10,7 @@ import rs.ac.bg.etf.pp1.ast.ArrayDesignator;
 import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
 import rs.ac.bg.etf.pp1.ast.ClassDecl;
-import rs.ac.bg.etf.pp1.ast.ClassDeclName;
+import rs.ac.bg.etf.pp1.ast.ClassDeclNameOptionalExtend;
 import rs.ac.bg.etf.pp1.ast.ClassFieldDesignator;
 import rs.ac.bg.etf.pp1.ast.ClassHasNoParent;
 import rs.ac.bg.etf.pp1.ast.ClassHasParent;
@@ -100,6 +98,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	
 	private String currentClassName = null;
 	private Struct currentClass = null;
+	private String superClassName = null;
+	private Struct superClass = null;
 
 	private Obj overridedMethod = null;
 
@@ -489,25 +489,41 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	return true; 
     }
     
+    private void transferFieldsFromSuperClassToCurrentClass() {
+    	for(Obj classMember: superClass.getMembers()) {
+    		if(classMember.getKind() == Obj.Fld) {
+    			// this is variable from super class
+    			Tab.insert(Obj.Fld, classMember.getName(), classMember.getType());
+    		}
+   		}
+		
+	}
+    
     @Override
-    public void visit(ClassDeclName classDeclName) {
+    public void visit(ClassDeclNameOptionalExtend classDeclNameOptionalExtend) {
     	    	
-    	if(!checkClassNameConstraint(classDeclName.getClassName(), classDeclName)) {
-    		classDeclName.obj = Tab.noObj;
+    	if(!checkClassNameConstraint(classDeclNameOptionalExtend.getClassName(), classDeclNameOptionalExtend)) {
+    		classDeclNameOptionalExtend.obj = Tab.noObj;
     		currentClass = Tab.noType;
-    		currentRecordName = "";
+    		currentClassName = "";
+    		superClass = Tab.noType;
+    		superClassName = "";
     		Tab.openScope();
     		return;
     	}
     	
     	System.out.println("clb");
 
-    	currentClassName = classDeclName.getClassName();
+    	currentClassName = classDeclNameOptionalExtend.getClassName();
     	currentClass = new Struct(Struct.Class);
-    	currentClass.setElementType(Tab.noType);
+
+    	superClass = classDeclNameOptionalExtend.getOptionalExtend().struct;
+    	superClassName = mapOfClasses.get(superClass);
+
+    	currentClass.setElementType(superClass);
     	
-    	classDeclName.obj = Tab.insert(Obj.Type, classDeclName.getClassName(), currentClass);
-		report_info("Kreirana je klasa (" + structDescription(currentClass) + ") " + classDeclName.getClassName() + ".", classDeclName);
+    	classDeclNameOptionalExtend.obj = Tab.insert(Obj.Type, classDeclNameOptionalExtend.getClassName(), currentClass);
+		report_info("Kreirana je klasa (" + structDescription(currentClass) + ") " + classDeclNameOptionalExtend.getClassName() + ".", classDeclNameOptionalExtend);
         Tab.openScope();
  
 // Uncomment when find purpose! 
@@ -515,9 +531,50 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 //			SymbolTable.insert(Obj.Fld, "$tvf" + className, SymbolTable.intType);
 //		}
         
+        transferFieldsFromSuperClassToCurrentClass();
+        
         classOrRecordScope = true;
     	
     }
+    
+    // extended classes processing
+    // those productions are set to be in "class" className to be processed before this visit method.
+    // so the info which type is the super class is sent through struct field
+    
+    private Struct checkSuperClassConstraints(String superClassName, SyntaxNode info) {
+    	
+    	// check if super class is defined 
+    	Obj superClassNode = Tab.find(superClassName);
+    	if(superClassNode == Tab.noObj) {
+    		// super class name is in symbol table so the super class is not declared
+    		report_error("Nadklasa " + superClassName + " nije deklarisana ranije!", info);    		
+    		return Tab.noType;
+    	}
+    	// super class is in the symbol table
+    	
+        // ! Specification constraint: super class has to be one of the user defined classes
+		for (Map.Entry<Struct, String> userDefinedClassStructName : mapOfClasses.entrySet()) {
+	    	// in this iterrating getKey will return struct, getValue will return name
+    		if(userDefinedClassStructName.getKey() == superClassNode.getType()) {
+    			// user defined class
+    			return userDefinedClassStructName.getKey();
+    		}
+    	}    	
+    	// 
+		report_error("Nadklasa " + superClassName + " ne predstavlja korisnicki definisanu klasu", info);    		
+		return Tab.noType;
+    }
+    
+    @Override
+    public void visit(ClassHasParent classHasParent) {
+    	classHasParent.struct = checkSuperClassConstraints(classHasParent.getType().getTypeName(), classHasParent);
+    }
+    
+    @Override
+    public void visit(ClassHasNoParent classHasNoParent) {
+    	classHasNoParent.struct = Tab.noType;
+    }
+
         
     // Class variables processing - very similar to the ordinary variables
         
@@ -570,19 +627,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	isVariableArray = false;
     }
-    
-    // extended classes processing
-    
-    @Override
-    public void visit(ClassHasParent classHasParent) {
-    	System.out.println("parent ");
-    	    	
-    }
-    
-    @Override
-    public void visit(ClassHasNoParent classHasNoParent) {
-    	System.out.println(" NOOO parent ");
-    }
+        
+    // class constructor 
     
     // finish with the class declaration
     
@@ -594,6 +640,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	classOrRecordScope = false;
     	currentClass = null;	
     	currentClassName = null;	
+    	superClass = null;	
+    	superClassName = null;	
     }
     
     
@@ -869,7 +917,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     }
     
-    Map<String, String> x = new HashMap<>();
     
     @Override
     public void visit(FactorClassNewOperator factorClassNewOperator) {

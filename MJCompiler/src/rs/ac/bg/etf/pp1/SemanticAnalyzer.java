@@ -1232,8 +1232,19 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	if(currentClass == classReference.getType()) {
     		// access to the field or method using this reference
     		// those fields are in outer (class name) scope, not in methods scope:
-    		report_info("Pristup polju tekuce klase, this." + classField, info);   
-    		return Tab.currentScope().getOuter().findSymbol(classReference.getName());
+    		
+    		Obj currentClassField = Tab.currentScope().getOuter().findSymbol(classField);
+
+    		if(currentClassField != null) {
+    			// and this field exists as class local variable
+        		report_info("Pristup polju tekuce klase, this." + classField, info);   
+        		return currentClassField;
+    		} else {
+    			// but this field do not exists as class local field
+    			
+    			report_error(classField + " ne predstavlja polje na klase " + currentClassName + "!", info);       	        
+    	    	return Tab.noObj;    			
+    		}
     	} else {
     		// access to the field or method using reference on the created class object
     		for(Obj classMember: classReference.getType().getMembers()) {

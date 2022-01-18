@@ -167,5 +167,8 @@ class Kvadar extends Predmet
 		k2 = new Kvadar;
 		k3 = new Kvadar;
 		
+		k3.koefTezine = 3;
+		//k3.koefTezine2  =3;
+		
 	}
 }

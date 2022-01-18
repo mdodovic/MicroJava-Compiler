@@ -9,6 +9,11 @@ import rs.ac.bg.etf.pp1.ast.AddOpTermList;
 import rs.ac.bg.etf.pp1.ast.ArrayDesignator;
 import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
+import rs.ac.bg.etf.pp1.ast.ClassBodyBrackets;
+import rs.ac.bg.etf.pp1.ast.ClassBodyConstructor;
+import rs.ac.bg.etf.pp1.ast.ClassBodyFull;
+import rs.ac.bg.etf.pp1.ast.ClassBodyMethods;
+import rs.ac.bg.etf.pp1.ast.ClassBodyNoConstructorNoMethod;
 import rs.ac.bg.etf.pp1.ast.ClassDecl;
 import rs.ac.bg.etf.pp1.ast.ClassDeclNameOptionalExtend;
 import rs.ac.bg.etf.pp1.ast.ClassFieldDesignator;
@@ -31,6 +36,7 @@ import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.FormalParameterDeclaration;
 import rs.ac.bg.etf.pp1.ast.GreaterEqualOp;
 import rs.ac.bg.etf.pp1.ast.GreaterOp;
+import rs.ac.bg.etf.pp1.ast.InnerClassBodyDummyStart;
 import rs.ac.bg.etf.pp1.ast.IntegerValue;
 import rs.ac.bg.etf.pp1.ast.LessEqualOp;
 import rs.ac.bg.etf.pp1.ast.LessOp;
@@ -512,8 +518,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		return;
     	}
     	
-    	System.out.println("clb");
-
     	currentClassName = classDeclNameOptionalExtend.getClassName();
     	currentClass = new Struct(Struct.Class);
 
@@ -627,7 +631,38 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	isVariableArray = false;
     }
-        
+
+    // Class constructor and methods processing - method processing is the same as the ordinary methods, but preprocessing needs to be done
+    
+    @Override
+    public void visit(InnerClassBodyDummyStart innerClassBodyDummyStart) {
+    	// At this point, currentClass and superClass are set, fields from super class are transfered to current and all current class' fields are insert
+    	// innerClassBodyDummyStart will be helper in class body processing:
+    	// create dummy constructor if it is necessary
+    	// copy method from super class if it is necessary
+    	
+    	if(innerClassBodyDummyStart.getParent() instanceof ClassBodyNoConstructorNoMethod) {
+    		// class has no body
+    		System.out.println();
+
+    	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyBrackets) {
+    		System.out.println();
+    		
+    	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyConstructor) {
+    		System.out.println();
+    		
+    	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyMethods) {
+    		System.out.println();
+    		
+    	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyFull) {
+    		System.out.println();
+    		
+    	} else {
+    		// error - innerClassBodyDummyStart cannot be anything else
+    		System.out.println();
+    	}
+    }
+    
     // class constructor 
     
     // finish with the class declaration
@@ -649,12 +684,15 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     private boolean checkMethodNameRedefinition(String methodName, SyntaxNode info) {
     	
-    	// Check if this is multiple definition: return false if it is not redefinition or it is not problem i this redefinition (overriding)
+    	// Check if this is multiple definition: 
+    	// return false if it is not redefinition or it is not problem with redefinition (overriding)
+
+    	// search method name only in current scope: return null if there is no such name in symbol table
+    	Obj methodNameNode = Tab.currentScope.findSymbol(methodName);
     	
-    	Obj methodNameNode = Tab.find(methodName);
-    	
-    	if(methodNameNode == Tab.noObj) {
-    		// No method name in symbol table
+    	if(methodNameNode == null) {
+    		// No method name in symbol table from current scope to the universe scope
+    		// this means that 
     		return false;
     	} else {
     		// This name exists in symbol table
@@ -728,13 +766,16 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     	Tab.openScope(); // open new scope for method. 
     	// All variables declared after is in this (inner) scope and can overdeclared global variables.
-		report_info("Definicija funkcije " + methodTypeName.getMethName(), methodTypeName);
 		
 		if(currentClass != null) {
 			// this method belongs to the class:
+			report_info("Definicija metode " + methodTypeName.getMethName() + " u klasi " + currentClassName + ".", methodTypeName);
 			// there is an implicit parameter this
 			methodFormalParametersCount++;
 			Tab.insert(Obj.Var, "this", currentClass);
+		} else {
+			// method is not in any class
+			report_info("Definicija funkcije " + methodTypeName.getMethName(), methodTypeName);
 		}
 
     }

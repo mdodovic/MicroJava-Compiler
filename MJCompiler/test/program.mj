@@ -10,7 +10,40 @@ const int cinilac = 4, delilac = 3;
 			 int y;
 			 char z;
 		}
-		
+	
+	int zapremina;
+
+
+class X {}
+
+class Y {
+	int yy;
+	{}
+}
+
+class Z extends Y {
+	int zz;
+	{
+		Z() {}
+	}
+}
+
+class T extends Z{
+	int tt;
+	{
+		void f() {}
+	}
+}
+
+class A {
+	int tt;
+	{
+		A() {}
+		void faa() {}
+	}
+}
+
+class TE extends T {}
 
 	class Predmet
 {
@@ -26,6 +59,10 @@ const int cinilac = 4, delilac = 3;
 		 int zapremina() { 
 		 	return 0;
 		 }
+		 
+		 char dohvVrstu() { return vrsta; }
+		 int dohvTezinu() { return tezina; }
+		
 		 
 	}
 }
@@ -65,6 +102,13 @@ class Kvadar extends Predmet
 			z = a * b * c;
 			return z;
 		}
+		
+		void postaviStranice(int a, int b, int c) {
+		
+			//this.a = a; this.b = b; this.c = c;
+		}
+		 
+		
 	}
 }
 	
@@ -74,24 +118,31 @@ class Kvadar extends Predmet
 {
 
 
-	int sum(int z, int d)
-	{
-		return z + d;
-	}
-	
-	int inkrement(int a, int inc) 
-		int pom; 
-	{
-		if(inc == jedan) pom = 1;
-		else if(inc == 2) pom = a;
+	 int zapremina2()
+			int v, alfa, beta, gama;
+		{
+			v = v / (alfa * beta * gama);
+			return v;
+		}
 
-		return sum(a,pom);
-	}
+//	int sum(int z, int d)
+//	{
+//		return z + d;
+//	}
 	
-	bool verify() {
-		print('v');
-		return false;
-	}	
+//	int inkrement(int a, int inc) 
+//		int pom; 
+//	{
+//		if(inc == jedan) pom = 1;
+//		else if(inc == 2) pom = a;
+//
+//		return sum(a,pom);
+//	}
+	
+//	bool verify() {
+//		print('v');
+//		return false;
+//	}	
 	
 	
 

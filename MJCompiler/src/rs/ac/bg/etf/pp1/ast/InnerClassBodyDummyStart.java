@@ -5,9 +5,27 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class NoDeclarations extends AllDeclarationsList {
+public class InnerClassBodyDummyStart implements SyntaxNode {
 
-    public NoDeclarations () {
+    private SyntaxNode parent;
+    private int line;
+    public InnerClassBodyDummyStart () {
+    }
+
+    public SyntaxNode getParent() {
+        return parent;
+    }
+
+    public void setParent(SyntaxNode parent) {
+        this.parent=parent;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line=line;
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +46,10 @@ public class NoDeclarations extends AllDeclarationsList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("NoDeclarations(\n");
+        buffer.append("InnerClassBodyDummyStart(\n");
 
         buffer.append(tab);
-        buffer.append(") [NoDeclarations]");
+        buffer.append(") [InnerClassBodyDummyStart]");
         return buffer.toString();
     }
 }

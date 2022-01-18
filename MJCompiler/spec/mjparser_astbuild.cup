@@ -198,6 +198,7 @@ nonterminal Mulop Mulop; /* contains "*", "/" and "%" */
 
 /* Dummy productions has just purpose to be first visited in Abstract Syntax Tree */
 nonterminal DoWhileDummyStart DoWhileDummyStart; /* this will represent the beginning of the do-while construction */
+nonterminal InnerClassBodyDummyStart InnerClassBodyDummyStart; /* this will represent the end of class variables declarations and the beginning of constructor+method declarations. It  */
 
 /* precedences */
 
@@ -291,31 +292,31 @@ OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName {: RESULT=new C
  				   (ErrorInExtendingClass) error {: RESULT=new ErrorInExtendingClass(); :} /* no need for "{" here; everything will be consumed until the "{" in ClassDecl production */
  				   ;
 
-ClassBody ::= (ClassBodyNoConstructorNoMethod) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 RIGHT_CURLY_BRACKET {: RESULT=new ClassBodyNoConstructorNoMethod(C1); RESULT.setLine(C1left); :}
+ClassBody ::= (ClassBodyNoConstructorNoMethod) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 InnerClassBodyDummyStart:I2 RIGHT_CURLY_BRACKET {: RESULT=new ClassBodyNoConstructorNoMethod(C1, I2); RESULT.setLine(C1left); :}
 			  |
-			  (ClassBodyBrackets) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 
+			  (ClassBodyBrackets) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 InnerClassBodyDummyStart:I2
 			  							LEFT_CURLY_BRACKET 
 										RIGHT_CURLY_BRACKET 
-							 	  RIGHT_CURLY_BRACKET {: RESULT=new ClassBodyBrackets(C1); RESULT.setLine(C1left); :}
+							 	  RIGHT_CURLY_BRACKET {: RESULT=new ClassBodyBrackets(C1, I2); RESULT.setLine(C1left); :}
 			  |
-			  (ClassBodyConstructor) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 
+			  (ClassBodyConstructor) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 InnerClassBodyDummyStart:I2
 			  							LEFT_CURLY_BRACKET 
-									  		ConstructorDecl:C2
+									  		ConstructorDecl:C3
 										RIGHT_CURLY_BRACKET 
-							 		 RIGHT_CURLY_BRACKET {: RESULT=new ClassBodyConstructor(C1, C2); RESULT.setLine(C1left); :}
+							 		 RIGHT_CURLY_BRACKET {: RESULT=new ClassBodyConstructor(C1, I2, C3); RESULT.setLine(C1left); :}
 			  |
-			  (ClassBodyMethods) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 
+			  (ClassBodyMethods) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 InnerClassBodyDummyStart:I2
 			  						LEFT_CURLY_BRACKET 
-									  ClassMethodDeclarations:C2 
+									  ClassMethodDeclarations:C3 
 									RIGHT_CURLY_BRACKET 
-								RIGHT_CURLY_BRACKET {: RESULT=new ClassBodyMethods(C1, C2); RESULT.setLine(C1left); :}
+								RIGHT_CURLY_BRACKET {: RESULT=new ClassBodyMethods(C1, I2, C3); RESULT.setLine(C1left); :}
 			  |
-			  (ClassBodyFull) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 
+			  (ClassBodyFull) LEFT_CURLY_BRACKET ClassFieldsVariables:C1 InnerClassBodyDummyStart:I2
 			  					LEFT_CURLY_BRACKET 
-									ConstructorDecl:C2
-									ClassMethodDeclarations:C3  
+									ConstructorDecl:C3
+									ClassMethodDeclarations:C4  
 								RIGHT_CURLY_BRACKET 
-							  RIGHT_CURLY_BRACKET {: RESULT=new ClassBodyFull(C1, C2, C3); RESULT.setLine(C1left); :}
+							  RIGHT_CURLY_BRACKET {: RESULT=new ClassBodyFull(C1, I2, C3, C4); RESULT.setLine(C1left); :}
 			  ;
 
 ClassFieldsVariables ::= (ClassFields) ClassFieldsVariables:C1 ClassVarDecl:C2 {: RESULT=new ClassFields(C1, C2); RESULT.setLine(C1left); :}
@@ -337,6 +338,7 @@ ClassVarDeclList ::= (ClassVarDeclMultiple) ClassVarDeclList:C1 COMMA ClassSingl
 
 ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:classFieldName ArrayBrackets:A1 {: RESULT=new ClassSingleVarDecl(classFieldName, A1); RESULT.setLine(classFieldNameleft); :};
 
+InnerClassBodyDummyStart ::= (InnerClassBodyDummyStart) {: RESULT=new InnerClassBodyDummyStart(); :} /* epsilon */;
 
 ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl:C1 LEFT_CURLY_BRACKET StatementList:S2 RIGHT_CURLY_BRACKET {: RESULT=new ClassConstructor(constructorName, C1, S2); RESULT.setLine(constructorNameleft); :};
 

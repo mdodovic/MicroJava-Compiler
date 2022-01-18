@@ -198,6 +198,7 @@ nonterminal Mulop; /* contains "*", "/" and "%" */
 
 /* Dummy productions has just purpose to be first visited in Abstract Syntax Tree */
 nonterminal DoWhileDummyStart; /* this will represent the beginning of the do-while construction */
+nonterminal InnerClassBodyDummyStart; /* this will represent the end of class variables declarations and the beginning of constructor+method declarations. It  */
 
 /* precedences */
 
@@ -291,26 +292,26 @@ OptionalExtend ::= (ClassHasParent) EXTENDS Type:parentClassName
  				   (ErrorInExtendingClass) error /* no need for "{" here; everything will be consumed until the "{" in ClassDecl production */
  				   ;
 
-ClassBody ::= (ClassBodyNoConstructorNoMethod) LEFT_CURLY_BRACKET ClassFieldsVariables RIGHT_CURLY_BRACKET
+ClassBody ::= (ClassBodyNoConstructorNoMethod) LEFT_CURLY_BRACKET ClassFieldsVariables InnerClassBodyDummyStart RIGHT_CURLY_BRACKET
 			  |
-			  (ClassBodyBrackets) LEFT_CURLY_BRACKET ClassFieldsVariables 
+			  (ClassBodyBrackets) LEFT_CURLY_BRACKET ClassFieldsVariables InnerClassBodyDummyStart
 			  							LEFT_CURLY_BRACKET 
 										RIGHT_CURLY_BRACKET 
 							 	  RIGHT_CURLY_BRACKET
 			  |
-			  (ClassBodyConstructor) LEFT_CURLY_BRACKET ClassFieldsVariables 
+			  (ClassBodyConstructor) LEFT_CURLY_BRACKET ClassFieldsVariables InnerClassBodyDummyStart
 			  							LEFT_CURLY_BRACKET 
 									  		ConstructorDecl
 										RIGHT_CURLY_BRACKET 
 							 		 RIGHT_CURLY_BRACKET
 			  |
-			  (ClassBodyMethods) LEFT_CURLY_BRACKET ClassFieldsVariables 
+			  (ClassBodyMethods) LEFT_CURLY_BRACKET ClassFieldsVariables InnerClassBodyDummyStart
 			  						LEFT_CURLY_BRACKET 
 									  ClassMethodDeclarations 
 									RIGHT_CURLY_BRACKET 
 								RIGHT_CURLY_BRACKET
 			  |
-			  (ClassBodyFull) LEFT_CURLY_BRACKET ClassFieldsVariables 
+			  (ClassBodyFull) LEFT_CURLY_BRACKET ClassFieldsVariables InnerClassBodyDummyStart
 			  					LEFT_CURLY_BRACKET 
 									ConstructorDecl
 									ClassMethodDeclarations  
@@ -337,6 +338,7 @@ ClassVarDeclList ::= (ClassVarDeclMultiple) ClassVarDeclList COMMA ClassSingleVa
 
 ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:classFieldName ArrayBrackets;
 
+InnerClassBodyDummyStart ::= (InnerClassBodyDummyStart) /* epsilon */;
 
 ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET;
 

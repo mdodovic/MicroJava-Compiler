@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 17/0/2022 22:4:24
+// 18/0/2022 12:10:20
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -132,6 +132,7 @@ public interface Visitor {
     public void visit(ConstructorHasNotVariables ConstructorHasNotVariables);
     public void visit(ConstructorHasVariables ConstructorHasVariables);
     public void visit(ClassConstructor ClassConstructor);
+    public void visit(InnerClassBodyDummyStart InnerClassBodyDummyStart);
     public void visit(ClassSingleVarDecl ClassSingleVarDecl);
     public void visit(ClassVarDeclSingle ClassVarDeclSingle);
     public void visit(ClassVarDeclMultiple ClassVarDeclMultiple);

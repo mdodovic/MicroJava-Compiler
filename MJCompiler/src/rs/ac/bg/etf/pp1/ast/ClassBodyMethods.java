@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 17/0/2022 22:4:24
+// 18/0/2022 12:10:20
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -8,11 +8,14 @@ package rs.ac.bg.etf.pp1.ast;
 public class ClassBodyMethods extends ClassBody {
 
     private ClassFieldsVariables ClassFieldsVariables;
+    private InnerClassBodyDummyStart InnerClassBodyDummyStart;
     private ClassMethodDeclarations ClassMethodDeclarations;
 
-    public ClassBodyMethods (ClassFieldsVariables ClassFieldsVariables, ClassMethodDeclarations ClassMethodDeclarations) {
+    public ClassBodyMethods (ClassFieldsVariables ClassFieldsVariables, InnerClassBodyDummyStart InnerClassBodyDummyStart, ClassMethodDeclarations ClassMethodDeclarations) {
         this.ClassFieldsVariables=ClassFieldsVariables;
         if(ClassFieldsVariables!=null) ClassFieldsVariables.setParent(this);
+        this.InnerClassBodyDummyStart=InnerClassBodyDummyStart;
+        if(InnerClassBodyDummyStart!=null) InnerClassBodyDummyStart.setParent(this);
         this.ClassMethodDeclarations=ClassMethodDeclarations;
         if(ClassMethodDeclarations!=null) ClassMethodDeclarations.setParent(this);
     }
@@ -23,6 +26,14 @@ public class ClassBodyMethods extends ClassBody {
 
     public void setClassFieldsVariables(ClassFieldsVariables ClassFieldsVariables) {
         this.ClassFieldsVariables=ClassFieldsVariables;
+    }
+
+    public InnerClassBodyDummyStart getInnerClassBodyDummyStart() {
+        return InnerClassBodyDummyStart;
+    }
+
+    public void setInnerClassBodyDummyStart(InnerClassBodyDummyStart InnerClassBodyDummyStart) {
+        this.InnerClassBodyDummyStart=InnerClassBodyDummyStart;
     }
 
     public ClassMethodDeclarations getClassMethodDeclarations() {
@@ -39,17 +50,20 @@ public class ClassBodyMethods extends ClassBody {
 
     public void childrenAccept(Visitor visitor) {
         if(ClassFieldsVariables!=null) ClassFieldsVariables.accept(visitor);
+        if(InnerClassBodyDummyStart!=null) InnerClassBodyDummyStart.accept(visitor);
         if(ClassMethodDeclarations!=null) ClassMethodDeclarations.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
         if(ClassFieldsVariables!=null) ClassFieldsVariables.traverseTopDown(visitor);
+        if(InnerClassBodyDummyStart!=null) InnerClassBodyDummyStart.traverseTopDown(visitor);
         if(ClassMethodDeclarations!=null) ClassMethodDeclarations.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
         if(ClassFieldsVariables!=null) ClassFieldsVariables.traverseBottomUp(visitor);
+        if(InnerClassBodyDummyStart!=null) InnerClassBodyDummyStart.traverseBottomUp(visitor);
         if(ClassMethodDeclarations!=null) ClassMethodDeclarations.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -61,6 +75,12 @@ public class ClassBodyMethods extends ClassBody {
 
         if(ClassFieldsVariables!=null)
             buffer.append(ClassFieldsVariables.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(InnerClassBodyDummyStart!=null)
+            buffer.append(InnerClassBodyDummyStart.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

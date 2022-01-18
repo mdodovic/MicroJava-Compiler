@@ -5,9 +5,27 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class GreaterEqualOp extends Relop {
+public class MethodBodyDummyStart implements SyntaxNode {
 
-    public GreaterEqualOp () {
+    private SyntaxNode parent;
+    private int line;
+    public MethodBodyDummyStart () {
+    }
+
+    public SyntaxNode getParent() {
+        return parent;
+    }
+
+    public void setParent(SyntaxNode parent) {
+        this.parent=parent;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line=line;
     }
 
     public void accept(Visitor visitor) {
@@ -28,10 +46,10 @@ public class GreaterEqualOp extends Relop {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("GreaterEqualOp(\n");
+        buffer.append("MethodBodyDummyStart(\n");
 
         buffer.append(tab);
-        buffer.append(") [GreaterEqualOp]");
+        buffer.append(") [MethodBodyDummyStart]");
         return buffer.toString();
     }
 }

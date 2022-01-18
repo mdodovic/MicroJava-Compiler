@@ -42,6 +42,7 @@ import rs.ac.bg.etf.pp1.ast.InnerClassBodyDummyStart;
 import rs.ac.bg.etf.pp1.ast.IntegerValue;
 import rs.ac.bg.etf.pp1.ast.LessEqualOp;
 import rs.ac.bg.etf.pp1.ast.LessOp;
+import rs.ac.bg.etf.pp1.ast.MethodBodyDummyStart;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
 import rs.ac.bg.etf.pp1.ast.MinusOp;
 import rs.ac.bg.etf.pp1.ast.ModuoOp;
@@ -827,8 +828,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     private boolean checkMethodNameRedefinition(String methodName, SyntaxNode info) {
     	
-    	// ULTRA TODO!!!!
-    	
     	// Check if this is multiple definition: 
     	// return false if it is not redefinition or it is not problem with redefinition (overriding)
     	
@@ -939,6 +938,10 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     }
        
+    @Override
+    public void visit(MethodBodyDummyStart methodBodyDummyStart) {
+
+    }
     
     @Override
     public void visit(StetementReturnExpression stetementReturnExpression) {

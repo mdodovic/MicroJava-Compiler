@@ -199,7 +199,8 @@ nonterminal Mulop; /* contains "*", "/" and "%" */
 
 /* Dummy productions has just purpose to be first visited in Abstract Syntax Tree */
 nonterminal DoWhileDummyStart; /* this will represent the beginning of the do-while construction */
-nonterminal InnerClassBodyDummyStart; /* this will represent the end of class variables declarations and the beginning of constructor+method declarations. It  */
+nonterminal InnerClassBodyDummyStart; /* this will represent the end of class variables declarations and the beginning of constructor+method declarations. */
+nonterminal MethodBodyDummyStart; /*  this will represent the end of method declaration and the beginning of the method body { statements } */
 
 /* precedences */
 
@@ -364,7 +365,9 @@ MethodDeclList ::= (NonEmptyMethodDeclList) MethodDeclList MethodDecl
 				   (EmptyMethodDeclList) /* epsilon */
 				   ;
 
-MethodDecl ::= (CorrectMethodDecl) MethodTypeName LEFT_ROUND_BRACKET FormPars MethodVarDecl LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET;
+MethodDecl ::= (CorrectMethodDecl) MethodTypeName LEFT_ROUND_BRACKET FormPars MethodVarDecl MethodBodyDummyStart LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET;
+
+MethodBodyDummyStart ::= (MethodBodyDummyStart) /* epsilon */;
 
 MethodTypeName ::= (MethodTypeName) MethodReturnType IDENT:methName;
 

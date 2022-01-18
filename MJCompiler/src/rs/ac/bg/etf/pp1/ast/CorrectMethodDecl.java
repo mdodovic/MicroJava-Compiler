@@ -1,6 +1,6 @@
 // generated with ast extension for cup
 // version 0.8
-// 18/0/2022 14:16:10
+// 18/0/2022 15:41:55
 
 
 package rs.ac.bg.etf.pp1.ast;
@@ -10,15 +10,18 @@ public class CorrectMethodDecl extends MethodDecl {
     private MethodTypeName MethodTypeName;
     private FormPars FormPars;
     private MethodVarDecl MethodVarDecl;
+    private MethodBodyDummyStart MethodBodyDummyStart;
     private StatementList StatementList;
 
-    public CorrectMethodDecl (MethodTypeName MethodTypeName, FormPars FormPars, MethodVarDecl MethodVarDecl, StatementList StatementList) {
+    public CorrectMethodDecl (MethodTypeName MethodTypeName, FormPars FormPars, MethodVarDecl MethodVarDecl, MethodBodyDummyStart MethodBodyDummyStart, StatementList StatementList) {
         this.MethodTypeName=MethodTypeName;
         if(MethodTypeName!=null) MethodTypeName.setParent(this);
         this.FormPars=FormPars;
         if(FormPars!=null) FormPars.setParent(this);
         this.MethodVarDecl=MethodVarDecl;
         if(MethodVarDecl!=null) MethodVarDecl.setParent(this);
+        this.MethodBodyDummyStart=MethodBodyDummyStart;
+        if(MethodBodyDummyStart!=null) MethodBodyDummyStart.setParent(this);
         this.StatementList=StatementList;
         if(StatementList!=null) StatementList.setParent(this);
     }
@@ -47,6 +50,14 @@ public class CorrectMethodDecl extends MethodDecl {
         this.MethodVarDecl=MethodVarDecl;
     }
 
+    public MethodBodyDummyStart getMethodBodyDummyStart() {
+        return MethodBodyDummyStart;
+    }
+
+    public void setMethodBodyDummyStart(MethodBodyDummyStart MethodBodyDummyStart) {
+        this.MethodBodyDummyStart=MethodBodyDummyStart;
+    }
+
     public StatementList getStatementList() {
         return StatementList;
     }
@@ -63,6 +74,7 @@ public class CorrectMethodDecl extends MethodDecl {
         if(MethodTypeName!=null) MethodTypeName.accept(visitor);
         if(FormPars!=null) FormPars.accept(visitor);
         if(MethodVarDecl!=null) MethodVarDecl.accept(visitor);
+        if(MethodBodyDummyStart!=null) MethodBodyDummyStart.accept(visitor);
         if(StatementList!=null) StatementList.accept(visitor);
     }
 
@@ -71,6 +83,7 @@ public class CorrectMethodDecl extends MethodDecl {
         if(MethodTypeName!=null) MethodTypeName.traverseTopDown(visitor);
         if(FormPars!=null) FormPars.traverseTopDown(visitor);
         if(MethodVarDecl!=null) MethodVarDecl.traverseTopDown(visitor);
+        if(MethodBodyDummyStart!=null) MethodBodyDummyStart.traverseTopDown(visitor);
         if(StatementList!=null) StatementList.traverseTopDown(visitor);
     }
 
@@ -78,6 +91,7 @@ public class CorrectMethodDecl extends MethodDecl {
         if(MethodTypeName!=null) MethodTypeName.traverseBottomUp(visitor);
         if(FormPars!=null) FormPars.traverseBottomUp(visitor);
         if(MethodVarDecl!=null) MethodVarDecl.traverseBottomUp(visitor);
+        if(MethodBodyDummyStart!=null) MethodBodyDummyStart.traverseBottomUp(visitor);
         if(StatementList!=null) StatementList.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -101,6 +115,12 @@ public class CorrectMethodDecl extends MethodDecl {
 
         if(MethodVarDecl!=null)
             buffer.append(MethodVarDecl.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
+        buffer.append("\n");
+
+        if(MethodBodyDummyStart!=null)
+            buffer.append(MethodBodyDummyStart.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

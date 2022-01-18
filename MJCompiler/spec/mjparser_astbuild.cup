@@ -199,7 +199,8 @@ nonterminal Mulop Mulop; /* contains "*", "/" and "%" */
 
 /* Dummy productions has just purpose to be first visited in Abstract Syntax Tree */
 nonterminal DoWhileDummyStart DoWhileDummyStart; /* this will represent the beginning of the do-while construction */
-nonterminal InnerClassBodyDummyStart InnerClassBodyDummyStart; /* this will represent the end of class variables declarations and the beginning of constructor+method declarations. It  */
+nonterminal InnerClassBodyDummyStart InnerClassBodyDummyStart; /* this will represent the end of class variables declarations and the beginning of constructor+method declarations. */
+nonterminal MethodBodyDummyStart MethodBodyDummyStart; /*   */
 
 /* precedences */
 
@@ -364,7 +365,9 @@ MethodDeclList ::= (NonEmptyMethodDeclList) MethodDeclList:M1 MethodDecl:M2 {: R
 				   (EmptyMethodDeclList) {: RESULT=new EmptyMethodDeclList(); :} /* epsilon */
 				   ;
 
-MethodDecl ::= (CorrectMethodDecl) MethodTypeName:M1 LEFT_ROUND_BRACKET FormPars:F2 MethodVarDecl:M3 LEFT_CURLY_BRACKET StatementList:S4 RIGHT_CURLY_BRACKET {: RESULT=new CorrectMethodDecl(M1, F2, M3, S4); RESULT.setLine(M1left); :};
+MethodDecl ::= (CorrectMethodDecl) MethodTypeName:M1 LEFT_ROUND_BRACKET FormPars:F2 MethodVarDecl:M3 MethodBodyDummyStart:M4 LEFT_CURLY_BRACKET StatementList:S5 RIGHT_CURLY_BRACKET {: RESULT=new CorrectMethodDecl(M1, F2, M3, M4, S5); RESULT.setLine(M1left); :};
+
+MethodBodyDummyStart ::= (MethodBodyDummyStart) {: RESULT=new MethodBodyDummyStart(); :} /* epsilon */;
 
 MethodTypeName ::= (MethodTypeName) MethodReturnType:M1 IDENT:methName {: RESULT=new MethodTypeName(M1, methName); RESULT.setLine(M1left); :};
 

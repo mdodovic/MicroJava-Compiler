@@ -150,7 +150,7 @@ nonterminal ClassVarDeclType ClassVarDeclType; /* declaration of the type of cla
 nonterminal ClassVarDeclList ClassVarDeclList; /* list of variable names bounded by ",", (.2.1.) in ClassVarDecl*/
 nonterminal ClassSingleVarDecl ClassSingleVarDecl; /* one variable name, it can be like varName or varName[] */
 nonterminal ConstructorDecl ConstructorDecl; /* class constructor (.3.1.), method without type and with the same name as class. Here this constructor is default (without parameters) and has body as same as regular method. */ 
-nonterminal ConstructorDeclName ConstructorDeclName; /* this will represent constructorName (here we do not check if it is equal to the class name) */
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ConstructorDeclName; /* this will represent constructorName (here we do not check if it is equal to the class name) */
 /* There we do not if the constructor name mathces the class name */
 nonterminal ClassMethodDeclarations ClassMethodDeclarations; /* class methods (.3.2.), recursive list with concrete method declaration (MethodDecl) terminating */
 nonterminal ConstructorVarDecl ConstructorVarDecl; /* local variables for constructor, there error handling is as same as VarDecl */
@@ -341,7 +341,7 @@ ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:classFieldName ArrayBrackets:A
 
 InnerClassBodyDummyStart ::= (InnerClassBodyDummyStart) {: RESULT=new InnerClassBodyDummyStart(); :} /* epsilon */;
 
-ConstructorDecl ::= (ClassConstructor) ConstructorDeclName:C1 LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl:C2 LEFT_CURLY_BRACKET StatementList:S3 RIGHT_CURLY_BRACKET {: RESULT=new ClassConstructor(C1, C2, S3); RESULT.setLine(C1left); :};
+ConstructorDecl ::= (ConstructorDecl) ConstructorDeclName:C1 LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl:C2 LEFT_CURLY_BRACKET StatementList:S3 RIGHT_CURLY_BRACKET {: RESULT=new ConstructorDecl(C1, C2, S3); RESULT.setLine(C1left); :};
 
 ConstructorDeclName ::= (ConstructorDeclName) IDENT:constructorName {: RESULT=new ConstructorDeclName(constructorName); RESULT.setLine(constructorNameleft); :};
 

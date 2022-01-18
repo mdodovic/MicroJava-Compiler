@@ -24,21 +24,25 @@ class Y {
 class Z extends Y {
 	int zz;
 	{
-		Z() {}
+		Z() { return;}
 	}
 }
 
 class T extends Z{
 	int tt;
 	{
-		void f() {}
+		void f() int zz; bool z; {
+			
+			
+		
+		}
 	}
 }
 
-class A {
-	int tt;
+class A extends T{
+	int aa;
 	{
-		A() {}
+		A() int x; int y; { return; }
 		void faa() {}
 	}
 }
@@ -53,7 +57,7 @@ class TE extends T {}
 
 	{
 		 Predmet(){
-		   koefTezine = 1;	
+		   this.koefTezine = 1;	
 		 }
 		 
 		 int zapremina() { 

@@ -99,7 +99,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	private boolean returnFound = false;
 	private int methodFormalParametersCount = 0;
 
-	private boolean classOrRecordScope = false; // When variable is declared, if it is in class or record, it's type is Obj.Fld, otherwise it is Obj.Var
+	private boolean classOrRecordFieldsScope = false; // When variable is declared, if it is class or record field, it's type is Obj.Fld, otherwise it is Obj.Var
 
 	private String currentRecordName = null;
 	private Struct currentRecord = null;
@@ -222,6 +222,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     public void visit(ProgName progName) {
     	System.out.println("ProgName");
     	progName.obj = Tab.insert(Obj.Prog, progName.getProgName(), Tab.noType);
+		System.out.println("OpenScope");
     	Tab.openScope(); // open global scope (to be in universe scope)
     }
     
@@ -237,6 +238,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     	
     	Tab.chainLocalSymbols(program.getProgName().obj); // chain variables for program scope
+		System.out.println("CloseScope");
     	Tab.closeScope();
     }
     
@@ -392,7 +394,9 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	}
 
     	Obj variableNode;
-    	if(classOrRecordScope == true) {
+		// this variable can be: global variable (Obj.Var), record/class field (Obj.Fld), local variable of class method or global method or constructor (Obj.Var)
+    	
+    	if(classOrRecordFieldsScope == true) {
     		variableNode = Tab.insert(Obj.Fld, variableName, variableType);
     	} else {
     		variableNode = Tab.insert(Obj.Var, variableName, variableType);
@@ -456,6 +460,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		recordDeclName.obj = Tab.noObj;
     		currentRecord = Tab.noType;
     		currentRecordName = "";
+    		System.out.println("OpenScope");
+
     		Tab.openScope();
     		return;
     	}
@@ -466,16 +472,18 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	recordDeclName.obj = Tab.insert(Obj.Type, recordDeclName.getRecordName(), currentRecord);
 		report_info("Kreiran je record (" + structDescription(currentRecord) + ") " + recordDeclName.getRecordName() + ".", recordDeclName);
+		System.out.println("OpenScope");
         Tab.openScope();
-        classOrRecordScope = true;
+        classOrRecordFieldsScope = true;
     }
     
     @Override
     public void visit(RecordDecl recordDecl) {
     	mapOfRecords.put(currentRecord, currentRecordName);
     	Tab.chainLocalSymbols(currentRecord);
+		System.out.println("CloseScope");
     	Tab.closeScope();
-    	classOrRecordScope = false;
+    	classOrRecordFieldsScope = false;
     	currentRecord = null;
     	currentRecordName = null;
     }
@@ -516,6 +524,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		currentClassName = "";
     		superClass = Tab.noType;
     		superClassName = "";
+    		System.out.println("OpenScope");
     		Tab.openScope();
     		return;
     	}
@@ -530,6 +539,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	classDeclNameOptionalExtend.obj = Tab.insert(Obj.Type, classDeclNameOptionalExtend.getClassName(), currentClass);
 		report_info("Kreirana je klasa (" + structDescription(currentClass) + ") " + classDeclNameOptionalExtend.getClassName() + ".", classDeclNameOptionalExtend);
+		System.out.println("OpenScope");
         Tab.openScope();
  
 // Uncomment when find purpose! 
@@ -539,7 +549,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
         
         transferFieldsFromSuperClassToCurrentClass();
         
-        classOrRecordScope = true;
+        classOrRecordFieldsScope = true;
     	
     }
     
@@ -658,6 +668,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	Tab.insert(Obj.Meth, currentClassName, Tab.noType);
       	currentMethod = Tab.insert(Obj.Meth, currentClassName, Tab.noType);
     	
+		System.out.println("OpenScope");
     	Tab.openScope(); // open new scope for dummy constructor
     	
     	// every method in class has predefined parameter this
@@ -667,12 +678,22 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	currentMethod.setLevel(1);
     	Tab.chainLocalSymbols(currentMethod); // chain the only parameter this
 
+		System.out.println("CloseScope");
     	Tab.closeScope(); // close scope for dummy constructor
+    	
+    	methodFormalParametersCount = 0;
+    	returnFound = false;
+    	currentMethod = null;
+
     	
     }
 
     @Override
     public void visit(InnerClassBodyDummyStart innerClassBodyDummyStart) {
+    	
+    	// Fields declaring is finished:
+    	classOrRecordFieldsScope = false;
+    	
     	// At this point, currentClass and superClass are set, fields from super class are transfered to current and all current class' fields are insert
     	// innerClassBodyDummyStart will be helper in class body processing:
     	// create dummy constructor if it is necessary
@@ -721,16 +742,68 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     // concrete constructor declaration 
 
+	// ! Specification constraint: constructor name has to be as same as the class name
+    private boolean checkConstructorNameConstraint(String constructorName, SyntaxNode info) {
+
+    	if(!constructorName.equals(currentClassName)) {
+    		report_error(constructorName+ " nije istog imena kao klasa " + currentClassName + " u kojoj je definisan!", info);   
+        	return false;
+    	}
+		
+    	return true;
+	}
+    
     @Override
-    public void visit(ConstructorDeclName ConstructorDeclName) {
-    	// TODO Auto-generated method stub
-    	super.visit(ConstructorDeclName);
+    public void visit(ConstructorDeclName constructorDeclName) {
+
+     	if(!checkConstructorNameConstraint(constructorDeclName.getConstructorName(), constructorDeclName)) {
+    		currentMethod = Tab.noObj;
+    		constructorDeclName.obj = Tab.noObj;
+    		System.out.println("OpenScope");
+    		Tab.openScope();
+    		return;
+    	}
+    	
+    	// constructor name is equal to the class name
+    	// if there is an return type; statement in constructor body, this will be processed at the end of the constructor declaration
+    	// here is is assumed that everything is correct so constructor type is noType
+    	currentMethod = Tab.insert(Obj.Meth, constructorDeclName.getConstructorName(), Tab.noType);
+    	constructorDeclName.obj = currentMethod;
+    	
+		System.out.println("OpenScope");
+    	Tab.openScope(); // open new scope for constructor
+    	// All variables declared after is in this (inner) scope and can overdeclared global variables.
+		
+		report_info("Definicija konstruktora " + constructorDeclName.getConstructorName() + " u klasi " + currentClassName + ".", constructorDeclName);
+
+		// there is an implicit parameter this
+		methodFormalParametersCount++;
+		Tab.insert(Obj.Var, "this", currentClass);
+		
     }
     
     @Override
-    public void visit(ConstructorDecl ConstructorDecl) {
-    	// TODO Auto-generated method stub
-    	super.visit(ConstructorDecl);
+    public void visit(ConstructorDecl constructorDecl) {
+    	
+    	// TODO: Check this
+    	if(returnFound) {
+			report_error("Konstruktor " + currentMethod.getName() + " ima tipiziran return iskaz!", constructorDecl);    		
+    	}
+    	
+    	currentMethod.setLevel(methodFormalParametersCount);
+ 	
+    	Tab.chainLocalSymbols(currentMethod);
+		System.out.println("CloseScope");
+
+    	Tab.closeScope();
+    	
+    	methodFormalParametersCount = 0;
+    	returnFound = false;
+    	currentMethod = null;
+    	
+    	// copy methods from super class to prepare current class for its methods (both completely new or method overriding
+    	copyMethodsFromSuperClass();
+    
     }
     
     
@@ -741,8 +814,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     public void visit(ClassDecl ClassDecl) {
     	mapOfClasses.put(currentClass, currentClassName);
     	Tab.chainLocalSymbols(currentClass);
+		System.out.println("CloseScope");
     	Tab.closeScope();
-    	classOrRecordScope = false;
     	currentClass = null;	
     	currentClassName = null;	
     	superClass = null;	
@@ -826,6 +899,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	if(checkMethodNameRedefinition(methodTypeName.getMethName(), methodTypeName)) {
     		currentMethod = Tab.noObj;
     		methodTypeName.obj = Tab.noObj;
+    		System.out.println("OpenScope");
     		Tab.openScope();
     		return;
     	}
@@ -835,6 +909,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethName(), methodTypeName.getMethodReturnType().struct);
     	methodTypeName.obj = currentMethod;
     	
+		System.out.println("OpenScope");
 
     	Tab.openScope(); // open new scope for method. 
     	// All variables declared after is in this (inner) scope and can overdeclared global variables.
@@ -898,6 +973,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     	
     	Tab.chainLocalSymbols(currentMethod);
+		System.out.println("CloseScope");
 
     	Tab.closeScope();
     	
@@ -1154,12 +1230,10 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     private Obj checkFieldConstraintAndReturnItsObjec(Obj classReference, String classField, SyntaxNode info) {
     	
     	if(currentClass == classReference.getType()) {
-    		// TODO: ...
-    		// context is class method, 
-    		// this.x
-    		// x
-    		// () int x; { this.x = x} 
-    		report_info("Pristup polju klase tekuce klase, this." + classField, info);   
+    		// access to the field or method using this reference
+    		// those fields are in outer (class name) scope, not in methods scope:
+    		report_info("Pristup polju tekuce klase, this." + classField, info);   
+    		return Tab.currentScope().getOuter().findSymbol(classReference.getName());
     	} else {
     		// access to the field or method using reference on the created class object
     		for(Obj classMember: classReference.getType().getMembers()) {

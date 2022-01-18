@@ -613,7 +613,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// this is class context - can only be Obj.Fld
     	Obj classVariableNode = Tab.insert(Obj.Fld, classVariableName, classVariableType);
 
-    	report_info("Kreirano je polje klase" + structDescription(classVariableType) + " " + classVariableName + (isVariableArray ? "[]" : "") +".", info);
+    	report_info("Kreirano je polje klase: " + structDescription(classVariableType) + " " + classVariableName + (isVariableArray ? "[]" : "") +".", info);
 		return classVariableNode;
 	}
 	
@@ -713,7 +713,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     @Override
     public void visit(MethodTypeName methodTypeName) {
     	
-    	
     	if(checkMethodNameRedefinition(methodTypeName.getMethName(), methodTypeName)) {
     		currentMethod = Tab.noObj;
     		methodTypeName.obj = Tab.noObj;
@@ -770,18 +769,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	//}
     }
 
-    /*
-    // ! Specification constraint: classField has to be the member of the classReference (either its field or its method)
-    private boolean checkLabelUsageConstraints() {
-    	
-    	for(Map<String, SyntaxNode> usedLabel: listOfUsedLabelsPerMethods) {
-    		if(listOfDeclaredLabelsPerMethods.contains(usedLabel.))
-    			
-    			
-    	}
-    	
-    }
-    */
 
     @Override
     public void visit(CorrectMethodDecl correctMethodDecl) {
@@ -801,8 +788,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     	Tab.closeScope();
     	
-    	/*checkLabelUsageConstraints();*/
-    	
     	// reset 
     	methodFormalParametersCount = 0;
     	returnFound = false;
@@ -810,34 +795,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     }
     
-    /* Label and goto Label procesing */
+    /* Label and goto Label procesing - removed from semantic analysis */
     
-    // declaring LabelName: ...
-    /*
-    @Override
-    public void visit(Label label) {
-    	if(currentMethod == null || !listOfLabelsPerMethods.containsKey(currentMethod)) {
-    		report_error("Labela " + label.getLabelName() + " mora biti definisana unutar metoda", label);
-    		return;
-    	}
-    	// add label into currentMethod->[labels] mapping
-    	listOfLabelsPerMethods.get(currentMethod).add(label.getLabelName());
-    }
-    
-    // usage goto LabelName;
-    @Override
-    public void visit(StatementGoTo statementGoTo) {
-    	
-    	for(String labelName: listOfLabelsPerMethods.get(currentMethod)) {
-    		if(labelName.equals(statementGoTo.getLabelName())) {
-    			return;
-    		}
-    	}
-		// ! Specification constraint: label from goto statement has to be in the same function as this goto statement
-		report_error("Labela u okviru naredbe goto " + statementGoTo.getLabelName() + " mora biti definisana u okviru iste metode", statementGoTo);
-    	
-    }
-    */
     /* Expressions processing */
     
     /* Terms processing */

@@ -150,6 +150,7 @@ nonterminal ClassVarDeclType; /* declaration of the type of class variable(s) */
 nonterminal ClassVarDeclList; /* list of variable names bounded by ",", (.2.1.) in ClassVarDecl*/
 nonterminal ClassSingleVarDecl; /* one variable name, it can be like varName or varName[] */
 nonterminal ConstructorDecl; /* class constructor (.3.1.), method without type and with the same name as class. Here this constructor is default (without parameters) and has body as same as regular method. */ 
+nonterminal ConstructorDeclName; /* this will represent constructorName (here we do not check if it is equal to the class name) */
 /* There we do not if the constructor name mathces the class name */
 nonterminal ClassMethodDeclarations; /* class methods (.3.2.), recursive list with concrete method declaration (MethodDecl) terminating */
 nonterminal ConstructorVarDecl; /* local variables for constructor, there error handling is as same as VarDecl */
@@ -340,12 +341,15 @@ ClassSingleVarDecl ::= (ClassSingleVarDecl) IDENT:classFieldName ArrayBrackets;
 
 InnerClassBodyDummyStart ::= (InnerClassBodyDummyStart) /* epsilon */;
 
-ConstructorDecl ::= (ClassConstructor) IDENT:constructorName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET;
+ConstructorDecl ::= (ClassConstructor) ConstructorDeclName LEFT_ROUND_BRACKET RIGHT_ROUND_BRACKET ConstructorVarDecl LEFT_CURLY_BRACKET StatementList RIGHT_CURLY_BRACKET;
+
+ConstructorDeclName ::= (ConstructorDeclName) IDENT:constructorName;
 
 ConstructorVarDecl ::= (ConstructorHasVariables) ConstructorVarDecl VarDecl
 					   |
 					   (ConstructorHasNotVariables) /* epsilon */
 					   ;
+
 
 ClassMethodDeclarations ::= (MultipleClassMethods) ClassMethodDeclarations MethodDecl
 				  			|

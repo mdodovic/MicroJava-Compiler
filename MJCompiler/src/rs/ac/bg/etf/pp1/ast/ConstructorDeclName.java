@@ -5,24 +5,22 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class RecordDeclName implements SyntaxNode {
+public class ConstructorDeclName implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    public rs.etf.pp1.symboltable.concepts.Obj obj = null;
+    private String constructorName;
 
-    private String recordName;
-
-    public RecordDeclName (String recordName) {
-        this.recordName=recordName;
+    public ConstructorDeclName (String constructorName) {
+        this.constructorName=constructorName;
     }
 
-    public String getRecordName() {
-        return recordName;
+    public String getConstructorName() {
+        return constructorName;
     }
 
-    public void setRecordName(String recordName) {
-        this.recordName=recordName;
+    public void setConstructorName(String constructorName) {
+        this.constructorName=constructorName;
     }
 
     public SyntaxNode getParent() {
@@ -59,13 +57,13 @@ public class RecordDeclName implements SyntaxNode {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("RecordDeclName(\n");
+        buffer.append("ConstructorDeclName(\n");
 
-        buffer.append(" "+tab+recordName);
+        buffer.append(" "+tab+constructorName);
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [RecordDeclName]");
+        buffer.append(") [ConstructorDeclName]");
         return buffer.toString();
     }
 }

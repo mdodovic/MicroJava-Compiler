@@ -21,6 +21,8 @@ import rs.ac.bg.etf.pp1.ast.ClassHasNoParent;
 import rs.ac.bg.etf.pp1.ast.ClassHasParent;
 import rs.ac.bg.etf.pp1.ast.ClassSingleVarDecl;
 import rs.ac.bg.etf.pp1.ast.ConcreteType;
+import rs.ac.bg.etf.pp1.ast.ConstructorDecl;
+import rs.ac.bg.etf.pp1.ast.ConstructorDeclName;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.DoWhileDummyStart;
@@ -633,7 +635,42 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     }
 
     // Class constructor and methods processing - method processing is the same as the ordinary methods, but preprocessing needs to be done
+
+    private void copyMethodsFromSuperClass() {
+    	if(superClass != Tab.noType) {
+    		// there is superClass of the current class
+   		
+    		for(Obj superClassMember: superClass.getMembers()) {
+        		if(superClassMember.getKind() == Obj.Meth && !superClassMember.getName().equals(superClassName)) {
+        			// this is method from super class, and it is not super class constructor (name of the method is not equal to the super class name)
+        			Tab.currentScope().addToLocals(superClassMember);
+        		}
+       		}
+    		
+    	}
+    }
     
+    private void createDummyConstructor() {
+
+    	
+    	// constructor's name is as same as class name
+    	// there is no return type, so it can be noType
+    	Tab.insert(Obj.Meth, currentClassName, Tab.noType);
+      	currentMethod = Tab.insert(Obj.Meth, currentClassName, Tab.noType);
+    	
+    	Tab.openScope(); // open new scope for dummy constructor
+    	
+    	// every method in class has predefined parameter this
+    	Tab.insert(Obj.Var, "this", currentClass);
+    	
+    	// and this is the only parameter in every constructor, so it is in this dummy
+    	currentMethod.setLevel(1);
+    	Tab.chainLocalSymbols(currentMethod); // chain the only parameter this
+
+    	Tab.closeScope(); // close scope for dummy constructor
+    	
+    }
+
     @Override
     public void visit(InnerClassBodyDummyStart innerClassBodyDummyStart) {
     	// At this point, currentClass and superClass are set, fields from super class are transfered to current and all current class' fields are insert
@@ -642,28 +679,61 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// copy method from super class if it is necessary
     	
     	if(innerClassBodyDummyStart.getParent() instanceof ClassBodyNoConstructorNoMethod) {
-    		// class has no body
-    		System.out.println();
+    		// class has no body:
+        	// -create dummy constructor
+        	// -copy method from super class
+    		
+    		createDummyConstructor();
+    		copyMethodsFromSuperClass();
 
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyBrackets) {
-    		System.out.println();
-    		
+    		// class has empty body:
+        	// -create dummy constructor
+        	// -copy method from super class
+
+    		createDummyConstructor();
+    		copyMethodsFromSuperClass();
+
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyConstructor) {
-    		System.out.println();
+    		// class has only constructor:
+        	// -copy method from super class: this will be done at the end of constructor processing
     		
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyMethods) {
-    		System.out.println();
+    		// class has only methods:
+        	// -create dummy constructor
+        	// -copy method from super class
+
+    		createDummyConstructor();
+    		copyMethodsFromSuperClass();
     		
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyFull) {
-    		System.out.println();
+    		// class has both constructor and methods:
+        	// -copy method from super class: this will be done at the end of constructor processing and this will be ready before the real methods are processed
     		
     	} else {
     		// error - innerClassBodyDummyStart cannot be anything else
-    		System.out.println();
     	}
     }
     
     // class constructor 
+    
+
+    
+    // concrete constructor declaration 
+
+    @Override
+    public void visit(ConstructorDeclName ConstructorDeclName) {
+    	// TODO Auto-generated method stub
+    	super.visit(ConstructorDeclName);
+    }
+    
+    @Override
+    public void visit(ConstructorDecl ConstructorDecl) {
+    	// TODO Auto-generated method stub
+    	super.visit(ConstructorDecl);
+    }
+    
+    
     
     // finish with the class declaration
     
@@ -684,9 +754,11 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     private boolean checkMethodNameRedefinition(String methodName, SyntaxNode info) {
     	
+    	// ULTRA TODO!!!!
+    	
     	// Check if this is multiple definition: 
     	// return false if it is not redefinition or it is not problem with redefinition (overriding)
-
+    	
     	// search method name only in current scope: return null if there is no such name in symbol table
     	Obj methodNameNode = Tab.currentScope.findSymbol(methodName);
     	

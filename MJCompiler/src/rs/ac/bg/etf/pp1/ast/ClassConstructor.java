@@ -1,30 +1,31 @@
 // generated with ast extension for cup
 // version 0.8
-// 18/0/2022 12:10:20
+// 18/0/2022 13:0:44
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class ClassConstructor extends ConstructorDecl {
 
-    private String constructorName;
+    private ConstructorDeclName ConstructorDeclName;
     private ConstructorVarDecl ConstructorVarDecl;
     private StatementList StatementList;
 
-    public ClassConstructor (String constructorName, ConstructorVarDecl ConstructorVarDecl, StatementList StatementList) {
-        this.constructorName=constructorName;
+    public ClassConstructor (ConstructorDeclName ConstructorDeclName, ConstructorVarDecl ConstructorVarDecl, StatementList StatementList) {
+        this.ConstructorDeclName=ConstructorDeclName;
+        if(ConstructorDeclName!=null) ConstructorDeclName.setParent(this);
         this.ConstructorVarDecl=ConstructorVarDecl;
         if(ConstructorVarDecl!=null) ConstructorVarDecl.setParent(this);
         this.StatementList=StatementList;
         if(StatementList!=null) StatementList.setParent(this);
     }
 
-    public String getConstructorName() {
-        return constructorName;
+    public ConstructorDeclName getConstructorDeclName() {
+        return ConstructorDeclName;
     }
 
-    public void setConstructorName(String constructorName) {
-        this.constructorName=constructorName;
+    public void setConstructorDeclName(ConstructorDeclName ConstructorDeclName) {
+        this.ConstructorDeclName=ConstructorDeclName;
     }
 
     public ConstructorVarDecl getConstructorVarDecl() {
@@ -48,17 +49,20 @@ public class ClassConstructor extends ConstructorDecl {
     }
 
     public void childrenAccept(Visitor visitor) {
+        if(ConstructorDeclName!=null) ConstructorDeclName.accept(visitor);
         if(ConstructorVarDecl!=null) ConstructorVarDecl.accept(visitor);
         if(StatementList!=null) StatementList.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
+        if(ConstructorDeclName!=null) ConstructorDeclName.traverseTopDown(visitor);
         if(ConstructorVarDecl!=null) ConstructorVarDecl.traverseTopDown(visitor);
         if(StatementList!=null) StatementList.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
+        if(ConstructorDeclName!=null) ConstructorDeclName.traverseBottomUp(visitor);
         if(ConstructorVarDecl!=null) ConstructorVarDecl.traverseBottomUp(visitor);
         if(StatementList!=null) StatementList.traverseBottomUp(visitor);
         accept(visitor);
@@ -69,7 +73,10 @@ public class ClassConstructor extends ConstructorDecl {
         buffer.append(tab);
         buffer.append("ClassConstructor(\n");
 
-        buffer.append(" "+tab+constructorName);
+        if(ConstructorDeclName!=null)
+            buffer.append(ConstructorDeclName.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
         buffer.append("\n");
 
         if(ConstructorVarDecl!=null)

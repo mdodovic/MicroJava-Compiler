@@ -833,32 +833,26 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// return false if it is not redefinition or it is not problem with redefinition (overriding)
     	
     	// search method name only in current scope: return null if there is no such name in symbol table
-    	Obj methodNameNode = Tab.currentScope.findSymbol(methodName);
+    	Obj methodNameNode = Tab.currentScope().findSymbol(methodName);
     	
     	if(methodNameNode == null) {
     		// No method name in symbol table from current scope to the universe scope
     		// this means that 
     		return false;
     	} else {
-    		// This name exists in symbol table
-    		if(Tab.currentScope.findSymbol(methodName) != null) {
-    			// and this name is in current scope: name clashing
-    			if(currentClass == null) {
-    				// this name is not in class, so it is not overriding
-    				report_error("Ime metode " + methodName + " je ranije vec deklarisano!", info);    		
-    				overridedMethod = null;
-    				return true;
-    			} else {
-    				// save method from parent class
-    				overridedMethod = methodNameNode;
-    				return false;
-    			}
-    			
-    		} else {
-    			// This name exists is in the outer scope, so it is correct redefinition
-    			return false;
-    		}
-    		
+    		// This name exists in symbol table in this very scope: name clashing
+    		if(currentClass == null) {
+				// this name is not in class, so it is not overriding
+				report_error("Ime metode " + methodName + " je ranije vec deklarisano!", info);    		
+				overridedMethod = null;
+				return true;
+			} else {
+				// this method has been copied after variable names and constructor finishing
+				// so it is in the class but this is overriding => replace copied method for this
+				overridedMethod = methodNameNode;
+				return false;
+			}
+    			    		
     	}
     	
     }
@@ -950,11 +944,10 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     public void visit(StetementReturnExpression stetementReturnExpression) {
     	returnFound = true;
     	Struct declaredMethodType = currentMethod.getType();
-    	// expression which is written in the return statement has to be compatible with the method type (from declaration)
-    	// TODO: struct of the espression is not set yet
-    	//if(!declaredMethodType.equals(stetementReturnExpression.getExpr().struct)){
-		//	report_error("Tip izraza u return naredbi (" + structDescription(stetementReturnExpression.getExpr().struct) + ") nije kompatibilan sa tipom povratne vrednosti funkcije " + structDescription(declaredMethodType), stetementReturnExpression);
-    	//}
+    	// expression which is written in the return statement has to be equivalent to the method type (from declaration)
+    	if(!declaredMethodType.equals(stetementReturnExpression.getExpr().struct)){
+			report_error("Tip izraza u return naredbi (" + structDescription(stetementReturnExpression.getExpr().struct) + ") nije kompatibilan sa tipom povratne vrednosti funkcije " + structDescription(declaredMethodType), stetementReturnExpression);
+    	}
     }
 
 

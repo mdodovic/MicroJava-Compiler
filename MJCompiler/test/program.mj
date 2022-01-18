@@ -11,7 +11,7 @@ const int cinilac = 4, delilac = 3;
 			 char z;
 		}
 	
-	int zapremina;
+	int zapremina_polje;
 
 
 class X {}
@@ -36,6 +36,10 @@ class T extends Z{
 			
 		
 		}
+		int xxt(int l, int ll) int lll; {
+			this.tt = l + ll + lll;
+			return 0;
+		}
 	}
 }
 
@@ -44,6 +48,7 @@ class A extends T{
 	{
 		A() int x; int y; { return; }
 		void faa() {}
+		void f() {}
 	}
 }
 
@@ -122,17 +127,17 @@ class Kvadar extends Predmet
 {
 
 
-	 int zapremina2()
+	 int zapremina()
 			int v, alfa, beta, gama;
 		{
 			v = v / (alfa * beta * gama);
 			return v;
 		}
 
-//	int sum(int z, int d)
-//	{
-//		return z + d;
-//	}
+	int sum(int z, int d)
+	{
+		return z + d;
+	}
 	
 //	int inkrement(int a, int inc) 
 //		int pom; 
@@ -143,31 +148,31 @@ class Kvadar extends Predmet
 //		return sum(a,pom);
 //	}
 	
-//	bool verify() {
-//		print('v');
-//		return false;
-//	}	
+	bool verify() {
+		print('v');
+		return false;
+	}	
 	
 	
 
-	void main() int c1; Predmet p2; Kvadar k; Sfera s; Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t; {
-	
-		p2 = new Predmet;
-		k = new Kvadar;
-		s = new Sfera;
+	void main() //int c1; Predmet p2; Kvadar k; Sfera s; Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t; {
+	{
+		//p2 = new Predmet;
+		//k = new Kvadar;
+		//s = new Sfera;
 		
-		p1 = new Kvadar;
+		//p1 = new Kvadar;
 		
-		predmeti = new Predmet[6];
-		s1 = new Sfera;
-		s2 = new Sfera;
-		s3 = new Sfera;
+		//predmeti = new Predmet[6];
+		//s1 = new Sfera;
+		//s2 = new Sfera;
+		//s3 = new Sfera;
 		
-		k1 = new Kvadar;
-		k2 = new Kvadar;
-		k3 = new Kvadar;
+		//k1 = new Kvadar;
+		//k2 = new Kvadar;
+		//k3 = new Kvadar;
 		
-		k3.koefTezine = 3;
+		//k3.koefTezine = 3;
 		//k3.koefTezine2  =3;
 		
 	}

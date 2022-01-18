@@ -697,8 +697,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 		}
 		return true;
 	}
-    
-    
+     
     @Override
     public void visit(ConcreteType concreteType) {
     	// return type is one of, allready declared types
@@ -736,7 +735,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 			// this method belongs to the class:
 			// there is an implicit parameter this
 			methodFormalParametersCount++;
-			Tab.insert(Obj.Meth, "this", currentClass);
+			Tab.insert(Obj.Var, "this", currentClass);
 		}
 
     }

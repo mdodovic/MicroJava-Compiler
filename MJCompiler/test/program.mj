@@ -1,5 +1,8 @@
 program p
 
+const int jedan = 1;
+
+const int cinilac = 4, delilac = 3;
 
 		record F
 		{
@@ -8,69 +11,90 @@ program p
 			 char z;
 		}
 		
-		int x;
-		
-		F f;
-		
-		class Predmet
-		{
-			 int tezina;
-			 int koefTezine;
-			 char vrsta;
-		
-			{
-				 Predmet(){
-				   koefTezine = 1;	
-				 }
-//				 void postaviTezinu(int tezina) {this.tezina = tezina * koefTezine;}  
-//				 void ucitajTezinu() { read(tezina); }
-//				 int zapremina() { return 0;}
-//				 int Q() {return zapremina() * tezina;}
-//				 void postaviVrstu(char vrsta) {this.vrsta = vrsta;}
-//				 char dohvVrstu() { return vrsta; }
-//				 int dohvTezinu() { return tezina; }
-//				 void ispisi() {
-//				 	print(vrsta);
-//				 	print(Q());
-//				 }
-			}
-		}
-	class Sfera extends Predmet
-	{
-		int r;
-		{
-		
-			Sfera() {
-			  // super();
-			  //vrsta = 's';
-			}
-		
 
-		}
-	}
-	
-	class X extends Sfera {
-	}
-		
-	class Kvadar extends Predmet
+	class Predmet
+{
+	 int tezina;
+	 int koefTezine;
+	 char vrsta;
+
 	{
-		 int a, b, c;
+		 Predmet(){
+		   koefTezine = 1;	
+		 }
+		 
+		 int zapremina() { 
+		 	return 0;
+		 }
+		 
+	}
+}
+
+class Sfera extends Predmet
+{
+	int r;
+	{
+		Sfera() {
+		  //super();
+		  vrsta = 's';
+		}
+		
+		
+		 int zapremina()
+			int z;
 		{
-			Kvadar() {
-			  //super();
-			 // vrsta = 'k';
-			}
-			
+			z = cinilac;
+			return z *(r/delilac);
+		}
+		
+	}
+}
+
+class Kvadar extends Predmet
+{
+	 int a, b, c;
+	{
+		Kvadar() {
+		  //super();
+		  vrsta = 'k';
+		}
+		
+		 int zapremina()
+			int z;
+		{
+			z = a * b * c;
+			return z;
 		}
 	}
+}
 	
-	class Z extends Kvadar {
-		X x;
-	}
 	
 	Predmet p1;
-	
+
 {
+
+
+	int sum(int z, int d)
+	{
+		return z + d;
+	}
+	
+	int inkrement(int a, int inc) 
+		int pom; 
+	{
+		if(inc == jedan) pom = 1;
+		else if(inc == 2) pom = a;
+
+		return sum(a,pom);
+	}
+	
+	bool verify() {
+		print('v');
+		return false;
+	}	
+	
+	
+
 	void main() int c1; Predmet p2; Kvadar k; Sfera s; Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t; {
 	
 		p2 = new Predmet;

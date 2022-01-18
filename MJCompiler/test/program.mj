@@ -14,45 +14,6 @@ const int cinilac = 4, delilac = 3;
 	int zapremina_polje;
 
 
-class X {}
-
-class Y {
-	int yy;
-	{}
-}
-
-class Z extends Y {
-	int zz;
-	{
-		Z() { return;}
-	}
-}
-
-class T extends Z{
-	int tt;
-	{
-		void f() int zz; bool z; {
-			
-			
-		
-		}
-		int xxt(int l, int ll) int lll; {
-			this.tt = l + ll + lll;
-			return 0;
-		}
-	}
-}
-
-class A extends T{
-	int aa;
-	{
-		A() int x; int y; { return; }
-		void faa() {}
-		void f() {}
-	}
-}
-
-class TE extends T {}
 
 	class Predmet
 {
@@ -65,7 +26,8 @@ class TE extends T {}
 		   this.koefTezine = 1;	
 		 }
 		 
-		 int zapremina() { 
+		 int zapremina() int predmetDummt; { 
+					 	
 		 	return 0;
 		 }
 		 
@@ -89,8 +51,13 @@ class Sfera extends Predmet
 		 int zapremina()
 			int z;
 		{
-			z = cinilac;
+			z = cinilac + this.r / this.koefTezine;
 			return z *(r/delilac);
+		}
+		
+		char sx() {
+			
+			return this.vrsta;
 		}
 		
 	}
@@ -106,15 +73,15 @@ class Kvadar extends Predmet
 		}
 		
 		 int zapremina()
-			int z;
+			int kvV;
 		{
-			z = a * b * c;
-			return z;
+			kvV = a * b * c;
+			return kvV;
 		}
 		
 		void postaviStranice(int a, int b, int c) {
 		
-			//this.a = a; this.b = b; this.c = c;
+			this.a = a; this.b = b; this.c = c;
 		}
 		 
 		

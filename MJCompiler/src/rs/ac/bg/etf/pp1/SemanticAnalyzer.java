@@ -899,7 +899,19 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	// methodTypeName.getMethodReturnType().struct is filled in return type visit methods (ConcreteType and VoidType)
     	
-    	currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethName(), methodTypeName.getMethodReturnType().struct);
+    	if(overridedMethod == null) {
+    		// this is no overriding, so insert this method normally
+    		currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethName(), methodTypeName.getMethodReturnType().struct);
+    	} else {
+    		// this is overriding, so one Obj(methodName) already exists in symbol table
+    		// this will be replaced 
+    		Tab.currentScope().getLocals().deleteKey(methodTypeName.getMethName());
+    		currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethName(), methodTypeName.getMethodReturnType().struct);
+    		
+    	}
+    	
+
+    	
     	methodTypeName.obj = currentMethod;
     	
 		System.out.println("OpenScope");
@@ -940,7 +952,30 @@ public class SemanticAnalyzer extends VisitorAdaptor{
        
     @Override
     public void visit(MethodBodyDummyStart methodBodyDummyStart) {
+    	/*
+    	Tab.chainLocalSymbols(currentMethod);
+		currentMethod.setLevel(methodFormalParametersCount);
+		
+		if (overridedMethod != null) {
+			//if (!checkOverriding(currentMethod, overridingMethod)) {
+			//	reportError("Method is an invalid override", methodSignature);
+			//	methodSignature.getMethodTypeName().obj = SymbolTable.noObj;
+			//} else {
+				Tab.currentScope().getOuter().getLocals().deleteKey(overridedMethod.getName());
+				Tab.currentScope().getOuter().addToLocals(currentMethod);
+				//SymbolTable.chainLocalSymbols(overridingMethod);
+				//overridingMethod.setLocals((SymbolDataStructure) currentMethod.getLocalSymbols());
+				//methodBodyDummyStart.getMethodTypeName().obj = currentMethod;
+				
+				if(methodBodyDummyStart.getParent() instanceof CorrectMethodDecl) {
 
+					CorrectMethodDecl x = (CorrectMethodDecl)methodBodyDummyStart.getParent();
+					x.getMethodTypeName().obj = currentMethod;
+				}
+				
+			//}
+		}
+		*/
     }
     
     @Override
@@ -977,7 +1012,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	methodFormalParametersCount = 0;
     	returnFound = false;
     	currentMethod = null;
-
+    	overridedMethod = null;
     }
     
     /* Label and goto Label procesing - removed from semantic analysis */

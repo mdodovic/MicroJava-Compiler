@@ -134,10 +134,12 @@ class Kvadar extends Predmet
 // class extending
 	class A { int fa1, fa2; }
 	class B extends A { char fb1;  }
-	class C extends B { int fc1, fc2; A theA; }
+	class C extends B { int fc1, fc2; A theA; bool arr1[]; }
 	
 {
-
+	void vo(char c) {
+	
+	}
 
 	 int zapremina()
 			int v, alfa, beta, gama;
@@ -203,21 +205,21 @@ class Kvadar extends Predmet
 		return l;
 	}
 
-	void main() char arc[]; int ar[]; C objC; int c1; Predmet p2; Kvadar k; Sfera s; Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t; {
+	void main() char arc[]; bool br[]; int ar[]; C objC; int c1; Predmet p2; Kvadar k; Sfera s; Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t; {
 		//p2 = new Predmet;
 		k = new Kvadar;
 		s = new Sfera;
 		
 		//p1 = new Kvadar;
 		
-		//predmeti = new Predmet[6];
-		//s1 = new Sfera;
-		//s2 = new Sfera;
-		//s3 = new Sfera;
+		predmeti = new Predmet[6];
+		s1 = new Sfera;
+		s2 = new Sfera;
+		s3 = new Sfera;
 		
-		//k1 = new Kvadar;
-		//k2 = new Kvadar;
-		//k3 = new Kvadar;
+		k1 = new Kvadar;
+		k2 = new Kvadar;
+		k3 = new Kvadar;
 		
 		//k3.koefTezine = 3;
 		//k3.koefTezine2  =3;
@@ -231,6 +233,27 @@ class Kvadar extends Predmet
 		
 		f1('x', false);
 		f1(f22('a', ar, ar, true, k), verify);
+		
+		objC.arr1 = new bool[c1];
+		
+		objC.arr1 = br;
+		
+		objC.arr1[c1] = objC.arr1[c1];
+		
+		objC.arr1[c1] = false;
+
+		objC.arr1[c1] = br[0];
+		objC.arr1[7] = br[0];
+		
+		predmeti[0] = s1;
+		predmeti[2] = s2;
+		predmeti[4] = s3;
+		predmeti[1] = k1;
+		predmeti[3] = k2;
+		predmeti[5] = k3;
+		
+		//objC.arr1[c2]++;
+		//objC.arr1[objC.theA.fa2]--;
 		
 	}
 }

@@ -28,6 +28,7 @@ import rs.ac.bg.etf.pp1.ast.ConcreteType;
 import rs.ac.bg.etf.pp1.ast.ConstructorDecl;
 import rs.ac.bg.etf.pp1.ast.ConstructorDeclName;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
+import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
 import rs.ac.bg.etf.pp1.ast.DesignatorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.DoWhileDummyStart;
@@ -1371,7 +1372,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
      	
     }
         
-    
+    // read(Designator) processing
     
     
     // Types passing
@@ -1603,7 +1604,36 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     }
     
+    /* = processing */
     
+	// ! Specification constraint: destination has to be variable, class field or element of the array
+    private boolean checkDestinationRightValueConstraint(Obj dst, SyntaxNode info) {
+    	
+    	if(dst.getKind() != Obj.Var && dst.getKind() != Obj.Fld && dst.getKind() != Obj.Elem) {
+    		report_error("Leva strana jednakosti mora biti promenjiva, polje klase ili element niza!", info);        	
+			return false;
+		}
+		return true;
+	}
+    
+    @Override
+    public void visit(DesignatorAssignOperation designatorAssignOperation) {
+    	
+    	Obj dst = designatorAssignOperation.getDesignator().obj;
+    	Struct src = designatorAssignOperation.getExpr().struct;
+    	
+    	if(!checkDestinationRightValueConstraint(dst, designatorAssignOperation)) {
+    		return;
+    	}
+    	
+    	// destination is right-value
+    	if(!assignableTo(src, dst.getType())) {
+    		// ! Specification constraint: source has to be assignable to the destination
+    		report_error("Leva strana (" + structDescription(src) + ") nije kompatibilna desnoj strani (" + structDescription(dst.getType()) + ") pri dodeli!", designatorAssignOperation);        	    		
+    	}
+
+    }
+
     
     /* do-while processing */
     

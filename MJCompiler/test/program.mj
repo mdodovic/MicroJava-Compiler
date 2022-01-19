@@ -37,8 +37,12 @@ const int cinilac = 4, delilac = 3;
 		 int f(int a, int b[], int c) int d, x[]; {
 		 	return a + b[a] + d + x[d];
 		 }
-
-
+		int Q() {return zapremina() * tezina;}
+		 
+		void ispisi() {
+		 	print(vrsta);
+		 	print(Q());
+		 }
 
 
 	}
@@ -70,7 +74,11 @@ class Sfera extends Predmet
 		 	return as + bs[as] + ds + xs[ds];
 		 }
 
-
+		void ispisi(){
+			super();
+			print(r);
+			print(eol);
+		}
 		
 	}
 }
@@ -181,6 +189,7 @@ class Kvadar extends Predmet
 			else 
 				c = c2;
 		}
+		//super();
 		return l;
 	}
 

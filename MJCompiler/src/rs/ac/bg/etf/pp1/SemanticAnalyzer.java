@@ -132,6 +132,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	private boolean returnFound = false;
 	private int methodFormalParametersCount = 0;
 	
+	private boolean constructorBody = false; // determines if we are in the constructor body when process statement
 	private boolean classMethod = false; // determines if called method is global (false) or belongs to the class (true)
 	
 	private boolean classOrRecordFieldsScope = false; // When variable is declared, if it is class or record field, it's type is Obj.Fld, otherwise it is Obj.Var
@@ -800,6 +801,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
      	if(!checkConstructorNameConstraint(constructorDeclName.getConstructorName(), constructorDeclName)) {
     		currentMethod = Tab.noObj;
+    		constructorBody = true;
     		constructorDeclName.obj = Tab.noObj;
     		System.out.println("OpenScope");
     		Tab.openScope();
@@ -810,6 +812,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// if there is an return type; statement in constructor body, this will be processed at the end of the constructor declaration
     	// here is is assumed that everything is correct so constructor type is noType
     	currentMethod = Tab.insert(Obj.Meth, constructorDeclName.getConstructorName(), Tab.noType);
+		constructorBody = true;
     	constructorDeclName.obj = currentMethod;
     	
 		System.out.println("OpenScope");
@@ -842,6 +845,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	methodFormalParametersCount = 0;
     	returnFound = false;
     	currentMethod = null;
+		constructorBody = false;
     	
     	// copy methods from super class to prepare current class for its methods (both completely new or method overriding
     	copyMethodsFromSuperClass();
@@ -1445,8 +1449,28 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// designator in form of simple variable
     	Obj designatorNode = Tab.find(simpleDesignator.getName()); // This will find variable in the nearest scope
     	
+    	// designatorNode is Tab.noObj when this name does not exists in symbol table
+    	// it can be because the symbol is not defined previously: which is error
+    	// or because this simbol is "super" and this means that we need to call a method or the constructor from the superclass;
+    	
+    	if("super".equals(simpleDesignator.getName())) {
+    		if(currentClass == null) {
+        		report_error("Poziv metoda/konstruktora nadklase funkcijom super se ne moze koristiti izvan tela metode/konstruktora klase!", simpleDesignator);
+        		simpleDesignator.obj = Tab.noObj;
+        		return;
+    		}
+    		// we are in the class context
+    		if(constructorBody == true) {
+    			
+    			System.out.println();
+    		} else {
+    			System.out.println();
+    		}
+    	}
+    	
     	if(designatorNode == Tab.noObj) {
     		report_error("Promenjiva " + simpleDesignator.getName() + " nije deklarisana!", simpleDesignator);
+    		// Tab.noObj will propagate to the upper nodes in the tree
     	} 
     	
     	simpleDesignator.obj = designatorNode;

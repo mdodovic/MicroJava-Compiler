@@ -1,6 +1,10 @@
 package rs.ac.bg.etf.pp1;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -907,7 +911,10 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethName(), methodTypeName.getMethodReturnType().struct);
     	} else {
     		// this is overriding, so one Obj(methodName) already exists in symbol table
-    		// this will be replaced 
+    		// this will be replaced with its overrider
+    		// Check that should be done are:
+    		// if the returned type is the same
+    		// if all of the parameters are as same as in the overrided method
     		Tab.currentScope().getLocals().deleteKey(methodTypeName.getMethName());
     		currentMethod = Tab.insert(Obj.Meth, methodTypeName.getMethName(), methodTypeName.getMethodReturnType().struct);
     		
@@ -958,6 +965,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
        
     @Override
     public void visit(MethodBodyDummyStart methodBodyDummyStart) {
+    	System.out.println(((CorrectMethodDecl) methodBodyDummyStart.getParent()).getMethodTypeName().getMethName());
+    	System.out.println();
     	/*
     	Tab.chainLocalSymbols(currentMethod);
 		currentMethod.setLevel(methodFormalParametersCount);
@@ -995,6 +1004,88 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     }
 
 
+    private boolean checkCurrentMethodAndOverrideMethod(SyntaxNode info) {
+    	if(overridedMethod == null) {
+    		// method is not overrided
+    		return true;
+    	}
+    	
+    	if(overridedMethod.getLevel() != currentMethod.getLevel()) {
+    		// number of the formal arguments are different
+    		report_error("Preklopljeni metod " + currentMethod.getName() + " nema adekvatan potpis (razlicit broj argumenata) kao metod u nadklasi!", info);    		    		
+	    	return false;
+    	}
+    	// number of the formal arguments are the same
+		// we should iterate only through the formal arguments, this is field level in both of Obj objects    	
+    	
+    	List<Struct> parametersInOverridedMethod = new ArrayList<Struct>(); 
+    	
+    	int currentIndexOfFormalArgument = 0;
+    	
+    	for (Iterator<Obj> overridedMethodParameterIterator = overridedMethod.getLocalSymbols().iterator(); 
+    			currentIndexOfFormalArgument < overridedMethod.getLevel() && overridedMethodParameterIterator.hasNext();) {
+    		
+    	    Obj overridedMethodParameter = overridedMethodParameterIterator.next();
+    	    
+    	    if(currentIndexOfFormalArgument == 0) {
+	    	    if(!"this".equals(overridedMethodParameter.getName())) {
+	    	    	// first argument in overrided methods is not this
+	        		report_error("Metod iz nadklase " + overridedMethod.getName() + " nema adekvatan potpis (prvi argument nije implicitni this)!", info);    		    		
+			    	return false;
+	    	    } else {
+	    	    	currentIndexOfFormalArgument++;
+	    	    	continue;
+	    	    }
+    	    }    	    
+    	    parametersInOverridedMethod.add(overridedMethodParameter.getType());    	    
+    	    currentIndexOfFormalArgument++;
+    	}
+	
+    	
+    	List<Struct> parametersInCurrentMethod = new ArrayList<Struct>(); 
+    	
+    	currentIndexOfFormalArgument = 0;
+    	
+    	for (Iterator<Obj> currentMethodParameterIterator = currentMethod.getLocalSymbols().iterator(); 
+    			currentIndexOfFormalArgument < currentMethod.getLevel() && currentMethodParameterIterator.hasNext();) {
+
+    	    Obj currentMethodParameter = currentMethodParameterIterator.next();
+    	    
+    	    if(currentIndexOfFormalArgument == 0) {
+	    	    if(!"this".equals(currentMethodParameter.getName())) {
+	    	    	// first argument in current method is not this
+	        		report_error("Preklopljeni metod " + currentMethod.getName() + " nema adekvatan potpis (prvi argument nije implicitni this) kao metod u nadklasi!", info);
+			    	return false;
+	    	    } else {
+	    	    	currentIndexOfFormalArgument++;
+	    	    	continue;
+	    	    }
+    	    }    	    
+    	    parametersInCurrentMethod.add(currentMethodParameter.getType());    	    
+    	    currentIndexOfFormalArgument++;
+    	}
+    	
+    	if(currentIndexOfFormalArgument == 1) {
+    		// there is only one argument, this, in the method signature
+    		return true;
+    	}
+    	// implicit this is present in both of methods
+    	currentIndexOfFormalArgument = currentIndexOfFormalArgument - 1; // -1 is for this
+    	// check others arguments
+    	
+    	for(int i = 0; i < currentIndexOfFormalArgument; i++) {
+    		
+    		if(!parametersInCurrentMethod.get(i).equals(parametersInOverridedMethod.get(i))) {
+	    		report_error("Preklopljeni metod " + currentMethod.getName() + " nema adekvatan potpis (parametri na poziciji "+ (i + 1) + " se ne slazu po tipu (" + structDescription(parametersInCurrentMethod.get(i)) + "," + structDescription(parametersInOverridedMethod.get(i)) + ")) kao metod u nadklasi!", info);   
+		    	return false;    				    			
+    		}
+    		
+    	}
+    	    	
+    	return true;
+
+	}
+    
     @Override
     public void visit(CorrectMethodDecl correctMethodDecl) {
     	
@@ -1010,7 +1101,11 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     	
     	Tab.chainLocalSymbols(currentMethod);
-		System.out.println("CloseScope");
+
+    	
+    	checkCurrentMethodAndOverrideMethod(correctMethodDecl);
+    	
+    	System.out.println("CloseScope");
 
     	Tab.closeScope();
     	
@@ -1023,11 +1118,9 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     /* Label and goto Label procesing - removed from semantic analysis */
     
-    /* Expressions processing */
-    
-    /* Terms processing */
-    
-    /* Factors processing */
+    /* Expressions processing */ // \
+    /* Terms processing */       // - processed together
+    /* Factors processing */     // /
     
     //  Factor -> constants - number, char, bool
     

@@ -34,7 +34,7 @@ const int cinilac = 4, delilac = 3;
 		 char dohvVrstu() { return vrsta; }
 		 int dohvTezinu() { return tezina; }
 		
-		 int f(int a, int b[], bool c) int d, x[]; {
+		 int f(int a, int b[], int c) int d, x[]; {
 		 	return a + b[a] + d + x[d];
 		 }
 
@@ -65,6 +65,12 @@ class Sfera extends Predmet
 			
 			return this.vrsta;
 		}
+
+		 int f2(int as, int bs[], int cs) int ds, xs[]; {
+		 	return as + bs[as] + ds + xs[ds];
+		 }
+
+
 		
 	}
 }
@@ -89,6 +95,11 @@ class Kvadar extends Predmet
 		
 			this.a = a; this.b = b; this.c = c;
 		}
+		 
+		 
+	 int f(int ad, int bd[], int cd) int dd, xd[]; {
+		 	return ad + bd[dd] + dd + xd[dd];
+		 }
 		 
 		
 	}

@@ -30,6 +30,8 @@ import rs.ac.bg.etf.pp1.ast.ConstructorDeclName;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
 import rs.ac.bg.etf.pp1.ast.DesignatorFunctionCall;
+import rs.ac.bg.etf.pp1.ast.DesignatorPostDecrement;
+import rs.ac.bg.etf.pp1.ast.DesignatorPostIncrement;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.DoWhileDummyStart;
 import rs.ac.bg.etf.pp1.ast.EqualOp;
@@ -1607,10 +1609,16 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     /* = processing */
     
 	// ! Specification constraint: destination has to be variable, class field or element of the array
-    private boolean checkDestinationRightValueConstraint(Obj dst, SyntaxNode info) {
+    private boolean checkDestinationRightValueConstraint(Obj dst, SyntaxNode info, int assignmentIncDec) {
     	
     	if(dst.getKind() != Obj.Var && dst.getKind() != Obj.Fld && dst.getKind() != Obj.Elem) {
-    		report_error("Leva strana jednakosti mora biti promenjiva, polje klase ili element niza!", info);        	
+    		if(assignmentIncDec == 0) {
+    			// message is appropriate to the assignment
+    			report_error("Leva strana jednakosti mora biti promenjiva, polje klase ili element niza!", info);        	
+    		} else {
+    			// message is appropriate to the assignment
+    			report_error((assignmentIncDec == 1 ? "Inkrementiranje" : "Dekrementiranje" ) + " se mora raditi mora raditi nad promenjivom, poljem klase ili elementom niza!", info);        	    			
+    		}
 			return false;
 		}
 		return true;
@@ -1622,7 +1630,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	Obj dst = designatorAssignOperation.getDesignator().obj;
     	Struct src = designatorAssignOperation.getExpr().struct;
     	
-    	if(!checkDestinationRightValueConstraint(dst, designatorAssignOperation)) {
+    	if(!checkDestinationRightValueConstraint(dst, designatorAssignOperation, 0)) {
     		return;
     	}
     	
@@ -1634,6 +1642,36 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     }
 
+    /* ++ and -- processing */
+    
+    @Override
+    public void visit(DesignatorPostIncrement designatorPostIncrement) {
+
+    	if(!checkDestinationRightValueConstraint(designatorPostIncrement.getDesignator().obj, designatorPostIncrement, 1)) {
+    		return;
+    	}
+    	
+    	// destination is right-value
+    	if(designatorPostIncrement.getDesignator().obj.getType() != Tab.intType) {
+    		// ! Specification constraint: variable has to be int 
+			report_error("Inkrementiranje se mora raditi mora raditi nad tipom int, a ne " + (structDescription(designatorPostIncrement.getDesignator().obj.getType())) + "!", designatorPostIncrement);        	    			
+    	}
+
+    	
+    }
+    
+    @Override
+    public void visit(DesignatorPostDecrement designatorPostDecrement) {
+    	if(!checkDestinationRightValueConstraint(designatorPostDecrement.getDesignator().obj, designatorPostDecrement, 2)) {
+    		return;
+    	}
+    	
+    	// destination is right-value
+    	if(designatorPostDecrement.getDesignator().obj.getType() != Tab.intType) {
+    		// ! Specification constraint: variable has to be int 
+			report_error("Dekrementiranje se mora raditi mora raditi nad tipom int, a ne " + (structDescription(designatorPostDecrement.getDesignator().obj.getType())) + "!", designatorPostDecrement);        	    			
+    	}
+    }
     
     /* do-while processing */
     

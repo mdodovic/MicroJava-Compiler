@@ -252,8 +252,7 @@ class Kvadar extends Predmet
 		predmeti[3] = k2;
 		predmeti[5] = k3;
 		
-		//objC.arr1[c2]++;
-		//objC.arr1[objC.theA.fa2]--;
+		predmeti[4].tezina--;
 		
 	}
 }

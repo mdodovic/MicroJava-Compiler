@@ -168,7 +168,7 @@ class Kvadar extends Predmet
 		return cinilac / delilac;
 	}
 
-	int f1(char c, bool check) char c1, c2; int l; {
+	void f1(char c, bool check) char c1, c2; int l; {
 		l = p1.koefTezine;
 		if(check == true) {
 			c = c1;

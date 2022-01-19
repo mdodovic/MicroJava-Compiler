@@ -1036,7 +1036,10 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	returnFound = true;
     	Struct declaredMethodType = currentMethod.getType();
     	// expression which is written in the return statement has to be equivalent to the method type (from declaration)
-    	
+    	if(declaredMethodType == Tab.noType) {
+			report_error("Funkcija tipa void ne moze imati tipiziran izraz u return naredbi (" + structDescription(stetementReturnExpression.getExpr().struct) + ")!", stetementReturnExpression);
+			return;    		  
+    	}
     	if(!declaredMethodType.equals(stetementReturnExpression.getExpr().struct)){
 			report_error("Tip izraza u return naredbi (" + structDescription(stetementReturnExpression.getExpr().struct) + ") nije kompatibilan sa tipom povratne vrednosti funkcije " + structDescription(declaredMethodType), stetementReturnExpression);
 			return;

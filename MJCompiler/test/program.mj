@@ -98,6 +98,7 @@ class Kvadar extends Predmet
 		 
 		 
 	 int f(int ad, int bd[], int cd) int dd, xd[]; {
+	 	this.zapremina();
 		 	return ad + bd[dd] + dd + xd[dd];
 		 }
 		 
@@ -137,6 +138,16 @@ class Kvadar extends Predmet
 			cnt = cnt + 1;
 		}
 		return 'a';
+	}
+	
+	char f22(char c, int xarr[], int yarr[], bool act, Predmet p) int cnt, i; char x1; char y1; int a; {
+		cnt = 0;
+		//f1();
+		
+		if (2 < 3 || 1 > 0 || a <= yarr[i] && a >= xarr[cnt] || 1 == 1 && 2 != 3 && cnt != -1)  {
+			cnt = cnt + 1;
+		}
+		return c;
 	}
 	
 //	int inkrement(int a, int inc) 
@@ -189,13 +200,15 @@ class Kvadar extends Predmet
 		//k3.koefTezine = 3;
 		//k3.koefTezine2  =3;
 		
-		c1 = k.postaviStranice(1,2,4);
+		//c1 = k.postaviStranice(1,2,4);
+		k.zapremina();
+		k.postaviStranice(1,2,4);
 		
 		objC.theA.fa2 = - 2 + 7 * 11 / objC.theA.fa1 - c1 % 5;
 		//objC.theA.fa2 = f0() * f1('x', false)  + 'a' * 1 / objC.theA.fa1 - c1 % 5;
 		
 		f1('x', false);
-		f1(f2('a', ar, ar, true, arc), verify);
+		f1(f22('a', ar, ar, true, k), verify);
 		
 	}
 }

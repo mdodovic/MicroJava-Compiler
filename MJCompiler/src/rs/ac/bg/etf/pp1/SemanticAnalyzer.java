@@ -91,8 +91,32 @@ import rs.etf.pp1.symboltable.concepts.Struct;
 public class SemanticAnalyzer extends VisitorAdaptor{
 
 	// Symbol table extensions
+	// bool type
 	public static final Struct boolType = new Struct(Struct.Bool);
+	
+	// super class reference can be assigned to sub class reference
+	public static boolean assignableTo(Struct src, Struct dst) {
+		// check if they are assignable without classes extensions:
+		if(src.assignableTo(dst)) {
+			return true;
+		}
+		// we cannot declare those two struct nodes as non-assignable until we check its class extensions tree
+		if(src.getKind() == Struct.Class && dst.getKind() == Struct.Class) {
+			// both of them are classes
+			Struct curr = src;
+            while (curr != null) {
 
+            	if (curr.equals(dst)) {
+            		// one of the super classes is equal to destination
+                    return true;
+                }
+
+                curr = curr.getElemType();
+            }
+		}
+		
+		return false;
+	}
 	
 	private Logger log = Logger.getLogger(getClass());
 
@@ -108,7 +132,9 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	private Obj currentMethod = null;
 	private boolean returnFound = false;
 	private int methodFormalParametersCount = 0;
-
+	
+	private boolean classMethod = false; // determines if called method is global (false) or belongs to the class (true)
+	
 	private boolean classOrRecordFieldsScope = false; // When variable is declared, if it is class or record field, it's type is Obj.Fld, otherwise it is Obj.Var
 
 	private String currentRecordName = null;
@@ -1010,8 +1036,10 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	returnFound = true;
     	Struct declaredMethodType = currentMethod.getType();
     	// expression which is written in the return statement has to be equivalent to the method type (from declaration)
+    	
     	if(!declaredMethodType.equals(stetementReturnExpression.getExpr().struct)){
 			report_error("Tip izraza u return naredbi (" + structDescription(stetementReturnExpression.getExpr().struct) + ") nije kompatibilan sa tipom povratne vrednosti funkcije " + structDescription(declaredMethodType), stetementReturnExpression);
+			return;
     	}
     }
 
@@ -1262,11 +1290,102 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	stackOfActualParameters.peek().add(firstActualParameter.getExpr().struct);
     }
     
+	// ! Specification constraint: number of arguments in formal and actual arguments' list has to be the same (with one exception when first argument is this)
+    private List<Obj> checkArgumentsNumberEquallity(Obj functionNode, int numberOfActualArguments, SyntaxNode info) {
+
+    	// copy formal parameters into list for easier processing
+    	
+    	List<Obj> formalArgumentsForCalledFunction = new ArrayList<Obj>(); 
+    	
+    	int currentIndexOfFormalArgument = 0;
+    	
+    	for (Iterator<Obj> formalArgumentIterator = functionNode.getLocalSymbols().iterator(); 
+    			currentIndexOfFormalArgument < functionNode.getLevel() && formalArgumentIterator.hasNext();) {
+
+    	    Obj formalParameter = formalArgumentIterator.next();
+    	    
+    	    formalArgumentsForCalledFunction.add(formalParameter);    	    
+    	    currentIndexOfFormalArgument++;
+    	}
+    	
+    	int numberOfFormalArguments = functionNode.getLevel();
+    	
+    	if(formalArgumentsForCalledFunction.size() > 0) {
+			if("this".equals(formalArgumentsForCalledFunction.get(0).getName())) {
+				classMethod = true;
+			}
+    	}
+    	
+    	// number of actual and formal parameters has to be the same, except one case
+    	// if this is class method, it has one implicit argument "this"
+    	
+    	if(numberOfActualArguments != numberOfFormalArguments) {
+    		
+    		if(numberOfActualArguments == numberOfFormalArguments - 1) {
+    			// this indicates that first argument is this
+    			if("this".equals(formalArgumentsForCalledFunction.get(0).getName())) {
+    				// remove implicit argument to match the number
+    				formalArgumentsForCalledFunction.remove(0);
+    				return formalArgumentsForCalledFunction;
+    			}
+    		}
+    		
+    	} else {
+			return formalArgumentsForCalledFunction;    		
+    	}
+    	
+		report_error("Broj stvarnih (" + numberOfActualArguments + ") i formalnih (" + (numberOfFormalArguments - (classMethod ? 1 : 0)) + ") mora biti isti", info);        	    		
+		
+    	
+    	return null;
+    	
+    }
+    
+    private Struct checkArgumentsMapping(Obj functionNode, SyntaxNode info) {
+    	
+    	if(functionNode.getKind() != Obj.Meth) {
+    		// ! Specification constraint: functionName has to be either global function or class method
+    		report_error(functionNode.getName() + " ne predstavlja funkciju", info);        	    		
+    		return Tab.noType;
+    	}
+    	
+    	List<Struct> actualArgumentsForCalledFunction = stackOfActualParameters.pop();
+    	int numberOfActualArguments = actualArgumentsForCalledFunction.size();
+    	
+    	// check number of arguments
+    	List<Obj> formalArgumentsForCalledFunction = checkArgumentsNumberEquallity(functionNode, numberOfActualArguments, info);
+    			
+    	if(formalArgumentsForCalledFunction == null)	{
+    		return Tab.noType;
+    	}
+
+    	// in 2 lists there is an equal number of formal and actual parameters
+    	// check their types compatibility    	
+    	
+    	for(int i = 0; i < numberOfActualArguments; i++) {
+    		
+    		if(!assignableTo(actualArgumentsForCalledFunction.get(i), formalArgumentsForCalledFunction.get(i).getType())){
+    			report_error("Formalnom argumentu na poziciji " + (i + 1) + " (tip: " + structDescription(formalArgumentsForCalledFunction.get(i).getType()) + ") se ne moze dodeliti stvarni argument na toj poziciji (tip: " + structDescription(actualArgumentsForCalledFunction.get(i)) + ")!", info);
+    			return Tab.noType;
+    		}    		
+    	}
+    	
+    	if(classMethod) {
+        	report_info("Poziv metode klase " + functionNode.getName() + ".", info);    		    		
+    	} else {
+        	report_info("Poziv funkcije " + functionNode.getName() + ".", info);    		
+    	}
+
+    	classMethod = false;
+    	
+    	return functionNode.getType();
+	}
     
     @Override
-    public void visit(FactorFunctionCall FactorFunctionCall) {
+    public void visit(FactorFunctionCall factorFunctionCall) {
     	
-    	
+    	// type of function should be returned for type compatibility check in expressions
+    	factorFunctionCall.struct = checkArgumentsMapping(factorFunctionCall.getFunctionCallName().obj, factorFunctionCall);
     	
     	
     	//
@@ -1278,6 +1397,11 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(DesignatorFunctionCall designatorFunctionCall) {
+    	
+    	// Designator statement does not need type
+    	// This is function call which is not within any expression
+    	checkArgumentsMapping(designatorFunctionCall.getFunctionCallName().obj, designatorFunctionCall);
+     	
     	//
 //    	private int actualParametersCounter = 0; // number of actual parameters for the function call
 //   	private List<Struct> listOfActualParameters = new ArrayList<Struct>();

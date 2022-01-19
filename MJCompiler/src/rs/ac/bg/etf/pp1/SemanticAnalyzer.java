@@ -89,10 +89,17 @@ import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.ac.bg.etf.pp1.ast.VoidType;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
+import rs.etf.pp1.symboltable.concepts.Scope;
 import rs.etf.pp1.symboltable.concepts.Struct;
+import rs.etf.pp1.symboltable.visitors.DumpSymbolTableVisitor;
+import rs.etf.pp1.symboltable.visitors.SymbolTableVisitor;
 
 public class SemanticAnalyzer extends VisitorAdaptor{
+	
+	// log access
+	private Logger log = Logger.getLogger(getClass());
 
+	
 	// Symbol table extensions
 	// bool type
 	public static final Struct boolType = new Struct(Struct.Bool);
@@ -121,7 +128,23 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 		return false;
 	}
 	
-	private Logger log = Logger.getLogger(getClass());
+	// print symbol table into log
+	
+	public void dump(SymbolTableVisitor stv) {
+		System.out.println("=====================SYMBOL TABLE DUMP=========================");
+		if (stv == null)
+			stv = new DumpSymbolTableVisitor();
+		for (Scope s = Tab.currentScope(); s != null; s = s.getOuter()) {
+			s.accept(stv);
+		}
+		System.out.println(stv.getOutput());
+		log.info(stv.getOutput());
+	}
+	
+	public void tsdump() {
+		dump(null);
+	}
+	
 
 	private boolean errorDetected = false;	
 	
@@ -1326,7 +1349,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	}
     	
     	if(classMethod) {
-        	report_info("Poziv metode klase " + functionNode.getName() + ".", info);    		    		
+        	report_info("Poziv klasne metode " + functionNode.getName() + ".", info);    		    		
     	} else {
         	report_info("Poziv funkcije " + functionNode.getName() + ".", info);    		
     	}

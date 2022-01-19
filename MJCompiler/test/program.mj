@@ -108,6 +108,12 @@ class Kvadar extends Predmet
 	
 	Predmet p1;
 
+
+// class extending
+	class A { int fa1, fa2; }
+	class B extends A { char fb1;  }
+	class C extends B { int fc1, fc2; A theA; }
+	
 {
 
 
@@ -147,12 +153,26 @@ class Kvadar extends Predmet
 		return false;
 	}	
 	
-	
+	int f0() {
+		return cinilac / delilac;
+	}
 
-	void main() //int c1; Predmet p2; Kvadar k; Sfera s; Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t; {
-	{
+	int f1(char c, bool check) char c1, c2; int l; {
+		l = p1.koefTezine;
+		if(check == true) {
+			c = c1;
+		} else {
+			if(l == 7) 
+				return 0;
+			else 
+				c = c2;
+		}
+		return l;
+	}
+
+	void main() char arc[]; int ar[]; C objC; int c1; Predmet p2; Kvadar k; Sfera s; Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t; {
 		//p2 = new Predmet;
-		//k = new Kvadar;
+		k = new Kvadar;
 		//s = new Sfera;
 		
 		//p1 = new Kvadar;
@@ -168,6 +188,14 @@ class Kvadar extends Predmet
 		
 		//k3.koefTezine = 3;
 		//k3.koefTezine2  =3;
+		
+		c1 = k.postaviStranice(1,2,4);
+		
+		objC.theA.fa2 = - 2 + 7 * 11 / objC.theA.fa1 - c1 % 5;
+		//objC.theA.fa2 = f0() * f1('x', false)  + 'a' * 1 / objC.theA.fa1 - c1 % 5;
+		
+		f1('x', false);
+		f1(f2('a', ar, ar, true, arc), verify);
 		
 	}
 }

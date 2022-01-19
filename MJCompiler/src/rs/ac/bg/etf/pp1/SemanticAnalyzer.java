@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
+import java.util.Stack;
 
 import org.apache.log4j.Logger;
 
@@ -28,6 +28,7 @@ import rs.ac.bg.etf.pp1.ast.ConcreteType;
 import rs.ac.bg.etf.pp1.ast.ConstructorDecl;
 import rs.ac.bg.etf.pp1.ast.ConstructorDeclName;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
+import rs.ac.bg.etf.pp1.ast.DesignatorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.DoWhileDummyStart;
 import rs.ac.bg.etf.pp1.ast.EqualOp;
@@ -37,9 +38,13 @@ import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorBracketExpression;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
 import rs.ac.bg.etf.pp1.ast.FactorClassNewOperator;
+import rs.ac.bg.etf.pp1.ast.FactorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.FactorVariable;
+import rs.ac.bg.etf.pp1.ast.FirstActualParameter;
 import rs.ac.bg.etf.pp1.ast.FormalParameterDeclaration;
+import rs.ac.bg.etf.pp1.ast.FunctionCallName;
+import rs.ac.bg.etf.pp1.ast.FurtherActualParameters;
 import rs.ac.bg.etf.pp1.ast.GreaterEqualOp;
 import rs.ac.bg.etf.pp1.ast.GreaterOp;
 import rs.ac.bg.etf.pp1.ast.InnerClassBodyDummyStart;
@@ -121,6 +126,13 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
 	private int doWhileDepthCounter = 0; // depth of the do-while statement; it cannot be boolean because we do not know when to reset it to the false value
 		
+	//private int functionCallDepthCounter = -1; // depth of function calls, for the arguments processing; f1(1, f2(3, f3(0)), 5) has different parameters
+	private Stack<List<Struct>> stackOfActualParameters = new Stack<List<Struct>>(); // stack of actual parametes for compatibility check. f1(1, f2(3, f3(0)), 5) has different parameters so needs to be nested
+	//private List<List<Struct>> listOfActualParameters = new ArrayList<List<Struct>>(); // list of actual parametes for compatibility check
+	// on every method call increment depthCounter and create new entry in list; depth will represent the index in the list so 
+
+	
+	
 //	private List<String> listOfDeclaredLabelsPerMethods = new ArrayList<String>(); // there will be collected all the labels declared in currentMethod - no constraints
 //	private List<Map<String, SyntaxNode>> listOfUsedLabelsPerMethods = new ArrayList<Map<String, SyntaxNode>>(); // there will be collected all used labels (in goto statement) - those labels have to be in list of declared labels
 	
@@ -1228,9 +1240,54 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     }
     
+    /* calls of the methods processing*/
+
+    @Override
+    public void visit(FunctionCallName functionCallName) {
+    	// pass obj from designator
+    	functionCallName.obj = functionCallName.getDesignator().obj;
+    	// open new frame for actual parameters
+    	stackOfActualParameters.push(new ArrayList<Struct>());
+    }
+    
+    @Override
+    public void visit(FurtherActualParameters furtherActualParameters) {
+    	// add parameter to the current actual parameters frame
+    	stackOfActualParameters.peek().add(furtherActualParameters.getExpr().struct);
+    }
+    
+    @Override
+    public void visit(FirstActualParameter firstActualParameter) {
+    	// add parameter to the current actual parameters frame
+    	stackOfActualParameters.peek().add(firstActualParameter.getExpr().struct);
+    }
     
     
-    // TODO: function call
+    @Override
+    public void visit(FactorFunctionCall FactorFunctionCall) {
+    	
+    	
+    	
+    	
+    	//
+//    	private int actualParametersCounter = 0; // number of actual parameters for the function call
+//   	private List<Struct> listOfActualParameters = new ArrayList<Struct>();
+    	
+    	//
+    }
+    
+    @Override
+    public void visit(DesignatorFunctionCall designatorFunctionCall) {
+    	//
+//    	private int actualParametersCounter = 0; // number of actual parameters for the function call
+//   	private List<Struct> listOfActualParameters = new ArrayList<Struct>();
+    	
+    	//
+
+    }
+        
+    
+    
     
     // Types passing
     

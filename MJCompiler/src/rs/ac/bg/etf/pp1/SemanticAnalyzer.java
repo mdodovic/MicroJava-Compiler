@@ -77,6 +77,7 @@ import rs.ac.bg.etf.pp1.ast.StatementContinue;
 import rs.ac.bg.etf.pp1.ast.StatementDoWhile;
 import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
 import rs.ac.bg.etf.pp1.ast.StatementPrintWithWidth;
+import rs.ac.bg.etf.pp1.ast.StatementRead;
 import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
 import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.Term;
@@ -833,7 +834,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     @Override
     public void visit(ConstructorDecl constructorDecl) {
     	
-    	// TODO: Check this
     	if(returnFound) {
 			report_error("Konstruktor " + currentMethod.getName() + " ima tipiziran return iskaz!", constructorDecl);    		
     	}
@@ -1374,8 +1374,22 @@ public class SemanticAnalyzer extends VisitorAdaptor{
      	
     }
         
-    // read(Designator) processing
+    // specific method: read(Designator) processing
     
+    @Override
+    public void visit(StatementRead statementRead) {
+    	if(!checkDestinationRightValueConstraint(statementRead.getDesignator().obj, statementRead, 3)) {
+    		return;
+    	}
+    	// designator is left-value
+
+    	if(statementRead.getDesignator().obj.getType() != Tab.intType && 
+    		statementRead.getDesignator().obj.getType() != Tab.charType &&
+    		statementRead.getDesignator().obj.getType() != boolType) {
+    		// ! Specification constraint: variable has to be int, char or bool
+			report_error("Ucitavanje sa standardnog ulaza se moze samo u promenjivu tipa int, char ili bool, ne u " + structDescription(statementRead.getDesignator().obj.getType()) + "!", statementRead);        	    			
+		}
+    }
     
     // Types passing
     
@@ -1609,15 +1623,21 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     /* = processing */
     
 	// ! Specification constraint: destination has to be variable, class field or element of the array
-    private boolean checkDestinationRightValueConstraint(Obj dst, SyntaxNode info, int assignmentIncDec) {
+    private boolean checkDestinationRightValueConstraint(Obj dst, SyntaxNode info, int errorOutputFlagAssignmentIncDecRead) {
     	
     	if(dst.getKind() != Obj.Var && dst.getKind() != Obj.Fld && dst.getKind() != Obj.Elem) {
-    		if(assignmentIncDec == 0) {
+    		if(errorOutputFlagAssignmentIncDecRead == 0) {
     			// message is appropriate to the assignment
     			report_error("Leva strana jednakosti mora biti promenjiva, polje klase ili element niza!", info);        	
+    		} else if(errorOutputFlagAssignmentIncDecRead == 1) {
+    			// message is appropriate to the increment
+    			report_error("Inkrementiranje se mora raditi mora raditi nad promenjivom, poljem klase ili elementom niza!", info);        	    			
+    		} else if(errorOutputFlagAssignmentIncDecRead == 2) {
+    			// message is appropriate to the increment
+    			report_error("Dekrementiranje se mora raditi mora raditi nad promenjivom, poljem klase ili elementom niza!", info);        	    			
     		} else {
-    			// message is appropriate to the assignment
-    			report_error((assignmentIncDec == 1 ? "Inkrementiranje" : "Dekrementiranje" ) + " se mora raditi mora raditi nad promenjivom, poljem klase ili elementom niza!", info);        	    			
+    			// message is appropriate to the read
+    			report_error("Ucitavanje sa standardnog ulaza se moze samo u promenjivu, polje klase ili element niza!", info);        	    			
     		}
 			return false;
 		}
@@ -1634,7 +1654,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		return;
     	}
     	
-    	// destination is right-value
+    	// destination is left-value
     	if(!assignableTo(src, dst.getType())) {
     		// ! Specification constraint: source has to be assignable to the destination
     		report_error("Leva strana (" + structDescription(src) + ") nije kompatibilna desnoj strani (" + structDescription(dst.getType()) + ") pri dodeli!", designatorAssignOperation);        	    		
@@ -1651,7 +1671,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		return;
     	}
     	
-    	// destination is right-value
+    	// destination is left-value
     	if(designatorPostIncrement.getDesignator().obj.getType() != Tab.intType) {
     		// ! Specification constraint: variable has to be int 
 			report_error("Inkrementiranje se mora raditi mora raditi nad tipom int, a ne " + (structDescription(designatorPostIncrement.getDesignator().obj.getType())) + "!", designatorPostIncrement);        	    			
@@ -1666,7 +1686,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		return;
     	}
     	
-    	// destination is right-value
+    	// destination is left-value
     	if(designatorPostDecrement.getDesignator().obj.getType() != Tab.intType) {
     		// ! Specification constraint: variable has to be int 
 			report_error("Dekrementiranje se mora raditi mora raditi nad tipom int, a ne " + (structDescription(designatorPostDecrement.getDesignator().obj.getType())) + "!", designatorPostDecrement);        	    			
@@ -1687,8 +1707,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     public void visit(StatementDoWhile statementDoWhile) {
     	// finish the current do-while
     	doWhileDepthCounter--;
-    	
-    	// TODO: check the condition
     }
     
     // ! Specification constraint: break/continue statement has to be in surrounding do-while

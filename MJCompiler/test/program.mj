@@ -254,5 +254,12 @@ class Kvadar extends Predmet
 		
 		predmeti[4].tezina--;
 		
+		do{
+		//
+		} while(predmeti[4].tezina > 0);
+		
+		read(objC.arr1[0]);
+		
+		
 	}
 }

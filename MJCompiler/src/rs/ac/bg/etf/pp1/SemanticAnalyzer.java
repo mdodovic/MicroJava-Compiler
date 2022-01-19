@@ -152,10 +152,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
 	private int doWhileDepthCounter = 0; // depth of the do-while statement; it cannot be boolean because we do not know when to reset it to the false value
 		
-	//private int functionCallDepthCounter = -1; // depth of function calls, for the arguments processing; f1(1, f2(3, f3(0)), 5) has different parameters
 	private Stack<List<Struct>> stackOfActualParameters = new Stack<List<Struct>>(); // stack of actual parametes for compatibility check. f1(1, f2(3, f3(0)), 5) has different parameters so needs to be nested
-	//private List<List<Struct>> listOfActualParameters = new ArrayList<List<Struct>>(); // list of actual parametes for compatibility check
-	// on every method call increment depthCounter and create new entry in list; depth will represent the index in the list so 
 
 	
 	
@@ -1000,37 +997,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	isVariableArray = false; 
     	
     }
-       
-    @Override
-    public void visit(MethodBodyDummyStart methodBodyDummyStart) {
-    	System.out.println(((CorrectMethodDecl) methodBodyDummyStart.getParent()).getMethodTypeName().getMethName());
-    	System.out.println();
-    	/*
-    	Tab.chainLocalSymbols(currentMethod);
-		currentMethod.setLevel(methodFormalParametersCount);
-		
-		if (overridedMethod != null) {
-			//if (!checkOverriding(currentMethod, overridingMethod)) {
-			//	reportError("Method is an invalid override", methodSignature);
-			//	methodSignature.getMethodTypeName().obj = SymbolTable.noObj;
-			//} else {
-				Tab.currentScope().getOuter().getLocals().deleteKey(overridedMethod.getName());
-				Tab.currentScope().getOuter().addToLocals(currentMethod);
-				//SymbolTable.chainLocalSymbols(overridingMethod);
-				//overridingMethod.setLocals((SymbolDataStructure) currentMethod.getLocalSymbols());
-				//methodBodyDummyStart.getMethodTypeName().obj = currentMethod;
-				
-				if(methodBodyDummyStart.getParent() instanceof CorrectMethodDecl) {
 
-					CorrectMethodDecl x = (CorrectMethodDecl)methodBodyDummyStart.getParent();
-					x.getMethodTypeName().obj = currentMethod;
-				}
-				
-			//}
-		}
-		*/
-    }
-    
     @Override
     public void visit(StetementReturnExpression stetementReturnExpression) {
     	returnFound = true;
@@ -1390,12 +1357,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// type of function should be returned for type compatibility check in expressions
     	factorFunctionCall.struct = checkArgumentsMapping(factorFunctionCall.getFunctionCallName().obj, factorFunctionCall);
     	
-    	
-    	//
-//    	private int actualParametersCounter = 0; // number of actual parameters for the function call
-//   	private List<Struct> listOfActualParameters = new ArrayList<Struct>();
-    	
-    	//
     }
     
     @Override
@@ -1405,12 +1366,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// This is function call which is not within any expression
     	checkArgumentsMapping(designatorFunctionCall.getFunctionCallName().obj, designatorFunctionCall);
      	
-    	//
-//    	private int actualParametersCounter = 0; // number of actual parameters for the function call
-//   	private List<Struct> listOfActualParameters = new ArrayList<Struct>();
-    	
-    	//
-
     }
         
     

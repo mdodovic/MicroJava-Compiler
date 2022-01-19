@@ -127,7 +127,7 @@ public class SemanticPass extends VisitorAdaptor {
 
     @Override
     public void visit(FactorFunctionCall funcCall) {
-    	Obj func = funcCall.getDesignator().obj;
+    	Obj func = funcCall.getFunctionCallName().getDesignator().obj;
     	if(Obj.Meth == func.getKind()){
     		if(Tab.noType == func.getType()) {
 				report_error("Semanticka greska " + func.getName() + " ne moze se koristiti u izrazima jer nema povratnu vrednost ", funcCall);    			

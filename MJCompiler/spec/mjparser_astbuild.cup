@@ -185,6 +185,7 @@ nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor; /* represent single f
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
+nonterminal rs.etf.pp1.symboltable.concepts.Obj FunctionCallName; /* this will represent function name (can be both class functions or global) */ 
 nonterminal ActualPars ActualPars; /* this will say if there are any actual parameters in the function call */ 
 nonterminal ActualParamList ActualParamList; /* this represents actual parameters in function call, that can by any expression */
 
@@ -200,7 +201,7 @@ nonterminal Mulop Mulop; /* contains "*", "/" and "%" */
 /* Dummy productions has just purpose to be first visited in Abstract Syntax Tree */
 nonterminal DoWhileDummyStart DoWhileDummyStart; /* this will represent the beginning of the do-while construction */
 nonterminal InnerClassBodyDummyStart InnerClassBodyDummyStart; /* this will represent the end of class variables declarations and the beginning of constructor+method declarations. */
-nonterminal MethodBodyDummyStart MethodBodyDummyStart; /*   */
+nonterminal MethodBodyDummyStart MethodBodyDummyStart; /*  this will represent the end of method declaration and the beginning of the method body { statements } */
 
 /* precedences */
 
@@ -472,12 +473,14 @@ DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT E
 						(ErrorInDesignatorAssignOperation) error SEMI:l
 					    {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :} {: RESULT=new ErrorInDesignatorAssignOperation(); :}
 						|
-						(DesignatorFunctionCall) Designator:functionName LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new DesignatorFunctionCall(functionName, A1); RESULT.setLine(functionNameleft); :}
+						(DesignatorFunctionCall) FunctionCallName:F1 LEFT_ROUND_BRACKET ActualPars:A2 RIGHT_ROUND_BRACKET SEMI {: RESULT=new DesignatorFunctionCall(F1, A2); RESULT.setLine(F1left); :}
 						|
 						(DesignatorPostIncrement) Designator:variableName INC SEMI {: RESULT=new DesignatorPostIncrement(variableName); RESULT.setLine(variableNameleft); :}
 						|
 						(DesignatorPostDecrement) Designator:variableName DEC SEMI {: RESULT=new DesignatorPostDecrement(variableName); RESULT.setLine(variableNameleft); :}
 						;
+
+FunctionCallName ::= (FunctionCallName) Designator:functionName {: RESULT=new FunctionCallName(functionName); RESULT.setLine(functionNameleft); :};
 
 Designator ::= (ClassFieldDesignator) Designator:D1 POINT IDENT:rightField {: RESULT=new ClassFieldDesignator(D1, rightField); RESULT.setLine(D1left); :}
 			   |
@@ -507,7 +510,7 @@ FactorList ::= (MulOpFactorList) FactorList:F1 Mulop:M2 Factor:F3 {: RESULT=new 
 
 Factor ::= (FactorVariable) Designator:variableName {: RESULT=new FactorVariable(variableName); RESULT.setLine(variableNameleft); :}
 		   |
-		   (FactorFunctionCall) Designator:functionName LEFT_ROUND_BRACKET ActualPars:A1 RIGHT_ROUND_BRACKET {: RESULT=new FactorFunctionCall(functionName, A1); RESULT.setLine(functionNameleft); :}
+		   (FactorFunctionCall) FunctionCallName:F1 LEFT_ROUND_BRACKET ActualPars:A2 RIGHT_ROUND_BRACKET {: RESULT=new FactorFunctionCall(F1, A2); RESULT.setLine(F1left); :}
 		   |
 		   (FactorNumConst) NUMBER:constValue {: RESULT=new FactorNumConst(constValue); RESULT.setLine(constValueleft); :}
 		   |
@@ -528,9 +531,9 @@ ActualPars ::= (Actuals) ActualParamList:A1 {: RESULT=new Actuals(A1); RESULT.se
 			   (NoActuals) {: RESULT=new NoActuals(); :} /* epsilon */
 			   ;
 			
-ActualParamList ::= (ActualParams) ActualParamList:A1 COMMA Expr:E2 {: RESULT=new ActualParams(A1, E2); RESULT.setLine(A1left); :}
+ActualParamList ::= (FurtherActualParameters) ActualParamList:A1 COMMA Expr:E2 {: RESULT=new FurtherActualParameters(A1, E2); RESULT.setLine(A1left); :}
 				    |
-				    (ActualParam) Expr:E1 {: RESULT=new ActualParam(E1); RESULT.setLine(E1left); :}
+				    (FirstActualParameter) Expr:E1 {: RESULT=new FirstActualParameter(E1); RESULT.setLine(E1left); :}
 				    ;		
 
 		

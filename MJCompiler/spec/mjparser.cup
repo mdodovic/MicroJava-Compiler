@@ -185,6 +185,7 @@ nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor; /* represent single f
 
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Type; /* ident that represent the variable type. It can be int/bool/char or an arbitrary class name */
 
+nonterminal rs.etf.pp1.symboltable.concepts.Obj FunctionCallName; /* this will represent function name (can be both class functions or global) */ 
 nonterminal ActualPars; /* this will say if there are any actual parameters in the function call */ 
 nonterminal ActualParamList; /* this represents actual parameters in function call, that can by any expression */
 
@@ -472,12 +473,14 @@ DesignatorStatement ::= (DesignatorAssignOperation) Designator:dest ASSIGNMENT E
 						(ErrorInDesignatorAssignOperation) error SEMI:l
 					    {: parser.report_error("Izvrsen oporavak do ; u liniji " + lleft, null); :}
 						|
-						(DesignatorFunctionCall) Designator:functionName LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET SEMI
+						(DesignatorFunctionCall) FunctionCallName LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET SEMI
 						|
 						(DesignatorPostIncrement) Designator:variableName INC SEMI
 						|
 						(DesignatorPostDecrement) Designator:variableName DEC SEMI
 						;
+
+FunctionCallName ::= (FunctionCallName) Designator:functionName;
 
 Designator ::= (ClassFieldDesignator) Designator POINT IDENT:rightField
 			   |
@@ -507,7 +510,7 @@ FactorList ::= (MulOpFactorList) FactorList Mulop Factor
 
 Factor ::= (FactorVariable) Designator:variableName
 		   |
-		   (FactorFunctionCall) Designator:functionName LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET
+		   (FactorFunctionCall) FunctionCallName LEFT_ROUND_BRACKET ActualPars RIGHT_ROUND_BRACKET
 		   |
 		   (FactorNumConst) NUMBER:constValue
 		   |
@@ -528,9 +531,9 @@ ActualPars ::= (Actuals) ActualParamList
 			   (NoActuals) /* epsilon */
 			   ;
 			
-ActualParamList ::= (ActualParams) ActualParamList COMMA Expr
+ActualParamList ::= (FurtherActualParameters) ActualParamList COMMA Expr
 				    |
-				    (ActualParam) Expr
+				    (FirstActualParameter) Expr
 				    ;		
 
 		

@@ -94,7 +94,7 @@ public class CodeGenerator extends VisitorAdaptor{
 
 	@Override
 	public void visit(FactorFunctionCall factorFunctionCall) {
-		Obj functionObj = factorFunctionCall.getDesignator().obj;
+		Obj functionObj = factorFunctionCall.getFunctionCallName().getDesignator().obj;
 		int offset = functionObj.getAdr() - Code.pc;
 
 		Code.put(Code.call);
@@ -104,13 +104,13 @@ public class CodeGenerator extends VisitorAdaptor{
 	
 	@Override
 	public void visit(DesignatorFunctionCall procCall) {
-		Obj functionObj = procCall.getDesignator().obj;
+		Obj functionObj = procCall.getFunctionCallName().getDesignator().obj;
 		int offset = functionObj.getAdr() - Code.pc;
 
 		Code.put(Code.call);
 		Code.put2(offset);
 		
-		if(procCall.getDesignator().obj.getType() != Tab.noType){
+		if(procCall.getFunctionCallName().getDesignator().obj.getType() != Tab.noType){
 			// If method is not void, but it is called alone
 			// Its returned value will be on estack so it should be removed
 			Code.put(Code.pop);

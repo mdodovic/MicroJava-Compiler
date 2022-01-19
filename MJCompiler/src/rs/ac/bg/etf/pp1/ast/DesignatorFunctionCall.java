@@ -1,28 +1,28 @@
 // generated with ast extension for cup
 // version 0.8
-// 18/0/2022 15:41:55
+// 19/0/2022 13:51:27
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class DesignatorFunctionCall extends DesignatorStatement {
 
-    private Designator Designator;
+    private FunctionCallName FunctionCallName;
     private ActualPars ActualPars;
 
-    public DesignatorFunctionCall (Designator Designator, ActualPars ActualPars) {
-        this.Designator=Designator;
-        if(Designator!=null) Designator.setParent(this);
+    public DesignatorFunctionCall (FunctionCallName FunctionCallName, ActualPars ActualPars) {
+        this.FunctionCallName=FunctionCallName;
+        if(FunctionCallName!=null) FunctionCallName.setParent(this);
         this.ActualPars=ActualPars;
         if(ActualPars!=null) ActualPars.setParent(this);
     }
 
-    public Designator getDesignator() {
-        return Designator;
+    public FunctionCallName getFunctionCallName() {
+        return FunctionCallName;
     }
 
-    public void setDesignator(Designator Designator) {
-        this.Designator=Designator;
+    public void setFunctionCallName(FunctionCallName FunctionCallName) {
+        this.FunctionCallName=FunctionCallName;
     }
 
     public ActualPars getActualPars() {
@@ -38,18 +38,18 @@ public class DesignatorFunctionCall extends DesignatorStatement {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Designator!=null) Designator.accept(visitor);
+        if(FunctionCallName!=null) FunctionCallName.accept(visitor);
         if(ActualPars!=null) ActualPars.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Designator!=null) Designator.traverseTopDown(visitor);
+        if(FunctionCallName!=null) FunctionCallName.traverseTopDown(visitor);
         if(ActualPars!=null) ActualPars.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Designator!=null) Designator.traverseBottomUp(visitor);
+        if(FunctionCallName!=null) FunctionCallName.traverseBottomUp(visitor);
         if(ActualPars!=null) ActualPars.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -59,8 +59,8 @@ public class DesignatorFunctionCall extends DesignatorStatement {
         buffer.append(tab);
         buffer.append("DesignatorFunctionCall(\n");
 
-        if(Designator!=null)
-            buffer.append(Designator.toString("  "+tab));
+        if(FunctionCallName!=null)
+            buffer.append(FunctionCallName.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

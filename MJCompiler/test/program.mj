@@ -1,21 +1,10 @@
-program p
+//Test 303
 
-const int jedan = 1;
+program test_303
 
 const int cinilac = 4, delilac = 3;
 
-		record F
-		{
-			 int x;
-			 int y;
-			 char z;
-		}
-	
-	int zapremina_polje;
-
-
-
-	class Predmet
+class Predmet
 {
 	 int tezina;
 	 int koefTezine;
@@ -23,31 +12,19 @@ const int cinilac = 4, delilac = 3;
 
 	{
 		 Predmet(){
-		   this.koefTezine = 1;	
-		   //super();
+		   koefTezine = 1;	
 		 }
-		 
-		 int zapremina() int predmetDummt; { 
-					 	
-		 	return 0;
-		 }
-		 
+		 void postaviTezinu(int tezina) {this.tezina = tezina * koefTezine;}  
+		 void ucitajTezinu() { read(tezina); }
+		 int zapremina() { return 0;}
+		 int Q() {return zapremina() * tezina;}
+		 void postaviVrstu(char vrsta) {this.vrsta = vrsta;}
 		 char dohvVrstu() { return vrsta; }
 		 int dohvTezinu() { return tezina; }
-		
-		 void postaviVrstu(char vrsta) {this.vrsta = vrsta;}
-		
-		 int f(int a, int b[], int c) int d, x[]; {
-		 	return a + b[a] + d + x[d];
-		 }
-		int Q() {return zapremina() * tezina;}
-		 
-		void ispisi() {
+		 void ispisi() {
 		 	print(vrsta);
 		 	print(Q());
 		 }
-
-
 	}
 }
 
@@ -57,39 +34,23 @@ class Sfera extends Predmet
 	{
 		Sfera() {
 		  super();
-		  //r = super;
 		  vrsta = 's';
 		}
 		
-		void postaviVrstu(char v) {
-		
-			super(this.vrsta);
-		
-		}
-		
-		
+		 void postaviPoluprecnik(int r) {this.r = r; }
+		 
 		 int zapremina()
 			int z;
 		{
-			z = super() + cinilac + this.r / this.koefTezine;
+			z = cinilac;
 			return z *(r/delilac);
 		}
 		
-		char sx() {
-			
-			return this.vrsta;
-		}
-
-		 int f2(int as, int bs[], int cs) int ds, xs[]; {
-		 	return as + bs[as] + ds + xs[ds];
-		 }
-
 		void ispisi(){
 			super();
 			print(r);
 			print(eol);
 		}
-		
 	}
 }
 
@@ -98,120 +59,40 @@ class Kvadar extends Predmet
 	 int a, b, c;
 	{
 		Kvadar() {
-		  //super();
+		  super();
 		  vrsta = 'k';
 		}
 		
+		 void postaviStranice(int a, int b, int c) {this.a = a; this.b = b; this.c = c;}
 		 int zapremina()
-			int kvV;
+			int z;
 		{
-			kvV = a * b * c;
-			return kvV;
+			z = a * b * c;
+			return z;
 		}
-		
-		void postaviStranice(int a, int b, int c) {
-		
-			this.a = a; this.b = b; this.c = c;
+		void ispisi(){
+			super();
+			print(a);
+			print(b);
+			print(c);
+			print(eol);
 		}
-		 
-		 
-	 int f(int ad, int bd[], int cd) int dd, xd[]; {
-	 	this.zapremina();
-	 	zapremina();
-	 	
-	 	
-		 	return ad + bd[dd] + dd + xd[dd];
-		 }
-		 
-		
 	}
 }
-	
-	
-	Predmet p1;
 
-
-// class extending
-	class A { int fa1, fa2; }
-	class B extends A { char fb1;  }
-	class C extends B { int fc1, fc2; A theA; bool arr1[]; }
-	
+int zapreminaK, zapreminaS;
+int tezinaK, tezinaS;
 {
-	void vo(char c) {
-	
-	}
 
-	 int zapremina()
-			int v, alfa, beta, gama;
-		{
-			v = v / (alfa * beta * gama);
-			return v;
-		}
-
-	int sum(int z, int d)
+	void ispis( Predmet p)
 	{
-		return z + d;
+		p.ispisi();
+		print(eol); 
+		print(p.dohvTezinu());
 	}
-	
-	char f2(char c, int xarr[], int yarr[], bool act, char arr[]) int cnt, i; char x1; char y1; int a; {
-		cnt = 0;
-		//f1();
 		
-		if (2 < 3 || 1 > 0 || a <= yarr[i] && a >= xarr[cnt] || 1 == 1 && 2 != 3 && cnt != -1)  {
-			cnt = cnt + 1;
-		}
-		return 'a';
-	}
-	
-	char f22(char c, int xarr[], int yarr[], bool act, Predmet p) int cnt, i; char x1; char y1; int a; {
-		cnt = 0;
-		//f1();
-		
-		if (2 < 3 || 1 > 0 || a <= yarr[i] && a >= xarr[cnt] || 1 == 1 && 2 != 3 && cnt != -1)  {
-			cnt = cnt + 1;
-		}
-		return c;
-	}
-	
-//	int inkrement(int a, int inc) 
-//		int pom; 
-//	{
-//		if(inc == jedan) pom = 1;
-//		else if(inc == 2) pom = a;
-//
-//		return sum(a,pom);
-//	}
-	
-	bool verify() {
-		print('v');
-		return false;
-	}	
-	
-	int f0() {
-		return cinilac / delilac;
-	}
-
-	int f1(char c, bool check) char c1, c2; int l; {
-		l = p1.koefTezine;
-		if(check == true) {
-			c = c1;
-		} else {
-			if(l == 7) 
-				return 0;
-			else 
-				c = c2;
-		}
-		//super();
-		return l;
-	}
-
-	void main() char arc[]; bool br[]; int ar[]; C objC; int c1; Predmet p2; Kvadar k; Sfera s; Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t; {
-		//p2 = new Predmet;
-		k = new Kvadar;
-		s = new Sfera;
-		
-		//p1 = new Kvadar;
-		
+	void main() Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t;
+	{	
 		predmeti = new Predmet[6];
 		s1 = new Sfera;
 		s2 = new Sfera;
@@ -221,29 +102,14 @@ class Kvadar extends Predmet
 		k2 = new Kvadar;
 		k3 = new Kvadar;
 		
-		//k3.koefTezine = 3;
-		//k3.koefTezine2  =3;
+		s1.postaviPoluprecnik(1);
+		s2.postaviPoluprecnik(2);
+		s3.postaviPoluprecnik(3);
 		
-		//c1 = k.postaviStranice(1,2,4);
-		k.zapremina();
-		k.postaviStranice(1,2,4);
-		
-		objC.theA.fa2 = - 2 + 7 * 11 / objC.theA.fa1 - c1 % 5;
-		objC.theA.fa2 = f0() * f1('x', false)  + s.r * 1 / objC.theA.fa1 - c1 % 5;
-		
-		f1('x', false);
-		f1(f22('a', ar, ar, true, k), verify);
-		
-		objC.arr1 = new bool[c1];
-		
-		objC.arr1 = br;
-		
-		objC.arr1[c1] = objC.arr1[c1];
-		
-		objC.arr1[c1] = false;
 
-		objC.arr1[c1] = br[0];
-		objC.arr1[7] = br[0];
+		k1.postaviStranice(1,2,3);
+		k2.postaviStranice(2,3,4);
+		k3.postaviStranice(3,4,5);
 		
 		predmeti[0] = s1;
 		predmeti[2] = s2;
@@ -251,15 +117,47 @@ class Kvadar extends Predmet
 		predmeti[1] = k1;
 		predmeti[3] = k2;
 		predmeti[5] = k3;
-		
-		predmeti[4].tezina--;
-		
+
+		read(t);
+		i=0;
 		do{
-		//
-		} while(predmeti[4].tezina > 0);
+			predmeti[i].postaviTezinu(t);	
+			i++;
+		}while(i<6);
 		
-		read(objC.arr1[0]);
+		zapreminaS = 0;
+		tezinaS = 0;
+		i = 1;
+		do{
+			if(i % 2 == 0) {
+				i++;
+				continue; 
+			}
+			zapreminaS = zapreminaS + predmeti[i - 1].zapremina();
+			tezinaS = tezinaS + predmeti[i - 1].Q();
+			ispis(predmeti[i - 1]);
+			i++;
+		}while(i<=6);
 		
 		
+		zapreminaK = 0; 
+		tezinaK = 0;
+		i = 1;
+		do{
+			if(i % 2 == 1) {
+				i++;
+				continue; 
+			}
+			zapreminaS = zapreminaS + predmeti[i - 1].zapremina();
+			tezinaS = tezinaS + predmeti[i - 1].Q();
+			ispis(predmeti[i - 1]);
+			i++;
+		}while(i<=6);
+		
+		print(zapreminaS); print(eol);
+		print(zapreminaK); print(eol);
+		print(tezinaS); print(eol);
+		print(tezinaK); print(eol);
+
 	}
 }

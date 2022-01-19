@@ -264,9 +264,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	
     @Override
     public void visit(ProgName progName) {
-    	System.out.println("ProgName");
     	progName.obj = Tab.insert(Obj.Prog, progName.getProgName(), Tab.noType);
-		System.out.println("OpenScope");
     	Tab.openScope(); // open global scope (to be in universe scope)
     }
     
@@ -282,7 +280,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     	
     	Tab.chainLocalSymbols(program.getProgName().obj); // chain variables for program scope
-		System.out.println("CloseScope");
     	Tab.closeScope();
     }
     
@@ -311,8 +308,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	}
     	
     	currentType = type.struct; // type of variable that is declaring 
-    	System.out.println("Type: " + structDescription(currentType));
-    	
     	
     }
 
@@ -506,7 +501,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		recordDeclName.obj = Tab.noObj;
     		currentRecord = Tab.noType;
     		currentRecordName = "";
-    		System.out.println("OpenScope");
 
     		Tab.openScope();
     		return;
@@ -518,7 +512,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	recordDeclName.obj = Tab.insert(Obj.Type, recordDeclName.getRecordName(), currentRecord);
 		report_info("Kreiran je record (" + structDescription(currentRecord) + ") " + recordDeclName.getRecordName() + ".", recordDeclName);
-		System.out.println("OpenScope");
         Tab.openScope();
         classOrRecordFieldsScope = true;
     }
@@ -527,7 +520,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     public void visit(RecordDecl recordDecl) {
     	mapOfRecords.put(currentRecord, currentRecordName);
     	Tab.chainLocalSymbols(currentRecord);
-		System.out.println("CloseScope");
     	Tab.closeScope();
     	classOrRecordFieldsScope = false;
     	currentRecord = null;
@@ -570,7 +562,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		currentClassName = "";
     		superClass = Tab.noType;
     		superClassName = "";
-    		System.out.println("OpenScope");
     		Tab.openScope();
     		return;
     	}
@@ -585,7 +576,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	classDeclNameOptionalExtend.obj = Tab.insert(Obj.Type, classDeclNameOptionalExtend.getClassName(), currentClass);
 		report_info("Kreirana je klasa (" + structDescription(currentClass) + ") " + classDeclNameOptionalExtend.getClassName() + ".", classDeclNameOptionalExtend);
-		System.out.println("OpenScope");
         Tab.openScope();
  
 // Uncomment when find purpose! 
@@ -715,7 +705,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	Tab.insert(Obj.Meth, currentClassName, Tab.noType);
       	currentMethod = Tab.insert(Obj.Meth, currentClassName, Tab.noType);
     	
-		System.out.println("OpenScope");
     	Tab.openScope(); // open new scope for dummy constructor
     	
     	// every method in class has predefined parameter this
@@ -725,7 +714,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	currentMethod.setLevel(1);
     	Tab.chainLocalSymbols(currentMethod); // chain the only parameter this
 
-		System.out.println("CloseScope");
     	Tab.closeScope(); // close scope for dummy constructor
     	
     	methodFormalParametersCount = 0;
@@ -807,7 +795,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		currentMethod = Tab.noObj;
     		constructorBody = true;
     		constructorDeclName.obj = Tab.noObj;
-    		System.out.println("OpenScope");
     		Tab.openScope();
     		return;
     	}
@@ -819,7 +806,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 		constructorBody = true;
     	constructorDeclName.obj = currentMethod;
     	
-		System.out.println("OpenScope");
     	Tab.openScope(); // open new scope for constructor
     	// All variables declared after is in this (inner) scope and can overdeclared global variables.
 		
@@ -841,7 +827,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	currentMethod.setLevel(methodFormalParametersCount);
  	
     	Tab.chainLocalSymbols(currentMethod);
-		System.out.println("CloseScope");
 
     	Tab.closeScope();
     	
@@ -863,7 +848,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     public void visit(ClassDecl ClassDecl) {
     	mapOfClasses.put(currentClass, currentClassName);
     	Tab.chainLocalSymbols(currentClass);
-		System.out.println("CloseScope");
     	Tab.closeScope();
     	currentClass = null;	
     	currentClassName = null;	
@@ -940,7 +924,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	if(checkMethodNameRedefinition(methodTypeName.getMethName(), methodTypeName)) {
     		currentMethod = Tab.noObj;
     		methodTypeName.obj = Tab.noObj;
-    		System.out.println("OpenScope");
     		Tab.openScope();
     		return;
     	}
@@ -965,8 +948,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	methodTypeName.obj = currentMethod;
     	
-		System.out.println("OpenScope");
-
     	Tab.openScope(); // open new scope for method. 
     	// All variables declared after is in this (inner) scope and can overdeclared global variables.
 		
@@ -1121,8 +1102,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	checkCurrentMethodAndOverrideMethod(correctMethodDecl);
     	
-    	System.out.println("CloseScope");
-
     	Tab.closeScope();
     	
     	// reset 
@@ -1487,7 +1466,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     			// ! Specification constraint: super() in the constructor body will call constructor from the super class
         		
     			for (Obj constructorNode : superClass.getMembers()) {
-    				//System.out.println(obj.getName());
     				if (constructorNode.getName().equals(superClassName)) {
     					// constructor from the super class
     					// object is passed to the upper nodes in processing
@@ -1501,7 +1479,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     			// ! Specification constraint: super() in the method will call the method which was overrided
     			
     			for (Obj methodNode : superClass.getMembers()) {
-    				//System.out.println(obj.getName());
     				if (methodNode.getName().equals(currentMethod.getName())) {
     					// overrided method from the super class
     					// object is passed to the upper nodes in processing

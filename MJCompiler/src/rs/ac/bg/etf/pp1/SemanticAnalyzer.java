@@ -1453,18 +1453,47 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// it can be because the symbol is not defined previously: which is error
     	// or because this simbol is "super" and this means that we need to call a method or the constructor from the superclass;
     	
-    	if("super".equals(simpleDesignator.getName())) {
-    		if(currentClass == null) {
+    	if("super".equals(simpleDesignator.getName()) && simpleDesignator.getParent() instanceof FunctionCallName ) {
+    		// this instanceof is because the case of using symbol super without "()" or "(arguments)" is treated as an error
+    		if(currentClass == null || currentClass == Tab.noType) {
         		report_error("Poziv metoda/konstruktora nadklase funkcijom super se ne moze koristiti izvan tela metode/konstruktora klase!", simpleDesignator);
         		simpleDesignator.obj = Tab.noObj;
         		return;
     		}
+    		if(superClass == null || superClass == Tab.noType) {
+        		report_error("Poziv metoda/konstruktora nadklase funkcijom super je moguc samo ukoliko trenutna klasa ima nadklasu!", simpleDesignator);
+        		simpleDesignator.obj = Tab.noObj;
+        		return;    			
+    		}
     		// we are in the class context
     		if(constructorBody == true) {
+    			// ! Specification constraint: super() in the constructor body will call constructor from the super class
+        		
+    			for (Obj constructorNode : superClass.getMembers()) {
+    				//System.out.println(obj.getName());
+    				if (constructorNode.getName().equals(superClassName)) {
+    					// constructor from the super class
+    					// object is passed to the upper nodes in processing
+    					simpleDesignator.obj = constructorNode;    	
+    			    	report_info("Poziv konstruktora nadklase (" + superClassName + ") iz konstruktora tekuce klase (" + currentClassName + ") koriscenjem predefinisane metode super().", simpleDesignator);
+    			    	return;
+    				}
+    			}
     			
-    			System.out.println();
     		} else {
-    			System.out.println();
+    			// ! Specification constraint: super() in the method will call the method which was overrided
+    			
+    			for (Obj methodNode : superClass.getMembers()) {
+    				//System.out.println(obj.getName());
+    				if (methodNode.getName().equals(currentMethod.getName())) {
+    					// overrided method from the super class
+    					// object is passed to the upper nodes in processing
+    					simpleDesignator.obj = methodNode;    	
+    			    	report_info("Poziv metode " + currentMethod.getName() + " nadklase (" + superClassName + ") iz konstruktora tekuce klase (" + currentClassName + ") koriscenjem predefinisane metode super.", simpleDesignator);
+    			    	return;
+    				}
+    			}
+
     		}
     	}
     	

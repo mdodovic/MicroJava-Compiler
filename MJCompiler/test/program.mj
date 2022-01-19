@@ -24,6 +24,7 @@ const int cinilac = 4, delilac = 3;
 	{
 		 Predmet(){
 		   this.koefTezine = 1;	
+		   //super();
 		 }
 		 
 		 int zapremina() int predmetDummt; { 
@@ -33,6 +34,8 @@ const int cinilac = 4, delilac = 3;
 		 
 		 char dohvVrstu() { return vrsta; }
 		 int dohvTezinu() { return tezina; }
+		
+		 void postaviVrstu(char vrsta) {this.vrsta = vrsta;}
 		
 		 int f(int a, int b[], int c) int d, x[]; {
 		 	return a + b[a] + d + x[d];
@@ -54,14 +57,21 @@ class Sfera extends Predmet
 	{
 		Sfera() {
 		  super();
+		  //r = super;
 		  vrsta = 's';
+		}
+		
+		void postaviVrstu(char v) {
+		
+			super(this.vrsta);
+		
 		}
 		
 		
 		 int zapremina()
 			int z;
 		{
-			z = cinilac + this.r / this.koefTezine;
+			z = super() + cinilac + this.r / this.koefTezine;
 			return z *(r/delilac);
 		}
 		

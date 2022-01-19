@@ -421,6 +421,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	insertVariableIntoSymbolTable(varFromLastPart.getVarName(), varFromLastPart);
     	
+    	// reset array determining after inserting into symbol table
     	isVariableArray = false;
 
     }
@@ -433,6 +434,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	insertVariableIntoSymbolTable(varFromMultiplePart.getVarName(), varFromMultiplePart);
     	
+    	// reset array determining after inserting into symbol table
     	isVariableArray = false;
 
     }
@@ -642,6 +644,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	insertClassVariableIntoSymbolTable(classSingleVarDecl.getClassFieldName(), classSingleVarDecl);
     	
+    	// reset array determining after inserting into symbol table
     	isVariableArray = false;
     }
 
@@ -948,6 +951,9 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	Tab.insert(Obj.Var, formalParameterDeclaration.getParameterName(), parameterType);
     	
+    	// reset array determining after inserting into symbol table
+    	isVariableArray = false; 
+    	
     }
        
     @Override
@@ -1219,20 +1225,20 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     public void visit(ArrayDesignator arrayDesignator) {
     	
     	// Obj arrayDesignatorNode = Tab.find(arrayDesignator.getDesignator().obj.getName());
-    	boolean errorHappened = false;
     	if(arrayDesignator.getDesignator().obj.getType().getKind() != Struct.Array) {
     	    // ! Specification constraint: Designator has to be Array
     		report_error("Promenjiva " + arrayDesignator.getDesignator().obj.getName() + " mora biti nizovskog tipa" , arrayDesignator);        	
-        	errorHappened = true;
+        	arrayDesignator.obj = Tab.noObj;
+        	return;
     	}
     	if(arrayDesignator.getExpr().struct != Tab.intType) {
     	    // ! Specification constraint: array index expression has to be intType
     		report_error("Indeks niza mora biti tipa int a ne tipa " + structDescription(arrayDesignator.getExpr().struct), arrayDesignator);        	
-        	errorHappened = true;
+        	arrayDesignator.obj = Tab.noObj;
+        	return;
     	}
-    	if(errorHappened == false) {
-    		report_info("Pristup elementu niza " + arrayDesignator.getDesignator().obj.getName(), arrayDesignator);
-    	}
+
+    	report_info("Pristup elementu niza " + arrayDesignator.getDesignator().obj.getName(), arrayDesignator);
     	
     	// Obj.Elem is used to send info about array element to the upper classes:
     	// (FactorVariable, ArrayDesignator, ClassFieldDesignator, DesignatorAssignOperation, DesignatorPostIncrement, DesignatorPostDecrement, StatementRead)

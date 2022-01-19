@@ -34,7 +34,13 @@ const int cinilac = 4, delilac = 3;
 		 char dohvVrstu() { return vrsta; }
 		 int dohvTezinu() { return tezina; }
 		
-		 
+		 int f(int a, int b[], bool c) int d, x[]; {
+		 	return a + b[a] + d + x[d];
+		 }
+
+
+
+
 	}
 }
 
@@ -104,6 +110,16 @@ class Kvadar extends Predmet
 	int sum(int z, int d)
 	{
 		return z + d;
+	}
+	
+	char f2(char c, int xarr[], int yarr[], bool act, char arr[]) int cnt, i; char x1; char y1; int a; {
+		cnt = 0;
+		//f1();
+		
+		if (2 < 3 || 1 > 0 || a <= yarr[i] && a >= xarr[cnt] || 1 == 1 && 2 != 3 && cnt != -1)  {
+			cnt = cnt + 1;
+		}
+		return 'a';
 	}
 	
 //	int inkrement(int a, int inc) 

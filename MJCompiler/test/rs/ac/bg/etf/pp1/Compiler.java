@@ -29,7 +29,10 @@ public class Compiler {
 		
 		Reader br = null;
 		try {
-			File sourceCode = new File("test/program.mj");
+			
+			String mjFileName = "program";
+			
+			File sourceCode = new File("test/" + mjFileName + ".mj");
 //			File sourceCode = new File("test/class_extends.mj");
 			log.info("Compiling source file: " + sourceCode.getAbsolutePath());
 			
@@ -64,7 +67,20 @@ public class Compiler {
 			
 	        if(!p.errorDetected && v.passed()) {
 				log.info("Parsiranje uspesno zavrseno!");
-			}else{
+
+
+				File objFile = new File("test/" + mjFileName + ".obj");
+				if(objFile.exists()) objFile.delete();
+				
+				CodeGenerator codeGenerator = new CodeGenerator();
+				prog.traverseBottomUp(codeGenerator);
+				
+				Code.dataSize = v.getProgramVariablesNumber();
+				Code.mainPc = codeGenerator.getMainPc();
+				Code.write(new FileOutputStream(objFile));
+	        	
+				
+	        }else{
 				log.error("Parsiranje NIJE uspesno zavrseno!");
 			}
 
@@ -160,7 +176,7 @@ public class Compiler {
 				File objFile = new File("test/" + mjFileName + ".obj");
 				if(objFile.exists()) objFile.delete();
 				
-				CodeGenerator codeGenerator = new CodeGenerator();
+				CodeGeneratorTutorial codeGenerator = new CodeGeneratorTutorial();
 				prog.traverseBottomUp(codeGenerator);
 				
 				Code.dataSize = v.nVars;

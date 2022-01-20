@@ -149,7 +149,7 @@ public class MJParserTest {
 				File objFile = new File("test/" + mjFileName + ".obj");
 				if(objFile.exists()) objFile.delete();
 				
-				CodeGenerator codeGenerator = new CodeGenerator();
+				CodeGeneratorTutorial codeGenerator = new CodeGeneratorTutorial();
 				prog.traverseBottomUp(codeGenerator);
 				
 				Code.dataSize = v.nVars;

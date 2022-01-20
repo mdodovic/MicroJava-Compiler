@@ -1,0 +1,36 @@
+program ABC
+
+int x, y;
+
+class TCalc {
+
+	int tax;
+
+	{
+		void m(int i) { tax = i; }  
+		void f(int i) { }
+	}
+}
+
+class ATCalc extends TCalc {
+
+	{
+		void m(int i) { f(i); }
+	}
+}
+
+
+{
+
+	int fun(int arg) {
+		return arg * arg;
+	}
+		
+	void main() TCalc obj; {	
+		
+		x = fun(3);
+		obj = new ATCalc;
+		obj.m(4);
+
+	}
+}

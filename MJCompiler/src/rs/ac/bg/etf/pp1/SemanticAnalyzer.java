@@ -568,8 +568,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     private void transferFieldsFromSuperClassToCurrentClass() {
     	for(Obj classMember: superClass.getMembers()) {
-    		if(classMember.getKind() == Obj.Fld) {
-    			// this is variable from super class
+    		if(classMember.getKind() == Obj.Fld && !"VTF_address".equals(classMember.getName())) {
+    			// this is variable from super class (we do not copy virtual table address, every class has it inserted immediately after the scope opening
     			Tab.insert(Obj.Fld, classMember.getName(), classMember.getType());
     		}
    		}
@@ -601,10 +601,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 		report_info("Kreirana je klasa (" + structDescription(currentClass) + ") " + classDeclNameOptionalExtend.getClassName() + ".", classDeclNameOptionalExtend);
         Tab.openScope();
  
-// Uncomment when find purpose! 
-//        if (currentClass != SymbolTable.noType) {
-//			SymbolTable.insert(Obj.Fld, "$tvf" + className, SymbolTable.intType);
-//		}
+        // insert mandatory field: virtual function table address
+        Tab.insert(Obj.Fld, "VTF_address", Tab.intType);
         
         transferFieldsFromSuperClassToCurrentClass();
         

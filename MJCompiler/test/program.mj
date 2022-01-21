@@ -10,17 +10,23 @@ program test_303
 //		return c+2;
 //	}
 
+	int f(int y) int x; {
+		x = y;
+		x++;
+		//return true;
+	}
+
 	void main() 
 	{	
 		// x = 3;
 		
 		print(1);
-		print('a');
+		print(ord('a'));
 		print(true);
-		print(1, 4);
+		print(chr(65), 4);
 		print('a', 4);
 		print(true, 4);
-		
+		return;
 		//y = 4 + 9 + k();
 		
 		//print(x);

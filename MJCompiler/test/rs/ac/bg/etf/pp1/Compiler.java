@@ -76,7 +76,7 @@ public class Compiler {
 				prog.traverseBottomUp(codeGenerator);
 				
 				Code.dataSize = v.getProgramVariablesNumber();
-				Code.mainPc = codeGenerator.getMainPc();
+				Code.mainPc = codeGenerator.getFirstInstruction();
 				Code.write(new FileOutputStream(objFile));
 	        	
 				

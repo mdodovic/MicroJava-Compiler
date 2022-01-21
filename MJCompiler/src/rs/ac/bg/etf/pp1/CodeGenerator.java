@@ -14,39 +14,50 @@ import rs.etf.pp1.symboltable.concepts.Obj;
 
 public class CodeGenerator extends VisitorAdaptor {
 	
-	private int mainPc;	// program start (in x86 it is _start label)
+	private int _start = -1;	// program start (in x86 it is _start label)
 	
-	public int getMainPc() {
-		return mainPc;
+	public int getFirstInstruction() {
+		return _start;
 	}
 	
+	private void createVirtualTablePointer() {
+		
+		
+	}
 	
 	public void visit(MethodTypeName methodTypeName){
 		
-		if("main".equalsIgnoreCase(methodTypeName.getMethName())){
-			mainPc = Code.pc;
-		}
-
+		// address of the method is the current pc (address of the first instruction in method)
 		methodTypeName.obj.setAdr(Code.pc);
-		// Collect arguments and local variables
-		//SyntaxNode methodNode = methodTypeName.getParent();
-	
-		//VarCounter varCnt = new VarCounter();
-		//methodNode.traverseTopDown(varCnt);
 		
-		//FormParamCounter fpCnt = new FormParamCounter();
-		//methodNode.traverseTopDown(fpCnt);
+		if("main".equals(methodTypeName.getMethName())){
+			// _start is the first instruction which will be executed:
+			// it starts with system setup code and then continue with void main() method
+			_start = Code.pc;
+		}
 		
-		// Generate the entry
+		// entering in every method begins with the instruction
+		// enter (parameters) (parameters + local variables)
 		Code.put(Code.enter);
-//		Code.put(fpCnt.getCount());
-//		Code.put(fpCnt.getCount() + varCnt.getCount());
-		Code.put(0);
-		Code.put(0);
-	}
+		Code.put(methodTypeName.obj.getLevel()); // level is number of formal arguments
+		Code.put(methodTypeName.obj.getLocalSymbols().size()); // local symbols are both formal arguments and local variables
+		
+		// system setup code if this is _start method: 
+		// - ord, chr, len are allready defined
+		// - virtual table pointer:
+		if(_start != -1) {
+			createVirtualTablePointer();
+		}
+	}	
 	
 	@Override
 	public void visit(CorrectMethodDecl correctMethodDecl) {
+		
+		//System.out.println(correctMethodDecl.getMethodTypeName().getMethName());
+			
+		//Obj methodNode = Tab.find(correctMethodDecl.getMethodTypeName().getMethName());
+		
+		//System.out.println(methodNode.getName());
 		
 		Code.put(Code.exit);
 		Code.put(Code.return_);

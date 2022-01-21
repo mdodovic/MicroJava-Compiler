@@ -1,5 +1,6 @@
 package rs.ac.bg.etf.pp1;
 
+import rs.ac.bg.etf.pp1.ast.ArrayDesignator;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostDecrement;
@@ -11,6 +12,7 @@ import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.FactorVariable;
+import rs.ac.bg.etf.pp1.ast.IndirectArrayNameDesignator;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
 import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
 import rs.ac.bg.etf.pp1.ast.MultiplyOp;
@@ -117,8 +119,20 @@ public class CodeGenerator extends VisitorAdaptor {
 		}		
 	}
 	
+	/* designator: array element */
 	
-	/* designator: */
+	@Override
+	public void visit(IndirectArrayNameDesignator indirectArrayNameDesignator) {
+		Code.load(indirectArrayNameDesignator.getDesignator().obj);
+	}
+	
+	@Override
+	public void visit(ArrayDesignator arrayDesignator) {
+		//System.out.println("AD");
+		//System.out.println(arrayDesignator.getDesignator().obj);
+	}
+	
+	/* designator: simple name */
 
 	@Override
 	public void visit(SimpleDesignator simpleDesignator) {
@@ -183,9 +197,14 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(FactorVariable factorVariable) {
 		// this is cumulative designator (includes access to the fields and elements of an array)
 		Code.load(factorVariable.getDesignator().obj);
+		System.out.println(factorVariable.getDesignator().obj.getName());
+		System.out.println("FB");
 	}
+
+	/* factor: new class operator */
 	
-	/* new operator */
+	
+	/* factor: new array operator */
 	
 	@Override
 	public void visit(FactorArrayNewOperator factorArrayNewOperator) {

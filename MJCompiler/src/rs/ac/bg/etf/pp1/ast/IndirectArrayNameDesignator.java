@@ -5,24 +5,23 @@
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class ConstructorDeclName implements SyntaxNode {
+public class IndirectArrayNameDesignator implements SyntaxNode {
 
     private SyntaxNode parent;
     private int line;
-    public rs.etf.pp1.symboltable.concepts.Obj obj = null;
+    private Designator Designator;
 
-    private String constructorName;
-
-    public ConstructorDeclName (String constructorName) {
-        this.constructorName=constructorName;
+    public IndirectArrayNameDesignator (Designator Designator) {
+        this.Designator=Designator;
+        if(Designator!=null) Designator.setParent(this);
     }
 
-    public String getConstructorName() {
-        return constructorName;
+    public Designator getDesignator() {
+        return Designator;
     }
 
-    public void setConstructorName(String constructorName) {
-        this.constructorName=constructorName;
+    public void setDesignator(Designator Designator) {
+        this.Designator=Designator;
     }
 
     public SyntaxNode getParent() {
@@ -46,26 +45,32 @@ public class ConstructorDeclName implements SyntaxNode {
     }
 
     public void childrenAccept(Visitor visitor) {
+        if(Designator!=null) Designator.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
+        if(Designator!=null) Designator.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
+        if(Designator!=null) Designator.traverseBottomUp(visitor);
         accept(visitor);
     }
 
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("ConstructorDeclName(\n");
+        buffer.append("IndirectArrayNameDesignator(\n");
 
-        buffer.append(" "+tab+constructorName);
+        if(Designator!=null)
+            buffer.append(Designator.toString("  "+tab));
+        else
+            buffer.append(tab+"  null");
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [ConstructorDeclName]");
+        buffer.append(") [IndirectArrayNameDesignator]");
         return buffer.toString();
     }
 }

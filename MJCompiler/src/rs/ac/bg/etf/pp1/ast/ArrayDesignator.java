@@ -1,28 +1,28 @@
 // generated with ast extension for cup
 // version 0.8
-// 21/0/2022 15:30:2
+// 21/0/2022 16:56:40
 
 
 package rs.ac.bg.etf.pp1.ast;
 
 public class ArrayDesignator extends Designator {
 
-    private Designator Designator;
+    private IndirectArrayNameDesignator IndirectArrayNameDesignator;
     private Expr Expr;
 
-    public ArrayDesignator (Designator Designator, Expr Expr) {
-        this.Designator=Designator;
-        if(Designator!=null) Designator.setParent(this);
+    public ArrayDesignator (IndirectArrayNameDesignator IndirectArrayNameDesignator, Expr Expr) {
+        this.IndirectArrayNameDesignator=IndirectArrayNameDesignator;
+        if(IndirectArrayNameDesignator!=null) IndirectArrayNameDesignator.setParent(this);
         this.Expr=Expr;
         if(Expr!=null) Expr.setParent(this);
     }
 
-    public Designator getDesignator() {
-        return Designator;
+    public IndirectArrayNameDesignator getIndirectArrayNameDesignator() {
+        return IndirectArrayNameDesignator;
     }
 
-    public void setDesignator(Designator Designator) {
-        this.Designator=Designator;
+    public void setIndirectArrayNameDesignator(IndirectArrayNameDesignator IndirectArrayNameDesignator) {
+        this.IndirectArrayNameDesignator=IndirectArrayNameDesignator;
     }
 
     public Expr getExpr() {
@@ -38,18 +38,18 @@ public class ArrayDesignator extends Designator {
     }
 
     public void childrenAccept(Visitor visitor) {
-        if(Designator!=null) Designator.accept(visitor);
+        if(IndirectArrayNameDesignator!=null) IndirectArrayNameDesignator.accept(visitor);
         if(Expr!=null) Expr.accept(visitor);
     }
 
     public void traverseTopDown(Visitor visitor) {
         accept(visitor);
-        if(Designator!=null) Designator.traverseTopDown(visitor);
+        if(IndirectArrayNameDesignator!=null) IndirectArrayNameDesignator.traverseTopDown(visitor);
         if(Expr!=null) Expr.traverseTopDown(visitor);
     }
 
     public void traverseBottomUp(Visitor visitor) {
-        if(Designator!=null) Designator.traverseBottomUp(visitor);
+        if(IndirectArrayNameDesignator!=null) IndirectArrayNameDesignator.traverseBottomUp(visitor);
         if(Expr!=null) Expr.traverseBottomUp(visitor);
         accept(visitor);
     }
@@ -59,8 +59,8 @@ public class ArrayDesignator extends Designator {
         buffer.append(tab);
         buffer.append("ArrayDesignator(\n");
 
-        if(Designator!=null)
-            buffer.append(Designator.toString("  "+tab));
+        if(IndirectArrayNameDesignator!=null)
+            buffer.append(IndirectArrayNameDesignator.toString("  "+tab));
         else
             buffer.append(tab+"  null");
         buffer.append("\n");

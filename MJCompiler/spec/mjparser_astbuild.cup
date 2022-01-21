@@ -177,8 +177,8 @@ nonterminal SingleStatement SingleStatement; /* this is collection of all simple
 nonterminal DesignatorStatement DesignatorStatement; /* this will collect assignment, function calls, inc and dec statements */
 
 nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator; /* this will represent variable, or className.someName (with arbitrary depth of indirection) or arrayName[expression]*/
-nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr; /* represent expressions which optionally can start with "-" */
-nonterminal rs.etf.pp1.symboltable.concepts.Struct TermList; /* represent list of terms with possible +/- operators because of associativity  */
+nonterminal IndirectArrayNameDesignator IndirectArrayNameDesignator; /* this will represent arrayName in Designator; this node will be visited before [index] and the array-name code will be generated before index code which is the right order */
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr; /* represent single expressions which optionally can start with and list of terms with possible +/- operators because of associativity */
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Term; /* represent single term which is the list of factors */
 nonterminal rs.etf.pp1.symboltable.concepts.Struct FactorList; /* represent list of factors with possible mul/mod/div operators because of associativity */
 nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor; /* represent single factor that can be variable, functionCall, number, character, true/false, creation of an array (new int[expression]) and expression surrounded with "(" ")" */
@@ -201,6 +201,7 @@ nonterminal Mulop Mulop; /* contains "*", "/" and "%" */
 /* Dummy productions has just purpose to be first visited in Abstract Syntax Tree */
 nonterminal DoWhileDummyStart DoWhileDummyStart; /* this will represent the beginning of the do-while construction */
 nonterminal InnerClassBodyDummyStart InnerClassBodyDummyStart; /* this will represent the end of class variables declarations and the beginning of constructor+method declarations. */
+
 
 /* precedences */
 
@@ -481,10 +482,12 @@ FunctionCallName ::= (FunctionCallName) Designator:functionName {: RESULT=new Fu
 
 Designator ::= (ClassFieldDesignator) Designator:D1 POINT IDENT:rightField {: RESULT=new ClassFieldDesignator(D1, rightField); RESULT.setLine(D1left); :}
 			   |
-			   (ArrayDesignator) Designator:D1 LEFT_SQUARE_BRACKET Expr:arrayIndex RIGHT_SQUARE_BRACKET {: RESULT=new ArrayDesignator(D1, arrayIndex); RESULT.setLine(D1left); :}
+			   (ArrayDesignator) IndirectArrayNameDesignator:I1 LEFT_SQUARE_BRACKET Expr:arrayIndex RIGHT_SQUARE_BRACKET {: RESULT=new ArrayDesignator(I1, arrayIndex); RESULT.setLine(I1left); :}
 			   |
 			   (SimpleDesignator) IDENT:name {: RESULT=new SimpleDesignator(name); RESULT.setLine(nameleft); :}
 			   ;
+
+IndirectArrayNameDesignator ::= (IndirectArrayNameDesignator) Designator:D1 {: RESULT=new IndirectArrayNameDesignator(D1); RESULT.setLine(D1left); :};
 
 /* Expressions */
 

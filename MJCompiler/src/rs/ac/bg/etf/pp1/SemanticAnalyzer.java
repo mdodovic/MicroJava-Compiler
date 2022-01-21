@@ -1535,9 +1535,9 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     public void visit(ArrayDesignator arrayDesignator) {
     	
     	// Obj arrayDesignatorNode = Tab.find(arrayDesignator.getDesignator().obj.getName());
-    	if(arrayDesignator.getDesignator().obj.getType().getKind() != Struct.Array) {
+    	if(arrayDesignator.getIndirectArrayNameDesignator().getDesignator().obj.getType().getKind() != Struct.Array) {
     	    // ! Specification constraint: Designator has to be Array
-    		report_error("Promenjiva " + arrayDesignator.getDesignator().obj.getName() + " mora biti nizovskog tipa" , arrayDesignator);        	
+    		report_error("Promenjiva " + arrayDesignator.getIndirectArrayNameDesignator().getDesignator().obj.getName() + " mora biti nizovskog tipa" , arrayDesignator);        	
         	arrayDesignator.obj = Tab.noObj;
         	return;
     	}
@@ -1548,12 +1548,12 @@ public class SemanticAnalyzer extends VisitorAdaptor{
         	return;
     	}
 
-    	report_info("Pristup elementu niza " + arrayDesignator.getDesignator().obj.getName(), arrayDesignator);
+    	report_info("Pristup elementu niza " + arrayDesignator.getIndirectArrayNameDesignator().getDesignator().obj.getName(), arrayDesignator);
     	
     	// Obj.Elem is used to send info about array element to the upper classes:
     	// (FactorVariable, ArrayDesignator, ClassFieldDesignator, DesignatorAssignOperation, DesignatorPostIncrement, DesignatorPostDecrement, StatementRead)
     	// key is to send the type of array's elements, not the type Array
-    	arrayDesignator.obj = new Obj(Obj.Elem, arrayDesignator.getDesignator().obj.getName(), arrayDesignator.getDesignator().obj.getType().getElemType());
+    	arrayDesignator.obj = new Obj(Obj.Elem, arrayDesignator.getIndirectArrayNameDesignator().getDesignator().obj.getName(), arrayDesignator.getIndirectArrayNameDesignator().getDesignator().obj.getType().getElemType());
     
     }
     

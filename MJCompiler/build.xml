@@ -78,7 +78,7 @@
 			<classpath>
 				<pathelement path="lib/mj-runtime-1.1.jar"/>
 			</classpath>
-			<!--<arg value="-debug"/>-->
+			<arg value="-debug"/>
 		</java>
 	</target>
 	

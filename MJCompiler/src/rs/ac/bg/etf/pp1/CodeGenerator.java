@@ -53,12 +53,13 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(CorrectMethodDecl correctMethodDecl) {
 		
-		//System.out.println(correctMethodDecl.getMethodTypeName().getMethName());
-			
-		//Obj methodNode = Tab.find(correctMethodDecl.getMethodTypeName().getMethName());
-		
-		//System.out.println(methodNode.getName());
-		
+		// if non-void method does not have the return statement information about it is passed from semantic analysis
+		//if(correctMethodDecl.getMethodTypeName().obj.getFpPos() == -1) {
+			// fpPos is set to -1 when it is realized that 
+		//	Code.put(Code.trap);
+	    //   Code.put(1);
+		//}
+				
 		Code.put(Code.exit);
 		Code.put(Code.return_);
 	}

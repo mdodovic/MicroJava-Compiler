@@ -1079,10 +1079,12 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     @Override
     public void visit(CorrectMethodDecl correctMethodDecl) {
     	
-    	// This error will be treated as runtime error
-    	//if(!returnFound && currentMethod.getType() != Tab.noType) {
-		//	report_error("Funkcija " + currentMethod.getName() + " nema (adekvatan) return iskaz!", correctMethodDecl);    		
-    	//}
+    	if(!returnFound && currentMethod.getType() != Tab.noType) {
+			report_error("Funkcija " + currentMethod.getName() + " nema (adekvatan) return iskaz!", correctMethodDecl);    		
+	    	// This error can be treated as runtime error: pass info through field fpPos
+    		// in code generator this will be threated as error
+    		// correctMethodDecl.getMethodTypeName().obj.setFpPos(-1);
+    	}
 
     	currentMethod.setLevel(methodFormalParametersCount);
 

@@ -13,7 +13,7 @@ program test_303
 	int f(int y) int x; {
 		x = y;
 		x++;
-		//return true;
+		return x;
 	}
 
 	void main() 
@@ -26,7 +26,8 @@ program test_303
 		print(chr(65), 4);
 		print('a', 4);
 		print(true, 4);
-		return;
+		
+		//print(f(4));
 		//y = 4 + 9 + k();
 		
 		//print(x);

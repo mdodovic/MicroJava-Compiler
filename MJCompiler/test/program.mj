@@ -12,13 +12,14 @@ program test_303
 
 	void main() 
 	{	
-		x = 3;
+		// x = 3;
 		
-		//print(1);
+		print(1);
+		print(1, 5);
 		
 		//y = 4 + 9 + k();
 		
-		print(x);
+		//print(x);
 		
 		//k();
 		

@@ -100,33 +100,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	private Logger log = Logger.getLogger(getClass());
 
 	
-	// Symbol table extensions
-	// bool type
-	public static final Struct boolType = new Struct(Struct.Bool);
-	
-	// super class reference can be assigned to sub class reference
-	public static boolean assignableTo(Struct src, Struct dst) {
-		// check if they are assignable without classes extensions:
-		if(src.assignableTo(dst)) {
-			return true;
-		}
-		// we cannot declare those two struct nodes as non-assignable until we check its class extensions tree
-		if(src.getKind() == Struct.Class && dst.getKind() == Struct.Class) {
-			// both of them are classes
-			Struct curr = src;
-            while (curr != null) {
-
-            	if (curr.equals(dst)) {
-            		// one of the super classes is equal to destination
-                    return true;
-                }
-
-                curr = curr.getElemType();
-            }
-		}
-		
-		return false;
-	}
 	
 	// print symbol table into log
 	
@@ -197,7 +170,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	/* Global utility functions */
 
 	public SemanticAnalyzer() {
-		Tab.currentScope.addToLocals(new Obj(Obj.Type, "bool", boolType));
+		Tab.currentScope.addToLocals(new Obj(Obj.Type, "bool", TabStaticExtensions.boolType));
 	}	
 	
 	// return name of struct type for the given object
@@ -376,7 +349,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     		// error happened
     		return;
     	}
-    	if(!checkConstantTypeConstraint(booleanValue.getConstName(), boolType, booleanValue)) {
+    	if(!checkConstantTypeConstraint(booleanValue.getConstName(), TabStaticExtensions.boolType, booleanValue)) {
     		// error happened
     		return;
     	}
@@ -385,7 +358,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 		if(booleanValue.getBoolConstValue() == true)
 			constValue = 1;
     	
-    	insertConstantIntoSymbolTable(booleanValue.getConstName(), boolType, constValue, booleanValue);
+    	insertConstantIntoSymbolTable(booleanValue.getConstName(), TabStaticExtensions.boolType, constValue, booleanValue);
     	
     }
     
@@ -1142,7 +1115,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     @Override
     public void visit(FactorBoolConst factorBoolConst) {
         // send type (boolType) to FactorList and then to Term
-    	factorBoolConst.struct = boolType;
+    	factorBoolConst.struct = TabStaticExtensions.boolType;
     }
     
     @Override
@@ -1339,7 +1312,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	
     	for(int i = 0; i < numberOfActualArguments; i++) {
     		
-    		if(!assignableTo(actualArgumentsForCalledFunction.get(i), formalArgumentsForCalledFunction.get(i).getType())){
+    		if(!TabStaticExtensions.assignableTo(actualArgumentsForCalledFunction.get(i), formalArgumentsForCalledFunction.get(i).getType())){
     			report_error("Formalnom argumentu na poziciji " + (i + 1) + " (tip: " + structDescription(formalArgumentsForCalledFunction.get(i).getType()) + ") se ne moze dodeliti stvarni argument na toj poziciji (tip: " + structDescription(actualArgumentsForCalledFunction.get(i)) + ")!", info);
     			return Tab.noType;
     		}    		
@@ -1384,7 +1357,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
     	if(statementRead.getDesignator().obj.getType() != Tab.intType && 
     		statementRead.getDesignator().obj.getType() != Tab.charType &&
-    		statementRead.getDesignator().obj.getType() != boolType) {
+    		statementRead.getDesignator().obj.getType() != TabStaticExtensions.boolType) {
     		// ! Specification constraint: variable has to be int, char or bool
 			report_error("Ucitavanje sa standardnog ulaza se moze samo u promenjivu tipa int, char ili bool, ne u " + structDescription(statementRead.getDesignator().obj.getType()) + "!", statementRead);        	    			
 		}
@@ -1652,7 +1625,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	}
     	
     	// destination is left-value
-    	if(!assignableTo(src, dst.getType())) {
+    	if(!TabStaticExtensions.assignableTo(src, dst.getType())) {
     		// ! Specification constraint: source has to be assignable to the destination
     		report_error("Leva strana (" + structDescription(src) + ") nije kompatibilna desnoj strani (" + structDescription(dst.getType()) + ") pri dodeli!", designatorAssignOperation);        	    		
     	}
@@ -1735,7 +1708,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     // ! Specification constraint: first argument of the print statement has to be one of the following types: int, char or bool
     private boolean checkPrintConstraint(Struct expressionType, SyntaxNode info) {
-    	if(expressionType != Tab.intType && expressionType != Tab.charType && expressionType != boolType) {
+    	if(expressionType != Tab.intType && expressionType != Tab.charType && expressionType != TabStaticExtensions.boolType) {
     		report_error("Funkcija print se mora pozvati sa prvim argumentom tipa int, a ne " + structDescription(expressionType), info);        	
 			return false;
     	}
@@ -1758,7 +1731,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     @Override
     public void visit(SingleExprCondition singleExprCondition) {
     	// condition is just an expr
-    	if(singleExprCondition.getExpr().struct != boolType) {
+    	if(singleExprCondition.getExpr().struct != TabStaticExtensions.boolType) {
     		// ! Specification constraint: passed type from expr has to be bool
     		report_error("Tip izraza u uslovu kontrola toka mora biti tipa bool a ne " + structDescription(singleExprCondition.getExpr().struct), singleExprCondition);        	
 			return;    	

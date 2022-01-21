@@ -61,9 +61,9 @@ public class Compiler {
 			//log.info(" Deklarisanih promenljivih ima = " + v.varDeclCount);
 			
 			log.info("===================================");
-	        Tab.dump();
+	        //Tab.dump();
 	        
-			//v.tsdump();
+			v.tsdump();
 			
 	        if(!p.errorDetected && v.passed()) {
 				log.info("Parsiranje uspesno zavrseno!");

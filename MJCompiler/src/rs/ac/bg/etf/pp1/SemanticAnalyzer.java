@@ -137,7 +137,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 		for (Scope s = Tab.currentScope(); s != null; s = s.getOuter()) {
 			s.accept(stv);
 		}
-		System.out.println(stv.getOutput());
 		log.info(stv.getOutput());
 	}
 	

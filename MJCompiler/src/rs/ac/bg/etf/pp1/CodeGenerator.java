@@ -151,7 +151,6 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		// TODO: processing fields or elements
 		
-		
 		// increment is just addition by one and assign the very same variable 
 		// var++ => var = var + 1;
 

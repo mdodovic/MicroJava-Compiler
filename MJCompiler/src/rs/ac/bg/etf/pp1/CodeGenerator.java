@@ -6,6 +6,7 @@ import rs.ac.bg.etf.pp1.ast.DesignatorPostDecrement;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostIncrement;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.ExprListAddOpTerm;
+import rs.ac.bg.etf.pp1.ast.FactorArrayNewOperator;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
@@ -182,6 +183,23 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(FactorVariable factorVariable) {
 		// this is cumulative designator (includes access to the fields and elements of an array)
 		Code.load(factorVariable.getDesignator().obj);
+	}
+	
+	/* new operator */
+	
+	@Override
+	public void visit(FactorArrayNewOperator factorArrayNewOperator) {
+		// arrays are created using newarray with additional argument that determines if the elements are characters or some other types
+		// number of array elements has already been set on the exprStact (it is calculated earlier)
+		Code.put(Code.newarray);
+		
+		if(factorArrayNewOperator.struct == Tab.charType) {
+			// char-array
+			Code.put(0);
+		} else {
+			// non-char-array (there can be simple types (int and bool) as well as classes (every element will act as a 4B-reference)
+			Code.put(1);
+		}
 	}
 	
 	/* factor: integer, character or boolean constant in expression */

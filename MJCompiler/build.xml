@@ -12,6 +12,8 @@
 				<exclude name="CodeGenerator.java"/>
 				<exclude name="CounterVisitor.java"/>
 				<exclude name="SemanticAnalyzer.java"/>
+				<exclude name="TabStaticExtensions.java"/>
+				<exclude name="CodeGeneratorTutorial.java"/>
 			</fileset>
 		</delete>
 		<delete>

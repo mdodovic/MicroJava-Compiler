@@ -20,13 +20,13 @@ int g;
 		//print(g);
 		
 		x = -y + g * N; 
-		//print(x);
+		print(x);
 		
-		niz = new int[N]; 
+		//niz = new int[N]; 
 		//print(niz[0]); print(niz[1]);
 		
-		niz[0] = niz[x + y];
-		niz[1]++;			
+		//niz[0] = niz[x + y];
+		//niz[1]++;			
 			
 		//print(niz[0]); 
 		//print(niz[1]);	

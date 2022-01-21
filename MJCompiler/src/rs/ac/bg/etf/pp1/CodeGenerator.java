@@ -1,17 +1,24 @@
 package rs.ac.bg.etf.pp1;
 
+import rs.ac.bg.etf.pp1.ast.AddOpTermList;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.Designator;
 import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
 import rs.ac.bg.etf.pp1.ast.DesignatorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostDecrement;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostIncrement;
+import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
 import rs.ac.bg.etf.pp1.ast.FactorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
+import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
+import rs.ac.bg.etf.pp1.ast.Mulop;
+import rs.ac.bg.etf.pp1.ast.MultiplyOp;
+import rs.ac.bg.etf.pp1.ast.NegativeExpr;
+import rs.ac.bg.etf.pp1.ast.PlusOp;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
 import rs.ac.bg.etf.pp1.ast.SingleStatementMatch;
 import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
@@ -218,6 +225,38 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 
 		Code.load(con);
+	}
+	
+	
+	/* aritmethic operations */
+	
+	@Override
+	public void visit(NegativeExpr negativeExpr) {
+		Code.put(Code.neg); // this will negate value from the top of the exprStack
+	}
+	
+	@Override
+	public void visit(AddOpTermList addOpTermList) {
+		// this will use 2 values from the exprStack and 
+		if(addOpTermList.getAddop() instanceof PlusOp) {
+			Code.put(Code.add); // add them
+		} else {
+			Code.put(Code.sub); // subtract them
+		}
+		// and put the result back to the exprStack		
+	}
+	
+	@Override
+	public void visit(MulOpFactorList mulOpFactorList) {
+		// this will use 2 values from the exprStack and 
+		if(mulOpFactorList.getMulop() instanceof MultiplyOp) {
+			Code.put(Code.mul); // multiply them
+		} else if(mulOpFactorList.getMulop() instanceof DivideOp) {
+			Code.put(Code.div); // divide them (integer division) 
+ 		} else {
+			Code.put(Code.rem); // find the remainder in the (integer) division
+		}
+		// and put the result back to the exprStack		
 	}
 	
 }

@@ -1,15 +1,16 @@
 package rs.ac.bg.etf.pp1;
 
-import rs.ac.bg.etf.pp1.CounterVisitor.FormParamCounter;
-import rs.ac.bg.etf.pp1.CounterVisitor.VarCounter;
-import rs.ac.bg.etf.pp1.ast.MethodDecl;
+import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
+import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
+import rs.ac.bg.etf.pp1.ast.FactorCharConst;
+import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
 import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
 import rs.ac.bg.etf.pp1.ast.StatementPrintWithWidth;
-import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
+import rs.etf.pp1.symboltable.concepts.Obj;
 
 public class CodeGenerator extends VisitorAdaptor {
 	
@@ -45,7 +46,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 	
 	@Override
-	public void visit(MethodDecl methodDecl) {
+	public void visit(CorrectMethodDecl correctMethodDecl) {
 		
 		Code.put(Code.exit);
 		Code.put(Code.return_);
@@ -80,6 +81,44 @@ public class CodeGenerator extends VisitorAdaptor {
 		}		
 	}
 	
+	
+	/* integer, character or boolean constant in expression */
+	// push constant value on expression stack
+	
+	@Override
+	public void visit(FactorNumConst factorNumConst) {
+		// dummy Obj<Con> with appropriate (int) type, just for purpose of loading constant to the expression stack
+		Obj con = Tab.insert(Obj.Con, "#const", Tab.intType);
+		con.setLevel(0);
+		con.setAdr(factorNumConst.getConstValue());
+				
+		Code.load(con);
+	}
+	
+	@Override
+	public void visit(FactorCharConst factorCharConst) {
+		// dummy Obj<Con> with appropriate (int) type, just for purpose of loading constant to the expression stack
+		Obj con = Tab.insert(Obj.Con, "#const", Tab.charType);
+		con.setLevel(0);
+		con.setAdr(factorCharConst.getConstValue());
+				
+		Code.load(con);
+	}
+	
+	@Override
+	public void visit(FactorBoolConst factorBoolConst) {
+		// dummy Obj<Con> with appropriate (int) type, just for purpose of loading constant to the expression stack
+		Obj con = Tab.insert(Obj.Con, "#const", TabStaticExtensions.boolType);
+		con.setLevel(0);
+				
+		if(factorBoolConst.getConstValue() == true) {
+			con.setAdr(1);
+		} else {
+			con.setAdr(0);
+		}
+
+		Code.load(con);
+	}
 	
 }
 

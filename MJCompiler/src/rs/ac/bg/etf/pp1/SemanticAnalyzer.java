@@ -9,7 +9,6 @@ import java.util.Stack;
 
 import org.apache.log4j.Logger;
 
-import rs.ac.bg.etf.pp1.ast.AddOpTermList;
 import rs.ac.bg.etf.pp1.ast.ArrayDesignator;
 import rs.ac.bg.etf.pp1.ast.BooleanValue;
 import rs.ac.bg.etf.pp1.ast.CharValue;
@@ -36,6 +35,7 @@ import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.DoWhileDummyStart;
 import rs.ac.bg.etf.pp1.ast.EqualOp;
 import rs.ac.bg.etf.pp1.ast.Expr;
+import rs.ac.bg.etf.pp1.ast.ExprListAddOpTerm;
 import rs.ac.bg.etf.pp1.ast.FactorArrayNewOperator;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorBracketExpression;
@@ -59,10 +59,8 @@ import rs.ac.bg.etf.pp1.ast.MinusOp;
 import rs.ac.bg.etf.pp1.ast.ModuoOp;
 import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
 import rs.ac.bg.etf.pp1.ast.MultiplyOp;
-import rs.ac.bg.etf.pp1.ast.NegativeExpr;
 import rs.ac.bg.etf.pp1.ast.NotEqualOp;
 import rs.ac.bg.etf.pp1.ast.PlusOp;
-import rs.ac.bg.etf.pp1.ast.PositiveExpr;
 import rs.ac.bg.etf.pp1.ast.ProgName;
 import rs.ac.bg.etf.pp1.ast.Program;
 import rs.ac.bg.etf.pp1.ast.RecordDecl;
@@ -71,7 +69,8 @@ import rs.ac.bg.etf.pp1.ast.RelOpExprCondition;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
 import rs.ac.bg.etf.pp1.ast.SingleExprCondition;
 import rs.ac.bg.etf.pp1.ast.SingleFactor;
-import rs.ac.bg.etf.pp1.ast.SingleTerm;
+import rs.ac.bg.etf.pp1.ast.SingleNegativeTerm;
+import rs.ac.bg.etf.pp1.ast.SinglePositiveTerm;
 import rs.ac.bg.etf.pp1.ast.StatementBreak;
 import rs.ac.bg.etf.pp1.ast.StatementContinue;
 import rs.ac.bg.etf.pp1.ast.StatementDoWhile;
@@ -1391,7 +1390,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
         // single factor should only pass its type
     	term.struct = term.getFactorList().struct;
     }
-    
+/*    
     @Override
     public void visit(SingleTerm singleTerm) {
     	// send type (TermType) to the Expr
@@ -1424,7 +1423,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     
     @Override
     public void visit(NegativeExpr negativeExpr) {
-    	if(negativeExpr.getTermList().struct != Tab.intType) {
+    	if(negativeExpr.getTerm().struct != Tab.intType) {
     	    // ! Specification constraint: Expr has to be the int type
     		report_error("Tip negiranog izraza treba da bude int", negativeExpr);        	
     		negativeExpr.struct = Tab.noType;
@@ -1433,7 +1432,44 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     	// send cumulative type (intType) to the Expr
     	negativeExpr.struct = Tab.intType;    	
     }
+*/    
     
+    @Override
+    public void visit(SinglePositiveTerm singlePositiveTerm) {
+    	// send type (TermType) to the upper nodes in tree
+    	singlePositiveTerm.struct = singlePositiveTerm.getTerm().struct;
+    }
+    
+    @Override
+    public void visit(ExprListAddOpTerm exprListAddOpTerm) {
+    	if(!exprListAddOpTerm.getExpr().struct.compatibleWith(exprListAddOpTerm.getTerm().struct)) {
+    	    // ! Specification constraint: Expr and Term types have to be compatible
+    		report_error("Tip svih sabiraka moraju biti kompatibilni (" + structDescription(exprListAddOpTerm.getExpr().struct) + "," + structDescription(exprListAddOpTerm.getTerm().struct) + ")", exprListAddOpTerm);        	
+    		exprListAddOpTerm.struct = Tab.noType;
+    		return;
+    	}
+    	if(exprListAddOpTerm.getExpr().struct != Tab.intType || exprListAddOpTerm.getTerm().struct != Tab.intType) {
+    	    // ! Specification constraint: Expr and Term have to be the int type
+    		report_error("Tip svih sabiraka treba da bude int", exprListAddOpTerm);        	
+    		exprListAddOpTerm.struct = Tab.noType;
+    		return;
+    	}
+    	// send cumulative type (intType) to the Expr
+    	exprListAddOpTerm.struct = Tab.intType;
+    }
+        
+    @Override
+    public void visit(SingleNegativeTerm singleNegativeTerm) {
+    	if(singleNegativeTerm.getTerm().struct != Tab.intType) {
+    	    // ! Specification constraint: Expr has to be the int type
+    		report_error("Tip negiranog izraza treba da bude int", singleNegativeTerm);        	
+    		singleNegativeTerm.struct = Tab.noType;
+    		return;
+    	}
+    	// send cumulative type (intType) to the Expr
+    	singleNegativeTerm.struct = Tab.intType;    	
+    }
+
     /* Designators processing */
     
     @Override

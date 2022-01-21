@@ -488,15 +488,12 @@ Designator ::= (ClassFieldDesignator) Designator POINT IDENT:rightField
 
 /* Expressions */
 
-Expr ::= (PositiveExpr) TermList:t
+Expr ::= (SingleNegativeTerm) MINUS Term
 		 |
-		 (NegativeExpr) MINUS TermList:t
-		 ;						
-
-TermList ::= (AddOpTermList) TermList Addop Term
-			 |
-			 (SingleTerm) Term
-			 ;
+		 (ExprListAddOpTerm) Expr Addop Term
+		 |
+		 (SinglePositiveTerm) Term
+		 ;
 
 Term ::= (Term) FactorList;
 

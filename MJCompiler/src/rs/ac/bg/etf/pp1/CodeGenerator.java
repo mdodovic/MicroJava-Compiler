@@ -1,29 +1,24 @@
 package rs.ac.bg.etf.pp1;
 
-import rs.ac.bg.etf.pp1.ast.AddOpTermList;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
-import rs.ac.bg.etf.pp1.ast.Designator;
 import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
-import rs.ac.bg.etf.pp1.ast.DesignatorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostDecrement;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostIncrement;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
+import rs.ac.bg.etf.pp1.ast.ExprListAddOpTerm;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
-import rs.ac.bg.etf.pp1.ast.FactorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
 import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
-import rs.ac.bg.etf.pp1.ast.Mulop;
 import rs.ac.bg.etf.pp1.ast.MultiplyOp;
-import rs.ac.bg.etf.pp1.ast.NegativeExpr;
 import rs.ac.bg.etf.pp1.ast.PlusOp;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
+import rs.ac.bg.etf.pp1.ast.SingleNegativeTerm;
 import rs.ac.bg.etf.pp1.ast.SingleStatementMatch;
 import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
 import rs.ac.bg.etf.pp1.ast.StatementPrintWithWidth;
-import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
@@ -231,14 +226,14 @@ public class CodeGenerator extends VisitorAdaptor {
 	/* aritmethic operations */
 	
 	@Override
-	public void visit(NegativeExpr negativeExpr) {
+	public void visit(SingleNegativeTerm singleNegativeTerm) {
 		Code.put(Code.neg); // this will negate value from the top of the exprStack
 	}
 	
 	@Override
-	public void visit(AddOpTermList addOpTermList) {
+	public void visit(ExprListAddOpTerm exprListAddOpTerm) {
 		// this will use 2 values from the exprStack and 
-		if(addOpTermList.getAddop() instanceof PlusOp) {
+		if(exprListAddOpTerm.getAddop() instanceof PlusOp) {
 			Code.put(Code.add); // add them
 		} else {
 			Code.put(Code.sub); // subtract them

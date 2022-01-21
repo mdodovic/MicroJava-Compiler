@@ -488,15 +488,12 @@ Designator ::= (ClassFieldDesignator) Designator:D1 POINT IDENT:rightField {: RE
 
 /* Expressions */
 
-Expr ::= (PositiveExpr) TermList:t {: RESULT=new PositiveExpr(t); RESULT.setLine(tleft); :}
+Expr ::= (SingleNegativeTerm) MINUS Term:T1 {: RESULT=new SingleNegativeTerm(T1); RESULT.setLine(T1left); :}
 		 |
-		 (NegativeExpr) MINUS TermList:t {: RESULT=new NegativeExpr(t); RESULT.setLine(tleft); :}
-		 ;						
-
-TermList ::= (AddOpTermList) TermList:T1 Addop:A2 Term:T3 {: RESULT=new AddOpTermList(T1, A2, T3); RESULT.setLine(T1left); :}
-			 |
-			 (SingleTerm) Term:T1 {: RESULT=new SingleTerm(T1); RESULT.setLine(T1left); :}
-			 ;
+		 (ExprListAddOpTerm) Expr:E1 Addop:A2 Term:T3 {: RESULT=new ExprListAddOpTerm(E1, A2, T3); RESULT.setLine(E1left); :}
+		 |
+		 (SinglePositiveTerm) Term:T1 {: RESULT=new SinglePositiveTerm(T1); RESULT.setLine(T1left); :}
+		 ;
 
 Term ::= (Term) FactorList:F1 {: RESULT=new Term(F1); RESULT.setLine(F1left); :};
 

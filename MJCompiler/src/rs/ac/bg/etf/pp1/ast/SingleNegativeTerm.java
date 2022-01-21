@@ -1,15 +1,15 @@
 // generated with ast extension for cup
 // version 0.8
-// 21/0/2022 10:8:11
+// 21/0/2022 15:30:2
 
 
 package rs.ac.bg.etf.pp1.ast;
 
-public class SingleTerm extends TermList {
+public class SingleNegativeTerm extends Expr {
 
     private Term Term;
 
-    public SingleTerm (Term Term) {
+    public SingleNegativeTerm (Term Term) {
         this.Term=Term;
         if(Term!=null) Term.setParent(this);
     }
@@ -43,7 +43,7 @@ public class SingleTerm extends TermList {
     public String toString(String tab) {
         StringBuffer buffer=new StringBuffer();
         buffer.append(tab);
-        buffer.append("SingleTerm(\n");
+        buffer.append("SingleNegativeTerm(\n");
 
         if(Term!=null)
             buffer.append(Term.toString("  "+tab));
@@ -52,7 +52,7 @@ public class SingleTerm extends TermList {
         buffer.append("\n");
 
         buffer.append(tab);
-        buffer.append(") [SingleTerm]");
+        buffer.append(") [SingleNegativeTerm]");
         return buffer.toString();
     }
 }

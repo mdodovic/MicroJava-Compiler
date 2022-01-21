@@ -16,11 +16,10 @@ int g;
 		y = 53; 
 		//print(y);
 		
-		g++; 
-		//print(g);
+		g++;
 		
 		x = -y + g * N; 
-		print(x);
+		//print(x);
 		
 		//niz = new int[N]; 
 		//print(niz[0]); print(niz[1]);

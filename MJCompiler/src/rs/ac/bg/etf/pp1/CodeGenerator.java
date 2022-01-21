@@ -1,12 +1,22 @@
 package rs.ac.bg.etf.pp1;
 
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
+import rs.ac.bg.etf.pp1.ast.Designator;
+import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
+import rs.ac.bg.etf.pp1.ast.DesignatorFunctionCall;
+import rs.ac.bg.etf.pp1.ast.DesignatorPostDecrement;
+import rs.ac.bg.etf.pp1.ast.DesignatorPostIncrement;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
+import rs.ac.bg.etf.pp1.ast.FactorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
+import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
+import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
+import rs.ac.bg.etf.pp1.ast.SingleStatementMatch;
 import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
 import rs.ac.bg.etf.pp1.ast.StatementPrintWithWidth;
+import rs.ac.bg.etf.pp1.ast.SyntaxNode;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
@@ -66,6 +76,16 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 	
 	
+	/*  */
+	
+	@Override
+	public void visit(SingleStatementMatch SingleStatementMatch) {
+		System.out.println("FINISH LINE " + SingleStatementMatch.getLine());
+		System.out.println();
+	}
+	
+	/* print */
+	
 	@Override
 	public void visit(StatementPrintNoWidth statementPrintNoWidth) {
 		if(statementPrintNoWidth.getExpr().struct == Tab.intType) {
@@ -95,7 +115,74 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 	
 	
-	/* integer, character or boolean constant in expression */
+	/* designator: */
+
+	@Override
+	public void visit(SimpleDesignator simpleDesignator) {
+		System.out.println(simpleDesignator.getName());
+		System.out.println(simpleDesignator.getParent().getClass());
+		//Code.load(simpleDesignator.obj);
+		
+		
+		
+	}
+	
+	/* designator: increment and decrement */
+	
+	@Override
+	public void visit(DesignatorPostIncrement designatorPostIncrement) {
+		
+		// TODO: processing fields or elements
+		
+		
+		// increment is just addition by one and assign the very same variable 
+		// var++ => var = var + 1;
+
+		Code.load(designatorPostIncrement.getDesignator().obj);	// var
+		Code.loadConst(1); // 1
+		Code.put(Code.add);
+		// var + 1 will be on exprStack
+		Code.store(designatorPostIncrement.getDesignator().obj);
+		// store var + 1 into var
+	}
+	
+	@Override
+	public void visit(DesignatorPostDecrement designatorPostDecrement) {
+
+		// TODO: processing fields or elements
+		
+		
+		// increment is just addition by one and assign the very same variable 
+		// var-- => var = var - 1;
+
+		Code.load(designatorPostDecrement.getDesignator().obj);	// var
+		Code.loadConst(1); // 1
+		Code.put(Code.sub);
+		// var + 1 will be on exprStack
+		Code.store(designatorPostDecrement.getDesignator().obj);
+		// store var + 1 into var
+		
+	}
+			
+	/* assign */
+	
+	@Override
+	public void visit(DesignatorAssignOperation designatorAssignOperation) {
+		
+		// add store to the exprStack: everything that is needed for this store has already been pushed to the stack
+		Code.store(designatorAssignOperation.getDesignator().obj);
+		
+	}
+	
+	/* factor: variable (designator) */
+	
+	@Override
+	public void visit(FactorVariable factorVariable) {
+		// this is cumulative designator (includes access to the fields and elements of an array)
+		Code.load(factorVariable.getDesignator().obj);
+	}
+	
+	/* factor: integer, character or boolean constant in expression */
 	// push constant value on expression stack
 	
 	@Override

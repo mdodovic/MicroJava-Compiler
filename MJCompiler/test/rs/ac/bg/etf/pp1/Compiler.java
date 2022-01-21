@@ -30,7 +30,7 @@ public class Compiler {
 		Reader br = null;
 		try {
 			
-			String mjFileName = "test_projspec_s7";
+			String mjFileName = "program";
 			
 			File sourceCode = new File("test/" + mjFileName + ".mj");
 //			File sourceCode = new File("test/class_extends.mj");
@@ -68,7 +68,7 @@ public class Compiler {
 	        if(!p.errorDetected && v.passed()) {
 				log.info("Parsiranje uspesno zavrseno!");
 
-/*
+
 				File objFile = new File("test/" + mjFileName + ".obj");
 				if(objFile.exists()) objFile.delete();
 				
@@ -78,7 +78,7 @@ public class Compiler {
 				Code.dataSize = v.getProgramVariablesNumber();
 				Code.mainPc = codeGenerator.getMainPc();
 				Code.write(new FileOutputStream(objFile));
-*/	        	
+	        	
 				
 	        }else{
 				log.error("Parsiranje NIJE uspesno zavrseno!");

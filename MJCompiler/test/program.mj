@@ -15,7 +15,11 @@ program test_303
 		// x = 3;
 		
 		print(1);
-		print(1, 5);
+		print('a');
+		print(true);
+		print(1, 4);
+		print('a', 4);
+		print(true, 4);
 		
 		//y = 4 + 9 + k();
 		

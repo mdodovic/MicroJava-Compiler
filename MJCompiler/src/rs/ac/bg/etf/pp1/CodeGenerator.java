@@ -67,8 +67,17 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 	
 	@Override
-	public void visit(StatementPrintWithWidth StatementPrintWithWidth) {
+	public void visit(StatementPrintWithWidth statementPrintWithWidth) {
+	
+		Code.loadConst(statementPrintWithWidth.getWidth());
 		
+		if(statementPrintWithWidth.getExpr().struct == Tab.intType) {
+			Code.put(Code.print);
+		} else if(statementPrintWithWidth.getExpr().struct == TabStaticExtensions.boolType) {
+			Code.put(Code.print);
+		} else {
+			Code.put(Code.bprint);
+		}		
 	}
 	
 	

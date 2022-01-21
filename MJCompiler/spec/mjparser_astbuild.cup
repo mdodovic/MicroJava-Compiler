@@ -431,7 +431,7 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement:D1 {: RESULT=new S
 					|
 					(StatementPrintNoWidth) PRINT LEFT_ROUND_BRACKET Expr:E1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementPrintNoWidth(E1); RESULT.setLine(E1left); :}
 					|
-					(StatementPrintWithWidth) PRINT LEFT_ROUND_BRACKET Expr:E1 COMMA NUMBER:N2 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementPrintWithWidth(E1, N2); RESULT.setLine(E1left); :}
+					(StatementPrintWithWidth) PRINT LEFT_ROUND_BRACKET Expr:E1 COMMA NUMBER:width RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementPrintWithWidth(E1, width); RESULT.setLine(E1left); :}
 					|
 					(StatementRead) READ LEFT_ROUND_BRACKET Designator:D1 RIGHT_ROUND_BRACKET SEMI {: RESULT=new StatementRead(D1); RESULT.setLine(D1left); :}
 					|

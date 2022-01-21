@@ -1,41 +1,22 @@
-program test_303
-	int x; int y;
+program ABC
+
+const int N = 2;
+int g;
+
 {
 
-//	int k () int c; {
-//		c = 2;
-//		
-//		print(0);
-//		
-//		return c+2;
-//	}
-
-	int f(int y) int x; {
-		x = y;
-		x++;
-		return x;
-	}
-
 	void main() 
-	{	
-		// x = 3;
+		int x, y;
+		int niz[];
 		
-		print(1);
-		print(ord('a'));
-		print(true);
-		print(chr(65), 4);
-		print('a', 4);
-		print(true, 4);
-		
-		//print(f(4));
-		//y = 4 + 9 + k();
-		
-		//print(x);
-		
-		//k();
-		
-		//print(y);
-		
-		//return 1;
+	{
+		g = N;
+		y = 53;
+		g++;
+		x = -y + g * N;
+		niz = new int[N];
+		niz[0] = niz[x + y];
+		niz[1]++;			
 	}
+
 }

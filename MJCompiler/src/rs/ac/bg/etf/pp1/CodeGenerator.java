@@ -53,7 +53,8 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(CorrectMethodDecl correctMethodDecl) {
 		
-		// if non-void method does not have the return statement information about it is passed from semantic analysis
+		// This is treated in semantic analysis!
+		// but it can be treated as runtime error: if non-void method does not have the return statement information about it is passed from semantic analysis
 		//if(correctMethodDecl.getMethodTypeName().obj.getFpPos() == -1) {
 			// fpPos is set to -1 when it is realized that 
 		//	Code.put(Code.trap);

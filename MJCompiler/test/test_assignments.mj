@@ -1,3 +1,5 @@
+// 2020_t1: assignments 
+
 program ABC
 
 const int N = 2;
@@ -14,8 +16,8 @@ int g;
 		y = 53;
 		g++;
 		x = -y + g * N;
-		niz = new int[N];
-		niz[0] = niz[x + y];
+		niz = new int[N + 1];
+		niz[0] = niz[x + y - 4];
 		niz[1]++;			
 	}
 

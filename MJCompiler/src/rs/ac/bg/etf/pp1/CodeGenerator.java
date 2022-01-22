@@ -146,20 +146,50 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	/* designator: increment and decrement */
 	
+	private void loadValueAndFixExprStackContend(int objKind) {
+		
+		
+		
+	}
+	
 	@Override
 	public void visit(DesignatorPostIncrement designatorPostIncrement) {
-		
-		// TODO: processing fields or elements
-		
-		// increment is just addition by one and assign the very same variable 
-		// var++ => var = var + 1;
 
-		Code.load(designatorPostIncrement.getDesignator().obj);	// var
+		// increment is just addition by one and assign the very same variable 
+		// var++ => var(1) = var(2) + 1;
+		
+		// var(2) has to be loaded on exprStack
+		if(designatorPostIncrement.getDesignator().obj.getKind() == Obj.Var) {		
+			// var(2) is Obj.Var (local or global variable) 
+			// exprStack does not required anything, load (load_n or getstatic n) will load var(2) properly
+			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2)
+
+		} else if(designatorPostIncrement.getDesignator().obj.getKind() == Obj.Elem) {
+			// var(2) is Obj.Elem (the element of the array) 
+			// exprStack requires &array, index and it has aready been set on exprStack
+			// (*) visiting "array[index]" will load &array and index deeper in the tree but it will load it only once
+			// (*) &array, index has to be duplicated because of store
+			Code.put(Code.dup2); 
+			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2)
+		} else if(designatorPostIncrement.getDesignator().obj.getKind() == Obj.Fld) {
+			// TODO: fix this ... 
+			// var(2) is Obj.Elem (the element of the array) 
+			// exprStack requires &array, index and it has aready been set on exprStack
+			// (*) visiting "array[index]" will load &array and index deeper in the tree but it will load it only once
+			// (*) &array, index has to be duplicated because of store
+			Code.put(Code.dup2);
+			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2)
+		}		
+
 		Code.loadConst(1); // 1
 		Code.put(Code.add);
-		// var + 1 will be on exprStack
+		// var(2) + 1 will be on exprStack and it has to be stored in var(1):
+
+		// if var(1) is Obj.Var (local or global variable) store (store_n or putstatic) does not requires anything on exprStack
+		// if var(1) is Obj.Elem (the element of the array) store (astore) requires &array, index, var (*)
+		// if var(1) is Obj.Fld (class field) store (putfield) 
+		
 		Code.store(designatorPostIncrement.getDesignator().obj);
-		// store var + 1 into var
 	}
 	
 	@Override
@@ -170,7 +200,15 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		// increment is just addition by one and assign the very same variable 
 		// var-- => var = var - 1;
-
+		
+		if(designatorPostDecrement.getDesignator().obj.getKind() == Obj.Fld) {
+			Code.put(Code.dup2);
+		}
+		if(designatorPostDecrement.getDesignator().obj.getKind() == Obj.Elem) {
+			Code.put(Code.dup2);
+		}
+			
+		
 		Code.load(designatorPostDecrement.getDesignator().obj);	// var
 		Code.loadConst(1); // 1
 		Code.put(Code.sub);

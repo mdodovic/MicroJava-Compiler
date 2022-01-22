@@ -8,34 +8,15 @@ int g;
 	void main() 
 		int x, y;
 		int niz[];
-		int z;
 		
 	{
-		//z = 1;
-		//g = N; 
-		//print(g);
-		
-		//y = 53; 
-		//print(y);
-		
-		//g++;
-		
-		//x = -y + g * N; 
-		//print(x);
-		
-		niz = new int[N + 1]; 
-		//print(niz[0]); 
-		//print(niz[1]);
-		//niz[0] = 17;
-		//niz[z] = 0;
-		//print(niz[niz[z]]);
-				
-		//niz[0] = niz[x + y - 4];
+		g = N;
+		y = 53;
+		g++;
+		x = -y + g * N;
+		niz = new int[N];
+		niz[0] = niz[x + y];
 		niz[1]++;			
-			
-		print(niz[1]); 
-		//print(niz[1]);	
-	
 	}
 
 }

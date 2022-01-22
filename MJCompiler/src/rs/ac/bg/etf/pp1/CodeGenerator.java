@@ -1,6 +1,10 @@
 package rs.ac.bg.etf.pp1;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import rs.ac.bg.etf.pp1.ast.ArrayDesignator;
+import rs.ac.bg.etf.pp1.ast.ClassFieldDesignator;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostDecrement;
@@ -10,6 +14,7 @@ import rs.ac.bg.etf.pp1.ast.ExprListAddOpTerm;
 import rs.ac.bg.etf.pp1.ast.FactorArrayNewOperator;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
+import rs.ac.bg.etf.pp1.ast.FactorClassNewOperator;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.IndirectArrayNameDesignator;
@@ -32,12 +37,14 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	private int _start = -1;	// program start (in x86 it is _start label)
 	
+	private Map<String, Integer> mapClassVirtualFunctionsTableAddresses = new HashMap<String, Integer>(); 
+	
 	public int getFirstInstruction() {
 		return _start;
 	}
 	
+	
 	private void createVirtualTablePointer() {
-		
 		
 	}
 	
@@ -133,20 +140,23 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 	}
 	
+
+	/* designator: class field */
 	
+	@Override
+	public void visit(ClassFieldDesignator classFieldDesignator) {
+		// &class or &record
+		Code.load(classFieldDesignator.getDesignator().obj);
+	}
+
 	/* designator: array element */
 	
 	@Override
 	public void visit(IndirectArrayNameDesignator indirectArrayNameDesignator) {
+		// &array
 		Code.load(indirectArrayNameDesignator.getDesignator().obj);
 	}
-	
-	@Override
-	public void visit(ArrayDesignator arrayDesignator) {
-		//System.out.println("AD");
-		//System.out.println(arrayDesignator.getDesignator().obj);
-	}
-	
+		
 	/* designator: simple name */
 
 	@Override
@@ -186,7 +196,7 @@ public class CodeGenerator extends VisitorAdaptor {
 			// exprStack requires &array, index and it has aready been set on exprStack
 			// (*) visiting "array[index]" will load &array and index deeper in the tree but it will load it only once
 			// (*) &array, index has to be duplicated because of store
-			Code.put(Code.dup2);
+			Code.put(Code.dup);
 			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2)
 		}		
 
@@ -233,7 +243,11 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(DesignatorAssignOperation designatorAssignOperation) {
 		
 		// add store to the exprStack: everything that is needed for this store has already been pushed to the stack
+		// Expression stack looks like:
+		// variable for storage
+		// value for storage
 		Code.store(designatorAssignOperation.getDesignator().obj);
+        System.out.println("ASSIGN");
 		
 	}
 	
@@ -243,12 +257,33 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(FactorVariable factorVariable) {
 		// this is cumulative designator (includes access to the fields and elements of an array)
 		Code.load(factorVariable.getDesignator().obj);
-		System.out.println(factorVariable.getDesignator().obj.getName());
-		System.out.println("FB");
+//		System.out.println(factorVariable.getDesignator().obj.getName());
+//		System.out.println("FB");
 	}
 
 	/* factor: new class operator */
 	
+	@Override
+	public void visit(FactorClassNewOperator factorClassNewOperator) {
+		
+		// class is created using new with additional argument that determines the class size
+		// every field in the class is 4B (all visible fields + virtual table function)
+		
+		Code.put(Code.new_);
+		Code.put2(factorClassNewOperator.struct.getNumberOfFields() * 4); 
+
+		// new size execution will left &class on exprStack which is fine for the assignment operator and its store (store_n or putstatic n) operator
+		// on the class object creation, virtual function table address has to be set on the appropriate value (dynamic type)
+		// &vft is always at the position 0 in the class object, so &vft will be stored using putfield 2
+
+		Code.put(Code.dup); // nevertheless putfield 2 will consume &class (which is meant to be for store operation in the assignment) so this address has to be copied
+
+		Code.loadConst(0); // &vft
+
+		Code.put(Code.putfield);
+        Code.put2(0); // field at the position 0 (&vtf) in the class will be filled with &vtf
+
+	}
 	
 	/* factor: new array operator */
 	

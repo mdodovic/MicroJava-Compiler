@@ -181,7 +181,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		if(designatorPostIncrement.getDesignator().obj.getKind() == Obj.Var) {		
 			// var(2) is Obj.Var (local or global variable) 
 			// exprStack does not required anything, load (load_n or getstatic n) will load var(2) properly
-			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2)
+			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2): consumes nothing
 
 		} else if(designatorPostIncrement.getDesignator().obj.getKind() == Obj.Elem) {
 			// var(2) is Obj.Elem (the element of the array) 
@@ -189,16 +189,15 @@ public class CodeGenerator extends VisitorAdaptor {
 			// (*) visiting "array[index]" will load &array and index deeper in the tree but it will load it only once
 			// (*) &array, index has to be duplicated because of store
 			Code.put(Code.dup2); 
-			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2)
+			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2): consumes one pair (&array,index) and left another pair for store 
 			
 		} else if(designatorPostIncrement.getDesignator().obj.getKind() == Obj.Fld) {
-			// TODO: fix this ... 
-			// var(2) is Obj.Elem (the element of the array) 
-			// exprStack requires &array, index and it has aready been set on exprStack
-			// (*) visiting "array[index]" will load &array and index deeper in the tree but it will load it only once
-			// (*) &array, index has to be duplicated because of store
+			// var(2) is Obj.Fld (the class field)
+			// exprStack requires &class it has aready been set on exprStack
+			// (**) visiting "class.field" will load &class deeper in the tree but it will load it only once
+			// (**) &class has to be duplicated because of store
 			Code.put(Code.dup);
-			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2)
+			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2): consumes one &class and left another &class for store
 
 		}
 
@@ -208,34 +207,53 @@ public class CodeGenerator extends VisitorAdaptor {
 
 		// if var(1) is Obj.Var (local or global variable) store (store_n or putstatic) does not requires anything on exprStack
 		// if var(1) is Obj.Elem (the element of the array) store (astore) requires &array, index, var (*)
-		// if var(1) is Obj.Fld (class field) store (putfield) 
+		// if var(1) is Obj.Fld (class field) store (putfield) requires &class, var(**)
 		
 		Code.store(designatorPostIncrement.getDesignator().obj);
+		// store var(2) + 1 into var(1): left empty exprStack
+
 	}
 	
 	@Override
 	public void visit(DesignatorPostDecrement designatorPostDecrement) {
+		
+		// decrement is just subtraction by one and assign the very same variable 
+		// var-- => var(1) = var(2) - 1;
+		
+		// var(2) has to be loaded on exprStack
+		if(designatorPostDecrement.getDesignator().obj.getKind() == Obj.Var) {		
+			// var(2) is Obj.Var (local or global variable) 
+			// exprStack does not required anything, load (load_n or getstatic n) will load var(2) properly
+			Code.load(designatorPostDecrement.getDesignator().obj);	// appropriate load value var(2): consumes nothing
 
-		// TODO: processing fields or elements
-		
-		
-		// increment is just addition by one and assign the very same variable 
-		// var-- => var = var - 1;
-		
-		if(designatorPostDecrement.getDesignator().obj.getKind() == Obj.Fld) {
-			Code.put(Code.dup);
-		}
-		if(designatorPostDecrement.getDesignator().obj.getKind() == Obj.Elem) {
-			Code.put(Code.dup2);
-		}
+		} else if(designatorPostDecrement.getDesignator().obj.getKind() == Obj.Elem) {
+			// var(2) is Obj.Elem (the element of the array) 
+			// exprStack requires &array, index and it has aready been set on exprStack
+			// (*) visiting "array[index]" will load &array and index deeper in the tree but it will load it only once
+			// (*) &array, index has to be duplicated because of store
+			Code.put(Code.dup2); 
+			Code.load(designatorPostDecrement.getDesignator().obj);	// appropriate load value var(2): consumes one pair (&array,index) and left another pair for store 
 			
-		
-		Code.load(designatorPostDecrement.getDesignator().obj);	// var
+		} else if(designatorPostDecrement.getDesignator().obj.getKind() == Obj.Fld) {
+			// var(2) is Obj.Fld (the class field)
+			// exprStack requires &class it has aready been set on exprStack
+			// (**) visiting "class.field" will load &class deeper in the tree but it will load it only once
+			// (**) &class has to be duplicated because of store
+			Code.put(Code.dup);
+			Code.load(designatorPostDecrement.getDesignator().obj);	// appropriate load value var(2): consumes one &class and left another &class for store
+
+		}
+
 		Code.loadConst(1); // 1
 		Code.put(Code.sub);
-		// var + 1 will be on exprStack
+		// var(2) - 1 will be on exprStack and it has to be stored in var(1):
+
+		// if var(1) is Obj.Var (local or global variable) store (store_n or putstatic) does not requires anything on exprStack
+		// if var(1) is Obj.Elem (the element of the array) store (astore) requires &array, index, var (*)
+		// if var(1) is Obj.Fld (class field) store (putfield) requires &class, var(**)
+		
 		Code.store(designatorPostDecrement.getDesignator().obj);
-		// store var + 1 into var
+		// store var(2) - 1 into var(1): left empty exprStack
 		
 	}
 			

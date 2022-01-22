@@ -22,6 +22,7 @@ import rs.ac.bg.etf.pp1.ast.SingleNegativeTerm;
 import rs.ac.bg.etf.pp1.ast.SingleStatementMatch;
 import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
 import rs.ac.bg.etf.pp1.ast.StatementPrintWithWidth;
+import rs.ac.bg.etf.pp1.ast.StatementRead;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
@@ -119,6 +120,20 @@ public class CodeGenerator extends VisitorAdaptor {
 		}		
 	}
 	
+	@Override
+	public void visit(StatementRead statementRead) {
+		
+		if(statementRead.getDesignator().obj.getType() == Tab.charType) {
+			Code.put(Code.bread);			
+		} else {
+			Code.put(Code.read);
+		}		
+
+		Code.store(statementRead.getDesignator().obj);
+		
+	}
+	
+	
 	/* designator: array element */
 	
 	@Override
@@ -145,12 +160,6 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 	
 	/* designator: increment and decrement */
-	
-	private void loadValueAndFixExprStackContend(int objKind) {
-		
-		
-		
-	}
 	
 	@Override
 	public void visit(DesignatorPostIncrement designatorPostIncrement) {

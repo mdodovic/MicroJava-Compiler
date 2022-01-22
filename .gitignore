@@ -29,3 +29,4 @@ local.properties
 
 # Specific ignore
 *.log*
+spec/mjparser_astbuild.cup

@@ -1,0 +1,29 @@
+// 2020_t2: class fields (v2)
+
+program ABC
+
+class A {
+	int i;	
+}
+
+class B{
+	A an[];
+}
+
+class C{
+	B b;
+}
+
+{
+
+	void main() 
+		C cn[]; C c; A a;
+		
+	{
+		a.i = 5;
+		a.i++;
+		c.b.an[1].i = 2;
+		a = cn[3].b.an[4];
+	}
+
+}

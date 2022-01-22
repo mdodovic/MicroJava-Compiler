@@ -26,9 +26,10 @@ A a2;
 		a2.i = 54;
 		a.i++;
 		a2.i--;
-		//cniz[0].b.aniz[i].i = 2;
-		//a = c.b.aniz[4];
-		
+			//c.b.aniz[1].i = 2;
+			//a = cn[3].b.aniz[4];
+			//cniz[0].b.aniz[1].i = 2;
+			//a = c.b.aniz[4];		
 		print(a.i);
 		print(a2.i);
 		

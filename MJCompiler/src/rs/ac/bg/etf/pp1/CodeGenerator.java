@@ -190,6 +190,7 @@ public class CodeGenerator extends VisitorAdaptor {
 			// (*) &array, index has to be duplicated because of store
 			Code.put(Code.dup2); 
 			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2)
+			
 		} else if(designatorPostIncrement.getDesignator().obj.getKind() == Obj.Fld) {
 			// TODO: fix this ... 
 			// var(2) is Obj.Elem (the element of the array) 
@@ -198,7 +199,8 @@ public class CodeGenerator extends VisitorAdaptor {
 			// (*) &array, index has to be duplicated because of store
 			Code.put(Code.dup);
 			Code.load(designatorPostIncrement.getDesignator().obj);	// appropriate load value var(2)
-		}		
+
+		}
 
 		Code.loadConst(1); // 1
 		Code.put(Code.add);
@@ -221,7 +223,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		// var-- => var = var - 1;
 		
 		if(designatorPostDecrement.getDesignator().obj.getKind() == Obj.Fld) {
-			Code.put(Code.dup2);
+			Code.put(Code.dup);
 		}
 		if(designatorPostDecrement.getDesignator().obj.getKind() == Obj.Elem) {
 			Code.put(Code.dup2);

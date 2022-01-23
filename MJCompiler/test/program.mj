@@ -53,16 +53,12 @@ int test_int;
 
 {
 
-//	int sum(int z, int d)
-//	{
-//		return z + d;
-//	}
+	int sum(int z, int d)
+	{
+		return z + d;
+	}
 
-//	int sum(int z, int d)
-//	{
-//		return z + d;
-//	}
-	
+
 	void pri() {
 		print(1);
 		return;
@@ -88,10 +84,10 @@ int test_int;
 		//print('a');
 		//print(ord('a'));
 		//print(chr(66));
-		pri();
-		test_int = dva();
-		print(test_int);				
-		print(sq(dva()));	
+		//pri();
+		//test_int = dva();
+		//print(test_int);				
+		print( sum( sq(dva()), jedan() ) );	
 		//a2 = new A;
 		//a = new A;
 		//a.i = 65;

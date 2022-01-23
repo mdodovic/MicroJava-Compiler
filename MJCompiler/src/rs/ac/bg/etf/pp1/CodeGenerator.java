@@ -18,6 +18,8 @@ import rs.ac.bg.etf.pp1.ast.FactorClassNewOperator;
 import rs.ac.bg.etf.pp1.ast.FactorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.FactorVariable;
+import rs.ac.bg.etf.pp1.ast.FirstActualParameter;
+import rs.ac.bg.etf.pp1.ast.FurtherActualParameters;
 import rs.ac.bg.etf.pp1.ast.IndirectArrayNameDesignator;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
 import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
@@ -174,6 +176,19 @@ public class CodeGenerator extends VisitorAdaptor {
 			}
 		}
 	}
+	
+	/* actual parameters */
+	
+	@Override
+	public void visit(FirstActualParameter firstActualParameter) {
+		
+	}
+	
+	@Override
+	public void visit(FurtherActualParameters furtherActualParameters) {
+		
+	}
+	
 	
 	/*  */
 	

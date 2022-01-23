@@ -76,6 +76,10 @@ int test_int;
 	int dva() {
 		return 2 + jedan();
 	}
+	
+	int sq(int a) {
+		return a * a;
+	}
 
 	void main() 
 		C cniz[]; C c; A a; 
@@ -87,7 +91,7 @@ int test_int;
 		pri();
 		test_int = dva();
 		print(test_int);				
-	
+		print(sq(dva()));	
 		//a2 = new A;
 		//a = new A;
 		//a.i = 65;

@@ -4,7 +4,7 @@ program ABC
 
 class A {
 	int i;	
-//	{	
+	{	
 //		A() {
 //			print('k');
 //			print('o');
@@ -12,7 +12,7 @@ class A {
 //			print('_');
 //			print('A');
 //		}
-//	}
+	}
 }
 
 class B{
@@ -51,6 +51,13 @@ class C{
 }
 int test_int;
 
+
+record Test {
+ int niz[];
+ int a;
+}
+
+Test t1, t2;
 {
 
 	int sum(int z, int d)
@@ -77,17 +84,34 @@ int test_int;
 		return a * a;
 	}
 
+	void ispis(Test t) {
+		print(t.a);
+		print(eol);
+		print(t.niz[0]);
+		print(t.niz[1]);
+		print(t.niz[2]);
+	}
+	
 	void main() 
 		C cniz[]; C c; A a; 
 		
 	{
+		t1 = new Test;	
+		t1.a = 2;	
+		t1.niz = new int[3];
+		t1.niz[0] = 1 * t1.a; // 2
+		t1.niz[1] = 2 * t1.a; // 4
+		t1.niz[2] = sum(t1.niz[1], t1.niz[0]) * t1.a + 1; // (2 + 4) * 2 + 1
+		
+		ispis(t1);	
+		
 		//print('a');
 		//print(ord('a'));
 		//print(chr(66));
 		//pri();
 		//test_int = dva();
 		//print(test_int);				
-		print( sum( sq(dva()), jedan() ) );	
+		//print( sum( sq(dva()), jedan() ) );	
 		//a2 = new A;
 		//a = new A;
 		//a.i = 65;

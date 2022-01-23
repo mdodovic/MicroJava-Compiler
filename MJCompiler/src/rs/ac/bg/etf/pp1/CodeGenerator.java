@@ -3,10 +3,10 @@ package rs.ac.bg.etf.pp1;
 import java.util.HashMap;
 import java.util.Map;
 
-import rs.ac.bg.etf.pp1.ast.ArrayDesignator;
 import rs.ac.bg.etf.pp1.ast.ClassFieldDesignator;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
+import rs.ac.bg.etf.pp1.ast.DesignatorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostDecrement;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostIncrement;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
@@ -15,6 +15,7 @@ import rs.ac.bg.etf.pp1.ast.FactorArrayNewOperator;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
 import rs.ac.bg.etf.pp1.ast.FactorClassNewOperator;
+import rs.ac.bg.etf.pp1.ast.FactorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.IndirectArrayNameDesignator;
@@ -28,6 +29,8 @@ import rs.ac.bg.etf.pp1.ast.SingleStatementMatch;
 import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
 import rs.ac.bg.etf.pp1.ast.StatementPrintWithWidth;
 import rs.ac.bg.etf.pp1.ast.StatementRead;
+import rs.ac.bg.etf.pp1.ast.StatementReturnEmpty;
+import rs.ac.bg.etf.pp1.ast.StetementReturnExpression;
 import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
@@ -46,6 +49,11 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	private void createVirtualTablePointer() {
 		
+	}
+
+	private void callLenMethod() {
+		// there is an array address on exprStack
+		Code.put(Code.arraylength);
 	}
 	
 	public void visit(MethodTypeName methodTypeName){
@@ -67,7 +75,10 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		// system setup code if this is _start method: 
 		// - ord, chr, len are allready defined
-		// - virtual table pointer:
+		// - ord and chr methods' call are inherent
+		// + len method call has to be using arraylen instruction
+		// + virtual table pointer:
+		
 		if(_start != -1) {
 			createVirtualTablePointer();
 		}
@@ -88,6 +99,81 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.put(Code.return_);
 	}
 	
+	/* return statements */
+	
+	@Override
+	public void visit(StatementReturnEmpty StatementReturnEmpty) {
+		// return; - no value on exprStack
+		Code.put(Code.exit);
+		Code.put(Code.return_);
+	}
+	
+	@Override
+	public void visit(StetementReturnExpression StetementReturnExpression) {
+		// return expr; - expr value is on exprStack, it will be consumed in the caller code
+		Code.put(Code.exit);
+		Code.put(Code.return_);
+	}
+	
+	/* function call */ 
+	
+	@Override
+	public void visit(FactorFunctionCall factorFunctionCall) {
+
+		Obj methodNode = factorFunctionCall.getFunctionCallName().obj;
+		System.out.println("Assgin fun call: " + factorFunctionCall.getFunctionCallName().obj.getName());
+
+		if("len".equals(methodNode.getName())) {
+			callLenMethod();
+			return;
+		}
+		
+		/*
+		if( virtual function ) {
+		
+			if(methodNode.getType() != Tab.noType) {
+				// non-void method will left returned value on the exprStack so it needs to be removed without any usage
+				Code.put(Code.pop);
+			}
+		} else */ {
+			int offset = methodNode.getAdr() - Code.pc;
+			
+			Code.put(Code.call); 
+			Code.put2(offset); // pc relative: pc = pc + offset = pc + &method - pc = &method
+		}
+	}
+	
+	@Override
+	public void visit(DesignatorFunctionCall designatorFunctionCall) {
+		// This is just function call and returned value will have never been used if it is non-void (Tab.noType)
+
+		Obj methodNode = designatorFunctionCall.getFunctionCallName().obj;
+		System.out.println("fun call not assign: " + designatorFunctionCall.getFunctionCallName().obj.getName());
+		
+		if("len".equals(methodNode.getName())) {
+			callLenMethod();
+			return;
+		}
+		/*
+		if( virtual function ) {
+		
+			if(methodNode.getType() != Tab.noType) {
+				// non-void method will left returned value on the exprStack so it needs to be removed without any usage
+				Code.put(Code.pop);
+			}
+		} else */ {
+			
+			int offset = methodNode.getAdr() - Code.pc;
+			
+			Code.put(Code.call); 
+			Code.put2(offset); // pc relative: pc = pc + offset = pc + &method - pc = &method
+		
+			if(methodNode.getType() != Tab.noType) {
+				// non-void method will left returned value on the exprStack so it needs to be removed without any usage
+				Code.put(Code.pop);
+			}
+		}
+	}
 	
 	/*  */
 	

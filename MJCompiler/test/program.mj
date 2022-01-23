@@ -49,7 +49,8 @@ class C{
 //	}
 	
 }
-A a2;
+int test_int;
+
 {
 
 //	int sum(int z, int d)
@@ -61,12 +62,32 @@ A a2;
 //	{
 //		return z + d;
 //	}
-
+	
+	void pri() {
+		print(1);
+		return;
+	}
+	
+	int jedan() {
+		
+		return 1;
+	}
+	
+	int dva() {
+		return 2 + jedan();
+	}
 
 	void main() 
-		C cniz[]; C c; A a;
+		C cniz[]; C c; A a; 
 		
 	{
+		//print('a');
+		//print(ord('a'));
+		//print(chr(66));
+		pri();
+		test_int = dva();
+		print(test_int);				
+	
 		//a2 = new A;
 		//a = new A;
 		//a.i = 65;
@@ -76,26 +97,29 @@ A a2;
 		//c = new C;
 		//c.b = new B;		
 		//c.b.aniz = new A[7];
+		//print(len(c.b.aniz));
 		//c.b.aniz[0] = new A;
 		//c.b.aniz[1] = new A;
 		//c.b.aniz[2] = new A;
+		//len(c.b.aniz);
 				
 		//c.b.aniz[1].i = 248;
 		//a = c.b.aniz[1];		
 		//print(a.i);
 		//print(a2.i);
 		
-		cniz = new C[4];
-		cniz[3] = new C;
-		cniz[3].b = new B;
-		cniz[3].b.aniz = new A[7];
-		cniz[3].b.aniz[4] = new A;
+		//cniz = new C[4];
+		//cniz[3] = new C;
+		//cniz[3].b = new B;
+		//cniz[3].b.aniz = new A[7];
+		//cniz[3].b.aniz[4] = new A;
 		
-		cniz[3].b.aniz[4].i = -11;
+		//cniz[3].b.aniz[4].i = -11;
 		
 		
-	a = cniz[3].b.aniz[4];
-		print(a.i);				
+		//a = cniz[3].b.aniz[4];
+		//print(a.i);				
+		
 	}
 
 }

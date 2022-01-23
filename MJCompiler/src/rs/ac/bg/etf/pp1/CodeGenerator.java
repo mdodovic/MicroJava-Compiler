@@ -127,6 +127,8 @@ public class CodeGenerator extends VisitorAdaptor {
 		}		
 	}
 	
+	/* read */
+	
 	@Override
 	public void visit(StatementRead statementRead) {
 		
@@ -145,7 +147,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	@Override
 	public void visit(ClassFieldDesignator classFieldDesignator) {
-		// &class or &record
+		// &class or &record address
 		Code.load(classFieldDesignator.getDesignator().obj);
 	}
 
@@ -153,7 +155,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	@Override
 	public void visit(IndirectArrayNameDesignator indirectArrayNameDesignator) {
-		// &array
+		// &array address
 		Code.load(indirectArrayNameDesignator.getDesignator().obj);
 	}
 		

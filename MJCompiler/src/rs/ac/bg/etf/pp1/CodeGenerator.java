@@ -49,7 +49,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 	
 	
-	private void createVirtualTablePointer() {
+	private void createVirtualTable() {
 		
 	}
 
@@ -82,7 +82,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		// + virtual table pointer:
 		
 		if(_start != -1) {
-			createVirtualTablePointer();
+			createVirtualTable();
 		}
 	}	
 	
@@ -242,6 +242,9 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.store(statementRead.getDesignator().obj);
 		
 	}
+	
+	
+	/* class constructor */
 	
 
 	/* designator: class field */

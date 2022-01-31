@@ -29,6 +29,8 @@ class ATCalc extends TCalc {
 	void main() TCalc obj; {	
 		
 		x = fun(3);
+		print(x);
+		
 		//obj = new ATCalc;
 		//obj.m(4);
 

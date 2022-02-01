@@ -30,11 +30,11 @@ int z, t;
 	}
 		
 	void main() TCalc obj; {	
-//		z = fun(11);
-//		print(z);
-//		x = fun(3);
-//		print(x);
-//		obj = new TCalc;
+		z = fun(11);
+		print(z);
+		x = fun(3);
+		print(x);
+		obj = new TCalc;
 		//obj.m(4);
 		//obj = new ATCalc;
 		//obj.m(4);

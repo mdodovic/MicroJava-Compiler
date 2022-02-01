@@ -182,14 +182,26 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 		
 		if(checkIfMethodIsVirtual(factorFunctionCall.getFunctionCallName().obj)) {
-			System.out.println("Virtual call!");
-		/*
-		if( virtual function ) {
-		
-			if(methodNode.getType() != Tab.noType) {
-				// non-void method will left returned value on the exprStack so it needs to be removed without any usage
-				Code.put(Code.pop);
-			}*/
+
+			System.out.println("Virtual call - FACTOR!");
+
+			// virtual method call is different from ordinary method call
+			// call stack has to be:
+			// &class (represents hidden argument this)
+			// arguments
+			// &class (represents class which virtual functions table has to be accessed)
+			
+			Code.put(Code.getfield); // getfiled consume &class and return &tvf
+			Code.put2(0); // &tvf is always at the position 0 in class
+			
+			Code.put(Code.invokevirtual); // invokevirtual functionName -1
+			
+			for(int i = 0; i < methodNode.getName().length(); i++) {
+				// functionName is broken into characters
+				Code.put4(methodNode.getName().charAt(i));
+			}
+			Code.put4(-1);
+
 		} else  {
 			int offset = methodNode.getAdr() - Code.pc;
 			
@@ -210,23 +222,29 @@ public class CodeGenerator extends VisitorAdaptor {
 			return;
 		}
 		if(checkIfMethodIsVirtual(designatorFunctionCall.getFunctionCallName().obj)) {
-			System.out.println("Virtual call!");
+			System.out.println("Virtual call - DESIGNATOR!");
 			
 			// virtual method call is different from ordinary method call
-			// 
+			// call stack has to be:
+			// &class (represents hidden argument this)
+			// arguments
+			// &class (represents class which virtual functions table has to be accessed)
 			
-			System.out.println(designatorFunctionCall.getFunctionCallName().obj.getLevel());			
+			Code.put(Code.getfield); // getfiled consume &class and return &tvf
+			Code.put2(0); // &tvf is always at the position 0 in class
+			
+			Code.put(Code.invokevirtual); // invokevirtual functionName -1
+			
+			for(int i = 0; i < methodNode.getName().length(); i++) {
+				// functionName is broken into characters
+				Code.put4(methodNode.getName().charAt(i));
+			}
+			Code.put4(-1);
 
-			Code.put(Code.getfield); // getfiled consume class address 
-			Code.put2(0);
-			
-		/*
-		if( virtual function ) {
-		
 			if(methodNode.getType() != Tab.noType) {
 				// non-void method will left returned value on the exprStack so it needs to be removed without any usage
 				Code.put(Code.pop);
-			} */
+			}
 		} else {
 			
 			int offset = methodNode.getAdr() - Code.pc;

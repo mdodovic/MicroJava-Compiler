@@ -3,6 +3,11 @@ package rs.ac.bg.etf.pp1;
 import java.util.HashMap;
 import java.util.Map;
 
+import rs.ac.bg.etf.pp1.ast.ClassBodyBrackets;
+import rs.ac.bg.etf.pp1.ast.ClassBodyConstructor;
+import rs.ac.bg.etf.pp1.ast.ClassBodyFull;
+import rs.ac.bg.etf.pp1.ast.ClassBodyMethods;
+import rs.ac.bg.etf.pp1.ast.ClassBodyNoConstructorNoMethod;
 import rs.ac.bg.etf.pp1.ast.ClassFieldDesignator;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
@@ -21,6 +26,7 @@ import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.FirstActualParameter;
 import rs.ac.bg.etf.pp1.ast.FurtherActualParameters;
 import rs.ac.bg.etf.pp1.ast.IndirectArrayNameDesignator;
+import rs.ac.bg.etf.pp1.ast.InnerClassBodyDummyStart;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
 import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
 import rs.ac.bg.etf.pp1.ast.MultiplyOp;
@@ -246,7 +252,48 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	/* class constructor */
 	
+	@Override
+	public void visit(InnerClassBodyDummyStart innerClassBodyDummyStart) {
 
+    	if(innerClassBodyDummyStart.getParent() instanceof ClassBodyNoConstructorNoMethod) {
+    		// class has no body:
+        	// -dummy constructor created
+    		
+    		System.out.println("DUMMY CONSTRUCTOR - no body");
+
+    	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyBrackets) {
+    		// class has empty body:
+        	// -create dummy constructor
+    		
+    		System.out.println("DUMMY CONSTRUCTOR - empty body");
+
+    	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyConstructor) {
+    		// class has only constructor:
+        	// -actual constructor created
+    		
+    		System.out.println("REAL CONSTRUCTOR - has construcot");
+    		
+    	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyMethods) {
+    		// class has only methods:
+        	// -dummy constructor created
+
+    		System.out.println("DUMMY CONSTRUCTOR - NO constructor ");
+    		
+    	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyFull) {
+    		// class has both constructor and methods:
+        	// -actual constructor created
+    		
+    		System.out.println("REAL CONSTRUCTOR - has ALL");
+    		
+    	} else {
+    		// error - innerClassBodyDummyStart cannot be anything else
+    	}
+
+		
+	}
+	
+	
+	
 	/* designator: class field */
 	
 	@Override

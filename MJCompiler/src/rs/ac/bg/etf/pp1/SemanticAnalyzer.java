@@ -119,7 +119,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 
 	private boolean errorDetected = false;	
 	
-	private int programVariablesNumber = 0;
+	private static int programVariablesNumber = 0;
 	private boolean mainMethodFound = false;
 	
 	private Struct currentType = null; // this will represent type of variable that is declaring
@@ -224,9 +224,14 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	
 	// return number of global variables (for the purpose of code generating)
 
-	public int getProgramVariablesNumber() {
+	public static int getProgramVariablesNumber() {
 		return programVariablesNumber;
 	}
+
+	public static void setProgramVariablesNumber(int newProgramVariablesNumber) {
+		programVariablesNumber = newProgramVariablesNumber;
+	}
+
 	
 	// Error handling
 	

@@ -22,7 +22,6 @@ import rs.ac.bg.etf.pp1.ast.DesignatorPostIncrement;
 import rs.ac.bg.etf.pp1.ast.DesignatorStatement;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.ExprListAddOpTerm;
-import rs.ac.bg.etf.pp1.ast.Factor;
 import rs.ac.bg.etf.pp1.ast.FactorArrayNewOperator;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
@@ -51,7 +50,6 @@ import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
-import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class CodeGenerator extends VisitorAdaptor {
 	
@@ -76,7 +74,67 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	
 	private void createVirtualTable() {
+		// virtual function table is set after global variables 
 		
+		int staticDataAreaTop = SemanticAnalyzer.getProgramVariablesNumber(); 
+		
+		System.out.println("VIRTUAL TABLE CREATION: &" + staticDataAreaTop);
+
+		for(Obj classNode: classNodesList) {
+			
+			mapClassVirtualFunctionsTableAddresses.put(classNode.getName(), staticDataAreaTop);
+			
+			for (Obj classMemberNode: classNode.getType().getMembers()) {
+
+				if(classMemberNode.getKind() == Obj.Meth) {
+					
+if(classMemberNode.getName() != classNode.getName()) {			
+// TODO: remove when add consturctor body
+					
+					System.out.println(classMemberNode.getName() + " &" + classMemberNode.getAdr());
+					
+					for(int i = 0; i < classMemberNode.getName().length(); i++) {
+						// functionName is broken into characters
+						Code.loadConst(classMemberNode.getName().charAt(i));
+
+						Code.put(Code.putstatic);
+						Code.put2(staticDataAreaTop);
+						staticDataAreaTop++;
+
+					}
+
+					Code.loadConst(-1);
+
+					Code.put(Code.putstatic);
+					Code.put2(staticDataAreaTop);
+					staticDataAreaTop++;
+					
+					// after mehtodName -1 there is method address:
+					Code.loadConst(classMemberNode.getAdr());
+
+					Code.put(Code.putstatic);
+					Code.put2(staticDataAreaTop);
+					staticDataAreaTop++;
+					
+}
+					
+				}
+				
+			
+			}
+			
+			Code.loadConst(-2);
+
+			Code.put(Code.putstatic);
+			Code.put2(staticDataAreaTop);
+			staticDataAreaTop++;
+			
+			
+			
+		}
+		
+		SemanticAnalyzer.setProgramVariablesNumber(staticDataAreaTop);
+
 	}
 
 	private void callLenMethod() {
@@ -166,6 +224,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(FunctionCallName functionCallName) {
 		functionNodesInInnerCallStack.add(functionCallName.obj);
+		//TODO: FIX REMOVAL FROM STACK
 	}
 	
 	/* function call */ 
@@ -583,7 +642,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	@Override
 	public void visit(FactorClassNewOperator factorClassNewOperator) {
-		
+
 		// class is created using new with additional argument that determines the class size
 		// every field in the class is 4B (all visible fields + virtual table function)
 		
@@ -596,7 +655,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
 		Code.put(Code.dup); // nevertheless putfield 2 will consume &class (which is meant to be for store operation in the assignment) so this address has to be copied
 
-		Code.loadConst(0); // &vft
+		Code.loadConst(mapClassVirtualFunctionsTableAddresses.get(factorClassNewOperator.getType().getTypeName())); // &vft
 
 		Code.put(Code.putfield);
         Code.put2(0); // field at the position 0 (&vtf) in the class will be filled with &vtf

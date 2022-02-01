@@ -11,7 +11,12 @@ class Predmet
 	 char vrsta;
 
 	{
-		 void postaviTezinu(int tezina) {this.tezina = tezina;}  
+	
+		 Predmet(){
+		   koefTezine = 2;	
+		 }
+		 
+		 void postaviTezinu(int tezina) {this.tezina = tezina * koefTezine;}  
 
 		 int zapremina() { return 0;}
 
@@ -119,8 +124,9 @@ int tezinaK, tezinaS;
 		predmeti[3].postaviTezinu(t);	
 		predmeti[4].postaviTezinu(t);	
 		predmeti[5].postaviTezinu(t);	
-		
-			
+		print('T'); print('e');
+		print(predmeti[0].tezina);	
+		print(eol);
 		zapreminaS = 0;
 		tezinaS = 0;
 		

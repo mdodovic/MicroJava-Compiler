@@ -18,6 +18,7 @@ class Predmet
 		 int Q() {return zapremina() * tezina;}
 
 		 void ispisi() {
+			 print('P');
 		 	print(vrsta);
 		 	print(Q());
 		 }
@@ -33,9 +34,20 @@ class Sfera extends Predmet
 		 int zapremina()
 			int z;
 		{
+			print('S');
+			print('=');
 			z = cinilac;
+			print(z *(r/delilac));
+			print(eol);
 			return z *(r/delilac);
 		}
+	
+		void ispisi(){
+			print('S');
+			//super();
+			print(r);
+			print(eol);
+		}		
 		
 	}
 }
@@ -52,7 +64,11 @@ class Kvadar extends Predmet
 		 int zapremina()
 			int z;
 		{
+			print('K');
+			print('=');
 			z = a * b * c;
+			print(z);
+			print(eol);
 			return z;
 		}
 	}
@@ -63,7 +79,7 @@ int tezinaK, tezinaS;
 {
 
 	void ispis( Predmet p)
-	{
+	{		
 		p.ispisi();
 		print(eol); 
 	}
@@ -71,24 +87,62 @@ int tezinaK, tezinaS;
 	void main() Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t;
 	{	
 		predmeti = new Predmet[6];
-		//s1 = new Sfera;
-		//s2 = new Sfera;
-		//s3 = new Sfera;
+		s1 = new Sfera;
+		s2 = new Sfera;
+		s3 = new Sfera;
 		
 		k1 = new Kvadar;
 		k2 = new Kvadar;
 		k3 = new Kvadar;
 		
-		//s1.postaviPoluprecnik(1);
-		//s2.postaviPoluprecnik(2);
-		//s3.postaviPoluprecnik(3);
+		s1.postaviPoluprecnik(9);
+		s2.postaviPoluprecnik(24);
+		s3.postaviPoluprecnik(36);
 		
 
-		k1.postaviStranice(1,222,3);
-		k2.postaviStranice(2,322,4);
-		k3.postaviStranice(3,422,5);
+		k1.postaviStranice(1,2,3);
+		k2.postaviStranice(2,3,4);
+		k3.postaviStranice(3,4,5);
 		
+	
+		predmeti[0] = s1;
+		predmeti[2] = s2;
+		predmeti[4] = s3;
+		predmeti[1] = k1;
+		predmeti[3] = k2;
+		predmeti[5] = k3;
 		
+		t = 6;
+		predmeti[0].postaviTezinu(t);	
+		predmeti[1].postaviTezinu(t);	
+		predmeti[2].postaviTezinu(t);	
+		predmeti[3].postaviTezinu(t);	
+		predmeti[4].postaviTezinu(t);	
+		predmeti[5].postaviTezinu(t);	
+		
+			
+		zapreminaS = 0;
+		tezinaS = 0;
+		
+		zapreminaS = zapreminaS + predmeti[0].zapremina();
+		zapreminaS = zapreminaS + predmeti[2].zapremina();
+		zapreminaS = zapreminaS + predmeti[4].zapremina();
+		
+		print(zapreminaS);
+		print(eol);
+		
+		zapreminaK = 0; 
+		tezinaK = 0;
+		
+		zapreminaK = zapreminaK + predmeti[1].zapremina();
+		zapreminaK = zapreminaK + predmeti[3].zapremina();
+		zapreminaK = zapreminaK + predmeti[5].zapremina();
 
+		print(zapreminaK);
+		print(eol);
+		
+		ispis(predmeti[0]);
+		ispis(predmeti[1]);
+					
 	}
 }

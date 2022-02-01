@@ -8,11 +8,7 @@ class TCalc {
 
 	{
 		void m(int i) { 
-			//this.tax = i; 			
-			tax = i; // this. - solve this!
-			
-			//i = this.tax;
-			//i = tax;
+			tax = i;
 		} 
 		void f(int i) { }
 	}
@@ -21,10 +17,11 @@ class TCalc {
 class ATCalc extends TCalc {
 
 	{
-		void m(int i) { f(i); }
+		void m(int i) { this.f(i); }
 	}
 }
 
+int z, t;
 
 {
 
@@ -33,10 +30,11 @@ class ATCalc extends TCalc {
 	}
 		
 	void main() TCalc obj; {	
-		
-		x = fun(3);
-		print(x);
-		obj = new TCalc;
+//		z = fun(11);
+//		print(z);
+//		x = fun(3);
+//		print(x);
+//		obj = new TCalc;
 		//obj.m(4);
 		//obj = new ATCalc;
 		//obj.m(4);

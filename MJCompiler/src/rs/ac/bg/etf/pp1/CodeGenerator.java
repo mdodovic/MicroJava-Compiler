@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import rs.ac.bg.etf.pp1.ast.ClassBodyBrackets;
 import rs.ac.bg.etf.pp1.ast.ClassBodyConstructor;
@@ -30,6 +31,7 @@ import rs.ac.bg.etf.pp1.ast.FactorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.FactorNumConst;
 import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.FirstActualParameter;
+import rs.ac.bg.etf.pp1.ast.FunctionCallName;
 import rs.ac.bg.etf.pp1.ast.FurtherActualParameters;
 import rs.ac.bg.etf.pp1.ast.IndirectArrayNameDesignator;
 import rs.ac.bg.etf.pp1.ast.InnerClassBodyDummyStart;
@@ -49,6 +51,7 @@ import rs.ac.bg.etf.pp1.ast.VisitorAdaptor;
 import rs.etf.pp1.mj.runtime.Code;
 import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
+import rs.etf.pp1.symboltable.concepts.Struct;
 
 public class CodeGenerator extends VisitorAdaptor {
 	
@@ -56,7 +59,15 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	private Map<String, Integer> mapClassVirtualFunctionsTableAddresses = new HashMap<String, Integer>(); 
 	
-	private List<Obj> classNodes = new ArrayList<Obj>();
+	private List<Obj> virtualMethodNodesList = new ArrayList<Obj>(); 
+
+	private Stack<Obj> functionNodesInInnerCallStack = new Stack<Obj>(); 
+	// stack of Obj nodes during calls. 
+	// nested function call example: f1(1, f2(3, f3(0)), 5) 
+	// 								 ^     ^    (^)
+	// ^ represents function Node and its relative position in the stack (^) is the top
+
+	private List<Obj> classNodesList = new ArrayList<Obj>();
 	private boolean classContext = false;
 	
 	public int getFirstInstruction() {
@@ -73,12 +84,28 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.put(Code.arraylength);
 	}
 	
+	private boolean checkIfMethodIsVirtual(Obj methodNode) {
+		
+		for(Obj virtualMethodNode: virtualMethodNodesList) {
+			if(virtualMethodNode.equals(methodNode)) {
+				return true;
+			}
+		}			
+		
+		return false;
+	}
+	
 	public void visit(MethodTypeName methodTypeName){
 		
 		// address of the method is the current pc (address of the first instruction in method)
 		methodTypeName.obj.setAdr(Code.pc);
 		
 		System.out.println("PC METODE: " + Code.pc);
+		if(classContext == true) {
+			// this method belongs to the class context: it is virtual
+			System.out.println("Virtual method name: " + methodTypeName.obj.getName());
+			virtualMethodNodesList.add(methodTypeName.obj);
+		}
 		
 		if("main".equals(methodTypeName.getMethName())){
 			// _start is the first instruction which will be executed:
@@ -134,8 +161,15 @@ public class CodeGenerator extends VisitorAdaptor {
 		Code.put(Code.return_);
 	}
 	
-	/* function call */ 
+	/* function call - name */
 	
+	@Override
+	public void visit(FunctionCallName functionCallName) {
+		functionNodesInInnerCallStack.add(functionCallName.obj);
+	}
+	
+	/* function call */ 
+		
 	@Override
 	public void visit(FactorFunctionCall factorFunctionCall) {
 
@@ -147,14 +181,16 @@ public class CodeGenerator extends VisitorAdaptor {
 			return;
 		}
 		
+		if(checkIfMethodIsVirtual(factorFunctionCall.getFunctionCallName().obj)) {
+			System.out.println("Virtual call!");
 		/*
 		if( virtual function ) {
 		
 			if(methodNode.getType() != Tab.noType) {
 				// non-void method will left returned value on the exprStack so it needs to be removed without any usage
 				Code.put(Code.pop);
-			}
-		} else */ {
+			}*/
+		} else  {
 			int offset = methodNode.getAdr() - Code.pc;
 			
 			Code.put(Code.call); 
@@ -173,14 +209,25 @@ public class CodeGenerator extends VisitorAdaptor {
 			callLenMethod();
 			return;
 		}
+		if(checkIfMethodIsVirtual(designatorFunctionCall.getFunctionCallName().obj)) {
+			System.out.println("Virtual call!");
+			
+			// virtual method call is different from ordinary method call
+			// 
+			
+			System.out.println(designatorFunctionCall.getFunctionCallName().obj.getLevel());			
+
+			Code.put(Code.getfield); // getfiled consume class address 
+			Code.put2(0);
+			
 		/*
 		if( virtual function ) {
 		
 			if(methodNode.getType() != Tab.noType) {
 				// non-void method will left returned value on the exprStack so it needs to be removed without any usage
 				Code.put(Code.pop);
-			}
-		} else */ {
+			} */
+		} else {
 			
 			int offset = methodNode.getAdr() - Code.pc;
 			
@@ -199,10 +246,17 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(FirstActualParameter firstActualParameter) {
 		
+		
+		System.out.println("First Actual Parameter");
+		Code.put(Code.dup_x1);
+		Code.put(Code.pop);
 	}
 	
 	@Override
 	public void visit(FurtherActualParameters furtherActualParameters) {
+		System.out.println("FuAP");
+		Code.put(Code.dup_x2);
+		Code.put(Code.pop);
 		
 	}
 	
@@ -266,7 +320,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(ClassDeclNameOptionalExtend classDeclNameOptionalExtend) {
 		// entering the class context: 
 		// save Obj node and set flag
-		classNodes.add(classDeclNameOptionalExtend.obj);
+		classNodesList.add(classDeclNameOptionalExtend.obj);
 		classContext = true;
 	}
 	
@@ -351,7 +405,7 @@ public class CodeGenerator extends VisitorAdaptor {
 //		System.out.println(simpleDesignator.getName());
 //		System.out.println(simpleDesignator.getParent().getClass());
 		
-		// class fields:
+		// class fields (Obj.Fld):
 		if(simpleDesignator.obj.getKind() == Obj.Fld) {				
 			// cover usage: 
 
@@ -364,7 +418,7 @@ public class CodeGenerator extends VisitorAdaptor {
 //				System.out.println("DesignatorStatement");
 			}
 			if(simpleDesignator.getParent() instanceof FactorVariable) {
-				// one factor in factor list (in expressions)
+				// part of some expression
 				
 				Code.put(Code.load_n + 0); // this
 				
@@ -374,9 +428,19 @@ public class CodeGenerator extends VisitorAdaptor {
 
 		}
 		
-		// class methods:
-		// TODO: ...
-
+		// class methods (in virtual method list):
+		if(checkIfMethodIsVirtual(simpleDesignator.obj)) {
+			// can be both part of expression and be called standalone
+			
+			if(simpleDesignator.getParent() instanceof FunctionCallName) {
+				Code.put(Code.load_n + 0); // this
+				
+				System.out.println("##");
+				System.out.println("Virtual function call");
+				
+			}
+			
+		}
 		
 	}
 	

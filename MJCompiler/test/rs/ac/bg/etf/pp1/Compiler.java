@@ -30,7 +30,7 @@ public class Compiler {
 		Reader br = null;
 		try {
 			
-			String mjFileName = "program";
+			String mjFileName = "class_extends";
 			
 			File sourceCode = new File("test/" + mjFileName + ".mj");
 //			File sourceCode = new File("test/class_extends.mj");
@@ -75,7 +75,7 @@ public class Compiler {
 				CodeGenerator codeGenerator = new CodeGenerator();
 				prog.traverseBottomUp(codeGenerator);
 				
-				Code.dataSize = v.getProgramVariablesNumber();
+				Code.dataSize = SemanticAnalyzer.getProgramVariablesNumber();
 				Code.mainPc = codeGenerator.getFirstInstruction();
 				Code.write(new FileOutputStream(objFile));
 	        	

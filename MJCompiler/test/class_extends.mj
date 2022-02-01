@@ -8,7 +8,7 @@ class TCalc {
 
 	{
 		void m(int i) { tax = i; }  
-		void f(int i) { }
+		void f(int i) { print(i); }
 	}
 }
 
@@ -31,6 +31,6 @@ class ATCalc extends TCalc {
 		x = fun(3);
 		obj = new ATCalc;
 		obj.m(4);
-
+		print(obj.tax);
 	}
 }

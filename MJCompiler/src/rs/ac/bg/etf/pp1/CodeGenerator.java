@@ -1,6 +1,8 @@
 package rs.ac.bg.etf.pp1;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import rs.ac.bg.etf.pp1.ast.ClassBodyBrackets;
@@ -8,14 +10,18 @@ import rs.ac.bg.etf.pp1.ast.ClassBodyConstructor;
 import rs.ac.bg.etf.pp1.ast.ClassBodyFull;
 import rs.ac.bg.etf.pp1.ast.ClassBodyMethods;
 import rs.ac.bg.etf.pp1.ast.ClassBodyNoConstructorNoMethod;
+import rs.ac.bg.etf.pp1.ast.ClassDecl;
+import rs.ac.bg.etf.pp1.ast.ClassDeclNameOptionalExtend;
 import rs.ac.bg.etf.pp1.ast.ClassFieldDesignator;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
 import rs.ac.bg.etf.pp1.ast.DesignatorFunctionCall;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostDecrement;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostIncrement;
+import rs.ac.bg.etf.pp1.ast.DesignatorStatement;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.ExprListAddOpTerm;
+import rs.ac.bg.etf.pp1.ast.Factor;
 import rs.ac.bg.etf.pp1.ast.FactorArrayNewOperator;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
 import rs.ac.bg.etf.pp1.ast.FactorCharConst;
@@ -50,6 +56,9 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	private Map<String, Integer> mapClassVirtualFunctionsTableAddresses = new HashMap<String, Integer>(); 
 	
+	private List<Obj> classNodes = new ArrayList<Obj>();
+	private boolean classContext = false;
+	
 	public int getFirstInstruction() {
 		return _start;
 	}
@@ -68,6 +77,8 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		// address of the method is the current pc (address of the first instruction in method)
 		methodTypeName.obj.setAdr(Code.pc);
+		
+		System.out.println("PC METODE: " + Code.pc);
 		
 		if("main".equals(methodTypeName.getMethName())){
 			// _start is the first instruction which will be executed:
@@ -249,6 +260,22 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 	}
 	
+	/* class context */
+	
+	@Override
+	public void visit(ClassDeclNameOptionalExtend classDeclNameOptionalExtend) {
+		// entering the class context: 
+		// save Obj node and set flag
+		classNodes.add(classDeclNameOptionalExtend.obj);
+		classContext = true;
+	}
+	
+	@Override
+	public void visit(ClassDecl classDecl) {
+		// leave class context:
+		// reset flag
+		classContext = false;
+	}
 	
 	/* class constructor */
 	
@@ -289,7 +316,6 @@ public class CodeGenerator extends VisitorAdaptor {
     		// error - innerClassBodyDummyStart cannot be anything else
     	}
 
-		
 	}
 	
 	
@@ -314,11 +340,43 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	@Override
 	public void visit(SimpleDesignator simpleDesignator) {
-		System.out.println(simpleDesignator.getName());
-		System.out.println(simpleDesignator.getParent().getClass());
-		//Code.load(simpleDesignator.obj);
+		
+		// designator can be global variable, local variable, global method name, class field access and class method name
+		// if the designator is global or local variable nothing should be done
+		// if the designator is the non-class method name nothing should be done as well
+		// in this situation (simple) class fields and methods are accessed without "this." so it should be added
+		// and "this" is the first (0) function argument
 		
 		
+//		System.out.println(simpleDesignator.getName());
+//		System.out.println(simpleDesignator.getParent().getClass());
+		
+		// class fields:
+		if(simpleDesignator.obj.getKind() == Obj.Fld) {				
+			// cover usage: 
+
+			if(simpleDesignator.getParent() instanceof DesignatorStatement) {
+				// left side of assignment
+				// increment or decrement 
+				Code.put(Code.load_n + 0); // this
+				
+//				System.out.println("##");
+//				System.out.println("DesignatorStatement");
+			}
+			if(simpleDesignator.getParent() instanceof FactorVariable) {
+				// one factor in factor list (in expressions)
+				
+				Code.put(Code.load_n + 0); // this
+				
+//				System.out.println("##");
+//				System.out.println("Factor Variable");
+			}
+
+		}
+		
+		// class methods:
+		// TODO: ...
+
 		
 	}
 	

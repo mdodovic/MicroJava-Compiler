@@ -17,7 +17,7 @@ class TCalc {
 class ATCalc extends TCalc {
 
 	{
-		void m(int i) { this.f(i); }
+		void m(int i) { f(i); }
 	}
 }
 

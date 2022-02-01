@@ -246,18 +246,23 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(FirstActualParameter firstActualParameter) {
 		
-		
-		System.out.println("First Actual Parameter");
-		Code.put(Code.dup_x1);
-		Code.put(Code.pop);
+		if(checkIfMethodIsVirtual(functionNodesInInnerCallStack.peek())) {
+			System.out.println("First Actual Parameter");
+			Code.put(Code.dup2);
+			Code.put(Code.pop);			
+		}
+
 	}
 	
 	@Override
 	public void visit(FurtherActualParameters furtherActualParameters) {
-		System.out.println("FuAP");
-		Code.put(Code.dup_x2);
-		Code.put(Code.pop);
-		
+
+		if(checkIfMethodIsVirtual(functionNodesInInnerCallStack.peek())) {
+			System.out.println("Further Actual Parameter");
+			Code.put(Code.dup2);
+			Code.put(Code.pop);			
+		}
+	
 	}
 	
 	

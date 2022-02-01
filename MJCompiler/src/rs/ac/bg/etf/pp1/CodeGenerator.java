@@ -227,7 +227,16 @@ if(classMemberNode.getName() != classNode.getName()) {
 		// add the top most function call from stack
 		functionNodesInInnerCallStack.push(functionCallName.obj);
 		
-		// TODO: fix error: transfer argument between &class and &class
+		// entering the function call
+		// if this is virtual function there is hidden argument "this" (&class)
+		// it has already been set and in the following nodes all arguments will be set on exprStack
+	 	// However &class is needed both as the argument "this" and as a getfield instruction argument
+		// so the copu of &class has to be propagate during the argument adding
+		
+		if(checkIfMethodIsVirtual(functionCallName.obj)) {
+			Code.put(Code.dup);
+		}
+
 	}
 	
 	/* function call */ 
@@ -333,11 +342,14 @@ if(classMemberNode.getName() != classNode.getName()) {
 	
 	@Override
 	public void visit(FirstActualParameter firstActualParameter) {
-		
+
 		if(checkIfMethodIsVirtual(functionNodesInInnerCallStack.peek())) {
+			// the argument has already been set on the exprStack and it looks like:
+			// &class &class firstArgument
 			System.out.println("First Actual Parameter");
-			Code.put(Code.dup2);
-			Code.put(Code.pop);			
+			// this argument should be pushed into the stack before second &class
+			Code.put(Code.dup_x1); // exprStack: &class firstArgument &class firstArgument
+			Code.put(Code.pop);	// exprStack: &class firstArgument &class
 		}
 
 	}
@@ -346,9 +358,12 @@ if(classMemberNode.getName() != classNode.getName()) {
 	public void visit(FurtherActualParameters furtherActualParameters) {
 
 		if(checkIfMethodIsVirtual(functionNodesInInnerCallStack.peek())) {
+			// the argument has already been set on the exprStack and it looks like:
+			// &class arguments &class currentArgument
 			System.out.println("Further Actual Parameter");
-			Code.put(Code.dup2);
-			Code.put(Code.pop);			
+			// this argument should be pushed into the stack before second &class
+			Code.put(Code.dup_x1); // exprStack: &class arguments currentArgument &class currentArgument
+			Code.put(Code.pop);	// exprStack: &class arguments currentArgument &class	
 		}
 	
 	}

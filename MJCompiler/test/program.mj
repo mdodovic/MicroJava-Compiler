@@ -1,36 +1,94 @@
-program ABC
+//Test 303
 
-int x, y;
+program test_303
 
-class TCalc {
+const int cinilac = 4, delilac = 3;
 
-	int tax;
+class Predmet
+{
+	 int tezina;
+	 int koefTezine;
+	 char vrsta;
 
 	{
-		void m(int i) { tax = i; }  
-		void f(int i) { print(i + 1); }
+		 void postaviTezinu(int tezina) {this.tezina = tezina;}  
+
+		 int zapremina() { return 0;}
+
+		 int Q() {return zapremina() * tezina;}
+
+		 void ispisi() {
+		 	print(vrsta);
+		 	print(Q());
+		 }
 	}
 }
 
-class ATCalc extends TCalc {
-
+class Sfera extends Predmet
+{
+	int r;
 	{
-		void m(int i) { f(i); }
+		 void postaviPoluprecnik(int r) {this.r = r; print('S'); print('P'); print(r); print(eol); }
+		 
+		 int zapremina()
+			int z;
+		{
+			z = cinilac;
+			return z *(r/delilac);
+		}
+		
 	}
 }
 
+class Kvadar extends Predmet
+{
+	 int a, b, c;
+	{
+		
+		 void postaviStranice(int a, int b, int c) {this.a = a; this.b = b; this.c = c;
+		 
+		 print('K'); print('S'); print(b); print(eol);
+		 }
+		 int zapremina()
+			int z;
+		{
+			z = a * b * c;
+			return z;
+		}
+	}
+}
 
+int zapreminaK, zapreminaS;
+int tezinaK, tezinaS;
 {
 
-	int fun(int arg) {
-		return arg * arg;
+	void ispis( Predmet p)
+	{
+		p.ispisi();
+		print(eol); 
 	}
 		
-	void main() TCalc obj; {	
+	void main() Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t;
+	{	
+		predmeti = new Predmet[6];
+		s1 = new Sfera;
+		s2 = new Sfera;
+		s3 = new Sfera;
 		
-		x = fun(3);
-		obj = new ATCalc;
-		obj.m(4);       // >> 4+1 => 5
-		print(obj.tax); // >> 0
+		k1 = new Kvadar;
+		k2 = new Kvadar;
+		k3 = new Kvadar;
+		
+		s1.postaviPoluprecnik(1);
+		s2.postaviPoluprecnik(2);
+		s3.postaviPoluprecnik(3);
+		
+
+		k1.postaviStranice(1,222,3);
+		k2.postaviStranice(2,322,4);
+		k3.postaviStranice(3,422,5);
+		
+		
+
 	}
 }

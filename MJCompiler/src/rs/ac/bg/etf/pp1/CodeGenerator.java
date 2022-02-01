@@ -102,14 +102,15 @@ if(classMemberNode.getName() != classNode.getName()) {
 						staticDataAreaTop++;
 
 					}
-
+					
+					// end of method name
 					Code.loadConst(-1);
 
 					Code.put(Code.putstatic);
 					Code.put2(staticDataAreaTop);
 					staticDataAreaTop++;
 					
-					// after mehtodName -1 there is method address:
+					// after 'mehtodName -1' there is method address:
 					Code.loadConst(classMemberNode.getAdr());
 
 					Code.put(Code.putstatic);
@@ -123,16 +124,16 @@ if(classMemberNode.getName() != classNode.getName()) {
 			
 			}
 			
+			// end of virtual table for one class
 			Code.loadConst(-2);
 
 			Code.put(Code.putstatic);
 			Code.put2(staticDataAreaTop);
 			staticDataAreaTop++;
 			
-			
-			
 		}
 		
+		// update program size (global variable count + virtual table size)
 		SemanticAnalyzer.setProgramVariablesNumber(staticDataAreaTop);
 
 	}
@@ -223,8 +224,8 @@ if(classMemberNode.getName() != classNode.getName()) {
 	
 	@Override
 	public void visit(FunctionCallName functionCallName) {
-		functionNodesInInnerCallStack.add(functionCallName.obj);
-		//TODO: FIX REMOVAL FROM STACK
+		// add the top most function call from stack
+		functionNodesInInnerCallStack.push(functionCallName.obj);
 	}
 	
 	/* function call */ 
@@ -267,6 +268,10 @@ if(classMemberNode.getName() != classNode.getName()) {
 			Code.put(Code.call); 
 			Code.put2(offset); // pc relative: pc = pc + offset = pc + &method - pc = &method
 		}
+		
+		// remove latest function call from stack
+		functionNodesInInnerCallStack.pop();
+		
 	}
 	
 	@Override
@@ -316,6 +321,10 @@ if(classMemberNode.getName() != classNode.getName()) {
 				Code.put(Code.pop);
 			}
 		}
+		
+		// remove latest function call from stack
+		functionNodesInInnerCallStack.pop();
+
 	}
 	
 	/* actual parameters */

@@ -226,6 +226,8 @@ if(classMemberNode.getName() != classNode.getName()) {
 	public void visit(FunctionCallName functionCallName) {
 		// add the top most function call from stack
 		functionNodesInInnerCallStack.push(functionCallName.obj);
+		
+		// TODO: fix error: transfer argument between &class and &class
 	}
 	
 	/* function call */ 

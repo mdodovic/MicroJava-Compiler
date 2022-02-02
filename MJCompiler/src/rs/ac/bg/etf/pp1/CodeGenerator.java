@@ -69,6 +69,8 @@ public class CodeGenerator extends VisitorAdaptor {
 	private List<Obj> classNodesList = new ArrayList<Obj>();
 	private Obj currentClassNode = null;
 	
+	private boolean superMethodCall = false;
+	
 	public int getFirstInstruction() {
 		return _start;
 	}
@@ -84,7 +86,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		for(Obj classNode: classNodesList) {
 			
 			mapClassVirtualFunctionsTableAddresses.put(classNode.getName(), staticDataAreaTop);
-			
+			System.out.println("Class " + classNode.getName() + " &" + staticDataAreaTop);
 			for (Obj classMemberNode: classNode.getType().getMembers()) {
 
 				if(classMemberNode.getKind() == Obj.Meth) {
@@ -234,10 +236,11 @@ public class CodeGenerator extends VisitorAdaptor {
 	 	// However &class is needed both as the argument "this" and as a getfield instruction argument
 		// so the copu of &class has to be propagate during the argument adding
 		
+		
 		if(checkIfMethodIsVirtual(functionCallName.obj)) {
 			Code.put(Code.dup);
 		}
-
+		
 	}
 	
 	/* function call */ 
@@ -329,7 +332,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
 				System.out.println("SUPER- constructor call");
 				
-			} else if(methodNode.getFpPos() == -3) {			
+			} else if(superMethodCall == true) {			
 				// semantic analysis sent information that this call is actually 
 				// super(args); and that this is overridden method call
 				// exprStack actually looks like:
@@ -386,6 +389,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		// remove latest function call from stack
 		functionNodesInInnerCallStack.pop();
+		superMethodCall = false;
 
 	}
 	
@@ -667,6 +671,13 @@ public class CodeGenerator extends VisitorAdaptor {
 			}
 			
 		}
+		
+		if("super".equals(simpleDesignator.getName())) {
+			
+			superMethodCall = true;
+			
+		}
+		
 		
 	}
 	

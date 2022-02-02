@@ -90,6 +90,7 @@ import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Scope;
 import rs.etf.pp1.symboltable.concepts.Struct;
+import rs.etf.pp1.symboltable.structure.SymbolDataStructure;
 import rs.etf.pp1.symboltable.visitors.DumpSymbolTableVisitor;
 import rs.etf.pp1.symboltable.visitors.SymbolTableVisitor;
 
@@ -1520,8 +1521,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     				if (methodNode.getName().equals(currentMethod.getName())) {
     					// overrided method from the super class
     					// object is passed to the upper nodes in processing
-    					simpleDesignator.obj = methodNode;    	
-    					simpleDesignator.obj.setFpPos(-3);
+    					simpleDesignator.obj = methodNode;
+    					//simpleDesignator.obj.setFpPos(-3);
     			    	report_info("Poziv metode " + currentMethod.getName() + " nadklase (" + superClassName + ") iz konstruktora tekuce klase (" + currentClassName + ") koriscenjem predefinisane metode super.", simpleDesignator);
     			    	return;
     				}

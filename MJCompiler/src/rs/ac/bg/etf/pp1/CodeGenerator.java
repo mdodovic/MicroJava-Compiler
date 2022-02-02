@@ -753,7 +753,32 @@ public class CodeGenerator extends VisitorAdaptor {
 
 		Code.put(Code.putfield);
         Code.put2(0); // field at the position 0 (&vtf) in the class will be filled with &vtf
+        
+        // after the class creation and before the assignment to the object reference
+        // appropriate constructor has to be called
+        // there is only &class on the exprStack (due to Code.put(Code.dup) that has been added to preserve one &class for the store operation)
+        
+		Code.put(Code.dup); // nevertheless calling the constructor (which will act as virutal function) will consume another &class so this address has to be copied
+		
+		// process of virtual method calling requires exprStack to be:
+		// &class (represents hidden argument this)
+		// arguments - which will be empty since constructor has no parameters
+		// &class (represents class which virtual functions table has to be accessed)
+		
+		Code.put(Code.dup); // second &class from calling exprStack can be added as simple copy (because of missing parameters)
+		
+		Code.put(Code.getfield); // getfiled consume &class and return &tvf
+		Code.put2(0); // &tvf is always at the position 0 in class
+					
+		Code.put(Code.invokevirtual); // invokevirtual functionName -1
+		
+		for(int i = 0; i < factorClassNewOperator.getType().getTypeName().length(); i++) {
+			// functionName is broken into characters
+			Code.put4(factorClassNewOperator.getType().getTypeName().charAt(i));
+		}
+		Code.put4(-1);
 
+        
 	}
 	
 	/* factor: new array operator */

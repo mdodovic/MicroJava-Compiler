@@ -12,13 +12,10 @@ class Predmet
 	
 		Predmet(){
 		  x = 2;	
-		  print('P');
-		  print(x);
+		  print('P'); print(x); print(eol);
 		}
 		 
-		 //int f() { return x + 1;}
-
-		 void g() { x = 3; print(x); }
+		 void g() { x = x + 1; print(x); print(eol); }
 
 	}
 }
@@ -26,7 +23,12 @@ class Predmet
 class Sfera extends Predmet 
 {
 	{
-		 int f() { print(5); return 0;}
+		Sfera() {
+			x = 6;
+			print('S'); print(x); print(eol);
+		}
+		
+		void g() { x = x + 1; print(x); print(eol);}
 				
 	}
 }
@@ -34,19 +36,22 @@ class Sfera extends Predmet
 {
 	void f(Predmet p)
 	{
-		
+		print(p.x);
+		print(eol);		
 	}
 
 	void main() Predmet p; {	
 		
 		p = new Predmet;
 		p.g();
-				
+		
+		f(p);						
 		//p.f();
 		//f(p);
-		//p = new Sfera;
+		p = new Sfera;
+		p.g();
 		//p.f();
-		//f(p);
+		f(p);
 					
 	}
 }

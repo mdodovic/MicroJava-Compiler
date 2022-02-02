@@ -1,98 +1,35 @@
 program ABC
 
-class A
-{
-	 int a;
-
-	{	
-		A() {
-			a = 3;	
-			print('<'); print('A'); print('>'); print(a); print(eol);
-		}
-		 
-		void foo(int x) { 
-			a = a + 1 - x; 
-			print('f'); print('o'); print('o'); print('<'); print('A'); print('>'); print(' '); print('a'); print('='); print(a); print(eol); 
-		}
-
-		void bar() { 
-			a = a * a; 
-			print('b'); print('a'); print('r'); print('<'); print('A'); print('>'); print(' '); print('a'); print('='); print(a); print(eol); 
-		}
-		
-	}
-}
-
-class B extends A
-{
-	 int b;
-
-	{	
-		B() {
-			super();
-		  	b = 5;	
-		  	print('<'); print('B'); print('>'); print(b); print(eol);
-		}
-		 
-		void foo(int x) { 
-			super(-1);
-			b = a + b + x; 
-			print('f'); print('o'); print('o'); print('<'); print('B'); print('>'); print(' '); print('a'); print('='); print(a); print(' '); print('b'); print('='); print(b); print(eol); 
-		}
-
-	}
-}
-
-class C extends A
-{
-	 int c;
-
-	{	
-		C() {
-			super();
-		  	c = -5;	
-		  	print('<'); print('C'); print('>'); print(c); print(eol);
-		}
-		 
-		void foo(int x) { 
-			super(11);
-			c = -a + c - x; 
-			print('f'); print('o'); print('o'); print('<'); print('C'); print('>'); print(' '); print('a'); print('='); print(a); print(' '); print('c'); print('='); print(c); print(eol); 
-		}
-
-	}
-}
-
 {
 
-	void p(A objA)
-	{
-		print(objA.a);
-		print(eol);		
-	}
+	void main() int x, y, n; {	
+		
+		x = 1;
+				
+		n = -11;
+//		do { 
+			n++;
+			print(n);
+			print(eol);
+//		} while (n <= x);
+		
+// 		if(x==1) 
+//			y = 2;
+//		else 
+//			y = 3;
+//		print(y);					
+//		
+//		if(x > 0 && y < 2) 
+//			x = 2;
+//		print(x);					
+//		
+//		if(x >= 0 || y <= 2) 
+//			x = 3;
+//		print(x);					
+//		
+//		if(x != 0 && y > 2 || x == 1) 
+//			x = 4;
+//		print(x);					
 
-	void main() A objA; {	
-		
-		objA = new A;
-		objA.foo(2);
-		objA.bar();
-		
-		p(objA);
-		print(eol);
-
-		objA = new B;
-		objA.foo(7);
-		objA.bar();
-		
-		p(objA);
-		print(eol);
-
-		objA = new C;
-		objA.foo(8);
-		objA.bar();
-		
-		p(objA);
-		print(eol);
-					
 	}
 }

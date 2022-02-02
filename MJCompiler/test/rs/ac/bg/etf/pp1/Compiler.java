@@ -30,7 +30,7 @@ public class Compiler {
 		Reader br = null;
 		try {
 			
-			String mjFileName = "class_constructor";
+			String mjFileName = "program";
 			
 			File sourceCode = new File("test/" + mjFileName + ".mj");
 //			File sourceCode = new File("test/class_extends.mj");

@@ -4,54 +4,77 @@ program test_303
 
 const int cinilac = 4, delilac = 3;
 
-class Predmet
+class A
 {
-	 int x;
+	 int a;
 
-	{
-	
-		Predmet(){
-		  x = 2;	
-		  print('P'); print(x); print(eol);
+	{	
+		A() {
+		  a = 3;	
+		  print('A'); print(a); print(eol);
 		}
 		 
-		 void g() { x = x + 1; print(x); print(eol); }
-
-	}
-}
-
-class Sfera extends Predmet 
-{
-	{
-		Sfera() {
-			x = 6;
-			print('S'); print(x); print(eol);
+		void foo() { 
+			a = a + 1; 
+			print('f'); print('o'); print('o'); print(a); print(eol); 
 		}
-		
-		void g() { x = x + 1; print(x); print(eol);}
-				
+
+		void bar() { 
+			a = a * a; 
+			print('b'); print('a'); print('r'); print(a); print(eol); 
+		}
+
+	}
+}
+
+class B extends A
+{
+	 int b;
+
+	{	
+		B() {
+		super();
+		  b = 4;	
+		  print('B'); print(b); print(eol);
+		}
+		 
+		void foo() { 
+		//	super();
+			b = a + b; 
+			print('f'); print('o'); print('o'); print(b); print(eol); 
+		}
+
+
 	}
 }
 
 {
-	void f(Predmet p)
+	void t()
 	{
-		print(p.x);
+		
+	}
+
+	void p(A objA)
+	{
+		print(objA.a);
 		print(eol);		
 	}
 
-	void main() Predmet p; {	
+	void main() A objA; B objB; {	
 		
-		p = new Predmet;
-		p.g();
+		objA = new A;
+		objA.foo();
+		objA.bar();
 		
-		f(p);						
-		//p.f();
-		//f(p);
-		p = new Sfera;
-		p.g();
-		//p.f();
-		f(p);
+		p(objA);
+		
+		objB = new B;
+		objB.foo();
+		objB.bar();
+		
+		p(objB);
+		
+		t();
 					
 	}
 }

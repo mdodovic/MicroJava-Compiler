@@ -297,6 +297,7 @@ public class CodeGenerator extends VisitorAdaptor {
 			callLenMethod();
 			return;
 		}
+
 		if(checkIfMethodIsVirtual(designatorFunctionCall.getFunctionCallName().obj)) {
 			System.out.println("Virtual call - DESIGNATOR!");
 			
@@ -306,17 +307,43 @@ public class CodeGenerator extends VisitorAdaptor {
 			// arguments
 			// &class (represents class which virtual functions table has to be accessed)
 			
-			Code.put(Code.getfield); // getfiled consume &class and return &tvf
-			Code.put2(0); // &tvf is always at the position 0 in class
-			
-			Code.put(Code.invokevirtual); // invokevirtual functionName -1
-			
-			for(int i = 0; i < methodNode.getName().length(); i++) {
-				// functionName is broken into characters
-				Code.put4(methodNode.getName().charAt(i));
-			}
-			Code.put4(-1);
+			if(methodNode.getFpPos() == -2) {
+				// semantic analysis sent information that this call is actually 
+				// super(); and that this is super-class-constructor call
+				// exprStack actually looks like:
+				// &inheritClass 
+				// &inheritClass ! - this is a problem because getfield 0 (which is meant to be the next instruction will fetch &tvf for &inheritClass
+				// in this table there is no function with this name (the name of constructor)
+				// so in this situation constructor from super class will be called on ordinary way
+				// we do know its address hence it has already been declared in super class
+				
+				Code.put(Code.pop);	// firstly we has to remove one &inheritClass from stack (which was meant to be consumed by getfield 0)
+				
+				int constructorAddress = methodNode.getAdr();				
+				int offset = constructorAddress - Code.pc;
+				
+				// then constructor from superclass is called by address
+				
+				Code.put(Code.call); 
+				Code.put2(offset); // pc relative: pc = pc + offset = pc + &method - pc = &method
 
+				System.out.println("SUPER- constructor call");
+				
+			} else {
+				// regular virtual function call
+				
+				Code.put(Code.getfield); // getfiled consume &class and return &tvf
+				Code.put2(0); // &tvf is always at the position 0 in class
+				
+				Code.put(Code.invokevirtual); // invokevirtual functionName -1
+				
+				for(int i = 0; i < methodNode.getName().length(); i++) {
+					// functionName is broken into characters
+					Code.put4(methodNode.getName().charAt(i));
+				}
+				Code.put4(-1);
+			}
+			
 			if(methodNode.getType() != Tab.noType) {
 				// non-void method will left returned value on the exprStack so it needs to be removed without any usage
 				Code.put(Code.pop);

@@ -10,8 +10,8 @@ class A
 			print('<'); print('A'); print('>'); print(a); print(eol);
 		}
 		 
-		void foo() { 
-			a = a + 1; 
+		void foo(int x) { 
+			a = a + 1 - x; 
 			print('f'); print('o'); print('o'); print('<'); print('A'); print('>'); print(' '); print('a'); print('='); print(a); print(eol); 
 		}
 
@@ -19,7 +19,7 @@ class A
 			a = a * a; 
 			print('b'); print('a'); print('r'); print('<'); print('A'); print('>'); print(' '); print('a'); print('='); print(a); print(eol); 
 		}
-
+		
 	}
 }
 
@@ -34,9 +34,9 @@ class B extends A
 		  	print('<'); print('B'); print('>'); print(b); print(eol);
 		}
 		 
-		void foo() { 
-			super();
-			b = a + b; 
+		void foo(int x) { 
+			super(-1);
+			b = a + b + x; 
 			print('f'); print('o'); print('o'); print('<'); print('B'); print('>'); print(' '); print('a'); print('='); print(a); print(' '); print('b'); print('='); print(b); print(eol); 
 		}
 
@@ -54,13 +54,13 @@ class B extends A
 	void main() A objA; B objB; {	
 		
 		objA = new A;
-		objA.foo();
+		objA.foo(2);
 		objA.bar();
 		
 		p(objA);
 		
 		objB = new B;
-		objB.foo();
+		objB.foo(7);
 		objB.bar();
 		
 		p(objB);

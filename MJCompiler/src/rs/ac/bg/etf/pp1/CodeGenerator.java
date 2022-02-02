@@ -312,7 +312,7 @@ public class CodeGenerator extends VisitorAdaptor {
 				// super(); and that this is super-class-constructor call
 				// exprStack actually looks like:
 				// &inheritClass 
-				// &inheritClass ! - this is a problem because getfield 0 (which is meant to be the next instruction will fetch &tvf for &inheritClass
+				// &inheritClass ! - this is a problem because getfield 0 (which is meant to be the next instruction) will fetch &tvf for &inheritClass
 				// in this table there is no function with this name (the name of constructor)
 				// so in this situation constructor from super class will be called on ordinary way
 				// we do know its address hence it has already been declared in super class
@@ -329,6 +329,29 @@ public class CodeGenerator extends VisitorAdaptor {
 
 				System.out.println("SUPER- constructor call");
 				
+			} else if(methodNode.getFpPos() == -3) {			
+				// semantic analysis sent information that this call is actually 
+				// super(args); and that this is overridden method call
+				// exprStack actually looks like:
+				// &inheritClass 
+				// arguments
+				// &inheritClass ! - this is a problem because getfield 0 (which is meant to be the next instruction) will fetch &tvf for &inheritClass
+				// this instruction will fetch the very same instruction not the overridden one, which will produce infinite recursion 
+				// so in this situation overridden method from super class will be called on ordinary way
+				// we do know its address hence it has already been declared in super class
+				
+				Code.put(Code.pop);	// firstly we has to remove one &inheritClass from stack (which was meant to be consumed by getfield 0)
+				
+				int overriddenMethodAddress = methodNode.getAdr();				
+				int offset = overriddenMethodAddress - Code.pc;
+				
+				// then overridden method from superclass is called by address
+				
+				Code.put(Code.call); 
+				Code.put2(offset); // pc relative: pc = pc + offset = pc + &method - pc = &method
+
+				System.out.println("SUPER- method");
+			
 			} else {
 				// regular virtual function call
 				

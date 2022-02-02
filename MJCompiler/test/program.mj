@@ -1,8 +1,4 @@
-//Test 303
-
-program test_303
-
-const int cinilac = 4, delilac = 3;
+program ABC
 
 class A
 {
@@ -10,20 +6,20 @@ class A
 
 	{	
 		A() {
-		  a = 3;	
-		  print('A'); print(a); print(eol);
+			a = 3;	
+			print('<'); print('A'); print('>'); print(a); print(eol);
 		}
 		 
-		void foo() { 
-			a = a + 1; 
-			print('f'); print('o'); print('o'); print(a); print(eol); 
+		void foo(int x) { 
+			a = a + 1 - x; 
+			print('f'); print('o'); print('o'); print('<'); print('A'); print('>'); print(' '); print('a'); print('='); print(a); print(eol); 
 		}
 
 		void bar() { 
 			a = a * a; 
-			print('b'); print('a'); print('r'); print(a); print(eol); 
+			print('b'); print('a'); print('r'); print('<'); print('A'); print('>'); print(' '); print('a'); print('='); print(a); print(eol); 
 		}
-
+		
 	}
 }
 
@@ -33,26 +29,21 @@ class B extends A
 
 	{	
 		B() {
-		super();
-		  b = 4;	
-		  print('B'); print(b); print(eol);
+			super();
+		  	b = 5;	
+		  	print('<'); print('B'); print('>'); print(b); print(eol);
 		}
 		 
-		void foo() { 
-		//	super();
-			b = a + b; 
-			print('f'); print('o'); print('o'); print(b); print(eol); 
+		void foo(int x) { 
+			super(-1);
+			b = a + b + x; 
+			print('f'); print('o'); print('o'); print('<'); print('B'); print('>'); print(' '); print('a'); print('='); print(a); print(' '); print('b'); print('='); print(b); print(eol); 
 		}
-
 
 	}
 }
 
 {
-	void t()
-	{
-		
-	}
 
 	void p(A objA)
 	{
@@ -63,18 +54,16 @@ class B extends A
 	void main() A objA; B objB; {	
 		
 		objA = new A;
-		objA.foo();
+		objA.foo(2);
 		objA.bar();
 		
 		p(objA);
 		
 		objB = new B;
-		objB.foo();
+		objB.foo(7);
 		objB.bar();
 		
 		p(objB);
-		
-		t();
 					
 	}
 }

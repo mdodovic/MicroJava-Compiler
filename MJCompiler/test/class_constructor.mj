@@ -1,153 +1,69 @@
-//Test 303
+program ABC
 
-program test_303
-
-const int cinilac = 4, delilac = 3;
-
-class Predmet
+class A
 {
-	 int tezina;
-	 int koefTezine;
-	 char vrsta;
+	 int a;
 
-	{
-	
-		 Predmet(){
-		   koefTezine = 2;	
-		 }
-		 
-		 void postaviTezinu(int tezina) {this.tezina = tezina * koefTezine;}  
-
-		 int zapremina() { return 0;}
-
-		 int Q() {return zapremina() * tezina;}
-
-		 void ispisi() {
-			 print('P');
-		 	print(vrsta);
-		 	print(Q());
-		 }
-	}
-}
-
-class Sfera extends Predmet
-{
-	int r;
-	{
-		 void postaviPoluprecnik(int r) {this.r = r; print('S'); print('P'); print(r); print(eol); }
-		 
-		 int zapremina()
-			int z;
-		{
-			print('S');
-			print('=');
-			z = cinilac;
-			print(z *(r/delilac));
-			print(eol);
-			return z *(r/delilac);
-		}
-	
-		void ispisi(){
-			//super();
-			print(r);
-			print(eol);
-		}		
-		
-	}
-}
-
-class Kvadar extends Predmet
-{
-	 int a, b, c;
-	{
-		
-		 void postaviStranice(int a, int b, int c) {this.a = a; this.b = b; this.c = c;
-		 
-		 print('K'); print('S'); print(a); print(b); print(c); print(eol);
-		 }
-		 int zapremina()
-			int z;
-		{
-			print('K');
-			print('=');
-			z = a * b * c;
-			print(z);
-			print(eol);
-			return z;
-		}
-	}
-}
-
-int zapreminaK, zapreminaS;
-int tezinaK, tezinaS;
-{
-
-	void ispis( Predmet p)
-	{		
-		p.ispisi();
-		print(eol); 
-	}
-		
-	void main() Predmet predmeti[]; int i; Sfera s1, s2, s3; Kvadar k1, k2, k3; int t;
 	{	
-		predmeti = new Predmet[6];
-		s1 = new Sfera;
-		s2 = new Sfera;
-		s3 = new Sfera;
-		
-		k1 = new Kvadar;
-		k2 = new Kvadar;
-		k3 = new Kvadar;
-		
-		s1.postaviPoluprecnik(9);
-		s2.postaviPoluprecnik(24);
-		s3.postaviPoluprecnik(36);
-		
+		A() {
+			a = 3;	
+			print('<'); print('A'); print('>'); print(a); print(eol);
+		}
+		 
+		void foo() { 
+			a = a + 1; 
+			print('f'); print('o'); print('o'); print('<'); print('A'); print('>'); print(' '); print('a'); print('='); print(a); print(eol); 
+		}
 
-		k1.postaviStranice(1,2,3);
-		k2.postaviStranice(2,3,4);
-		k3.postaviStranice(3,4,5);
-		
-	
-		predmeti[0] = s1;
-		predmeti[2] = s2;
-		predmeti[4] = s3;
-		predmeti[1] = k1;
-		predmeti[3] = k2;
-		predmeti[5] = k3;
-		
-		t = 6;
-		predmeti[0].postaviTezinu(t);	
-		predmeti[1].postaviTezinu(t);	
-		predmeti[2].postaviTezinu(t);	
-		predmeti[3].postaviTezinu(t);	
-		predmeti[4].postaviTezinu(t);	
-		predmeti[5].postaviTezinu(t);	
-		print('T'); print('e');
-		print(predmeti[0].tezina);	
-		print(eol);
-		zapreminaS = 0;
-		tezinaS = 0;
-		
-		zapreminaS = zapreminaS + predmeti[0].zapremina();
-		zapreminaS = zapreminaS + predmeti[2].zapremina();
-		zapreminaS = zapreminaS + predmeti[4].zapremina();
-		
-		print(zapreminaS);
-		print(eol);
-		
-		zapreminaK = 0; 
-		tezinaK = 0;
-		
-		zapreminaK = zapreminaK + predmeti[1].zapremina();
-		zapreminaK = zapreminaK + predmeti[3].zapremina();
-		zapreminaK = zapreminaK + predmeti[5].zapremina();
+		void bar() { 
+			a = a * a; 
+			print('b'); print('a'); print('r'); print('<'); print('A'); print('>'); print(' '); print('a'); print('='); print(a); print(eol); 
+		}
 
-		print(zapreminaK);
-		print(eol);
+	}
+}
+
+class B extends A
+{
+	 int b;
+
+	{	
+		B() {
+			super();
+		  	b = 5;	
+		  	print('<'); print('B'); print('>'); print(b); print(eol);
+		}
+		 
+		void foo() { 
+			super();
+			b = a + b; 
+			print('f'); print('o'); print('o'); print('<'); print('B'); print('>'); print(' '); print('a'); print('='); print(a); print(' '); print('b'); print('='); print(b); print(eol); 
+		}
+
+	}
+}
+
+{
+
+	void p(A objA)
+	{
+		print(objA.a);
+		print(eol);		
+	}
+
+	void main() A objA; B objB; {	
 		
-		ispis(predmeti[0]);
-		ispis(predmeti[1]);
+		objA = new A;
+		objA.foo();
+		objA.bar();
+		
+		p(objA);
+		
+		objB = new B;
+		objB.foo();
+		objB.bar();
+		
+		p(objB);
 					
 	}
 }

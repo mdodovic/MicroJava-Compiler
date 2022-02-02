@@ -1508,7 +1508,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     					// constructor from the super class
     					// object is passed to the upper nodes in processing
     					simpleDesignator.obj = constructorNode;    	
-    					simpleDesignator.obj.setFpPos(-2);
     			    	report_info("Poziv konstruktora nadklase (" + superClassName + ") iz konstruktora tekuce klase (" + currentClassName + ") koriscenjem predefinisane metode super().", simpleDesignator);
     			    	return;
     				}
@@ -1522,7 +1521,6 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     					// overrided method from the super class
     					// object is passed to the upper nodes in processing
     					simpleDesignator.obj = methodNode;
-    					//simpleDesignator.obj.setFpPos(-3);
     			    	report_info("Poziv metode " + currentMethod.getName() + " nadklase (" + superClassName + ") iz konstruktora tekuce klase (" + currentClassName + ") koriscenjem predefinisane metode super.", simpleDesignator);
     			    	return;
     				}

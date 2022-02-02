@@ -69,7 +69,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	private List<Obj> classNodesList = new ArrayList<Obj>();
 	private Obj currentClassNode = null;
 	
-	private boolean superMethodCall = false;
+	private boolean superMethodCallFlag = false; // flag that determines if the method call is an ordinary method or this is super(...); call
 	
 	public int getFirstInstruction() {
 		return _start;
@@ -266,17 +266,42 @@ public class CodeGenerator extends VisitorAdaptor {
 			// arguments
 			// &class (represents class which virtual functions table has to be accessed)
 			
-			Code.put(Code.getfield); // getfiled consume &class and return &tvf
-			Code.put2(0); // &tvf is always at the position 0 in class
-			
-			Code.put(Code.invokevirtual); // invokevirtual functionName -1
-			
-			for(int i = 0; i < methodNode.getName().length(); i++) {
-				// functionName is broken into characters
-				Code.put4(methodNode.getName().charAt(i));
-			}
-			Code.put4(-1);
+			if(superMethodCallFlag == true) {
+				// super(args); and that this is overridden method call
+				// exprStack actually looks like:
+				// &inheritClass 
+				// arguments - if this super call is super constructor call there will be no arguments which will not affect further processing
+				// &inheritClass ! - this is a problem because getfield 0 (which is meant to be the next instruction) will fetch &tvf for &inheritClass
+				// this instruction will fetch the very same instruction not the overridden one, which will produce infinite recursion 
+				// so in this situation overridden method from super class will be called on ordinary way
+				// we do know its address hence it has already been declared in super class
+				
+				Code.put(Code.pop);	// firstly we has to remove one &inheritClass from stack (which was meant to be consumed by getfield 0)
+				
+				int overriddenMethodAddress = methodNode.getAdr();				
+				int offset = overriddenMethodAddress - Code.pc;
+				
+				// then overridden method from superclass is called by address
+				
+				Code.put(Code.call); 
+				Code.put2(offset); // pc relative: pc = pc + offset = pc + &method - pc = &method
 
+				System.out.println("SUPER- method");
+			
+			} else {
+				// regular virtual function call
+			
+				Code.put(Code.getfield); // getfiled consume &class and return &tvf
+				Code.put2(0); // &tvf is always at the position 0 in class
+				
+				Code.put(Code.invokevirtual); // invokevirtual functionName -1
+				
+				for(int i = 0; i < methodNode.getName().length(); i++) {
+					// functionName is broken into characters
+					Code.put4(methodNode.getName().charAt(i));
+				}
+				Code.put4(-1);
+			}
 		} else  {
 			int offset = methodNode.getAdr() - Code.pc;
 			
@@ -286,7 +311,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		// remove latest function call from stack
 		functionNodesInInnerCallStack.pop();
-		
+		superMethodCallFlag = false; // reset marking for super-call at the end of processing
 	}
 	
 	@Override
@@ -310,34 +335,11 @@ public class CodeGenerator extends VisitorAdaptor {
 			// arguments
 			// &class (represents class which virtual functions table has to be accessed)
 			
-			if(methodNode.getFpPos() == -2) {
-				// semantic analysis sent information that this call is actually 
-				// super(); and that this is super-class-constructor call
-				// exprStack actually looks like:
-				// &inheritClass 
-				// &inheritClass ! - this is a problem because getfield 0 (which is meant to be the next instruction) will fetch &tvf for &inheritClass
-				// in this table there is no function with this name (the name of constructor)
-				// so in this situation constructor from super class will be called on ordinary way
-				// we do know its address hence it has already been declared in super class
-				
-				Code.put(Code.pop);	// firstly we has to remove one &inheritClass from stack (which was meant to be consumed by getfield 0)
-				
-				int constructorAddress = methodNode.getAdr();				
-				int offset = constructorAddress - Code.pc;
-				
-				// then constructor from superclass is called by address
-				
-				Code.put(Code.call); 
-				Code.put2(offset); // pc relative: pc = pc + offset = pc + &method - pc = &method
-
-				System.out.println("SUPER- constructor call");
-				
-			} else if(superMethodCall == true) {			
-				// semantic analysis sent information that this call is actually 
+			if(superMethodCallFlag == true) {
 				// super(args); and that this is overridden method call
 				// exprStack actually looks like:
 				// &inheritClass 
-				// arguments
+				// arguments - if this super call is super constructor call there will be no arguments which will not affect further processing
 				// &inheritClass ! - this is a problem because getfield 0 (which is meant to be the next instruction) will fetch &tvf for &inheritClass
 				// this instruction will fetch the very same instruction not the overridden one, which will produce infinite recursion 
 				// so in this situation overridden method from super class will be called on ordinary way
@@ -389,7 +391,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		// remove latest function call from stack
 		functionNodesInInnerCallStack.pop();
-		superMethodCall = false;
+		superMethodCallFlag = false; // reset marking for super-call at the end of processing
 
 	}
 	
@@ -673,11 +675,10 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 		
 		if("super".equals(simpleDesignator.getName())) {
-			
-			superMethodCall = true;
+			// if the designator is super then this call is overridden method call
+			superMethodCallFlag = true;
 			
 		}
-		
 		
 	}
 	

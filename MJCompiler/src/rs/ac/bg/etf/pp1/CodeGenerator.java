@@ -14,6 +14,7 @@ import rs.ac.bg.etf.pp1.ast.ClassBodyNoConstructorNoMethod;
 import rs.ac.bg.etf.pp1.ast.ClassDecl;
 import rs.ac.bg.etf.pp1.ast.ClassDeclNameOptionalExtend;
 import rs.ac.bg.etf.pp1.ast.ClassFieldDesignator;
+import rs.ac.bg.etf.pp1.ast.ConstructorDecl;
 import rs.ac.bg.etf.pp1.ast.CorrectMethodDecl;
 import rs.ac.bg.etf.pp1.ast.DesignatorAssignOperation;
 import rs.ac.bg.etf.pp1.ast.DesignatorFunctionCall;
@@ -66,7 +67,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	// ^ represents function Node and its relative position in the stack (^) is the top
 
 	private List<Obj> classNodesList = new ArrayList<Obj>();
-	private boolean classContext = false;
+	private Obj currentClassNode = null;
 	
 	public int getFirstInstruction() {
 		return _start;
@@ -88,7 +89,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
 				if(classMemberNode.getKind() == Obj.Meth) {
 					
-if(classMemberNode.getName() != classNode.getName()) {			
+//if(classMemberNode.getName() != classNode.getName()) {			
 // TODO: remove when add consturctor body
 					
 					System.out.println(classMemberNode.getName() + " &" + classMemberNode.getAdr());
@@ -117,7 +118,7 @@ if(classMemberNode.getName() != classNode.getName()) {
 					Code.put2(staticDataAreaTop);
 					staticDataAreaTop++;
 					
-}
+//}
 					
 				}
 				
@@ -160,7 +161,7 @@ if(classMemberNode.getName() != classNode.getName()) {
 		methodTypeName.obj.setAdr(Code.pc);
 		
 		System.out.println("PC METODE: " + Code.pc);
-		if(classContext == true) {
+		if(currentClassNode != null) {
 			// this method belongs to the class context: it is virtual
 			System.out.println("Virtual method name: " + methodTypeName.obj.getName());
 			virtualMethodNodesList.add(methodTypeName.obj);
@@ -429,51 +430,118 @@ if(classMemberNode.getName() != classNode.getName()) {
 		// entering the class context: 
 		// save Obj node and set flag
 		classNodesList.add(classDeclNameOptionalExtend.obj);
-		classContext = true;
+		currentClassNode = classDeclNameOptionalExtend.obj;
 	}
 	
 	@Override
 	public void visit(ClassDecl classDecl) {
 		// leave class context:
 		// reset flag
-		classContext = false;
+		currentClassNode = null;
 	}
 	
 	/* class constructor */
+	
+	private void createDummyConstructor() {
+		
+		// this is dummy constructor without any body
+		// it will contain only entering (enter) and exiting (exit and return) instructions
+		// Newertheless it has to be marked as virtual, and its address has to be set
+		
+		Obj constructorNode = null;
+		for(Obj currentClassMemberNode: currentClassNode.getType().getMembers()) {
+			if(currentClassMemberNode.getName().equals(currentClassNode.getName())) {
+				constructorNode = currentClassMemberNode;
+				break;
+			}
+		}
+
+		virtualMethodNodesList.add(constructorNode);				
+		constructorNode.setAdr(Code.pc);
+		
+		// entering in every method begins with the instruction
+		// enter (parameters) (parameters + local variables)
+		// so this is the case with the constructor 
+		Code.put(Code.enter);
+		Code.put(constructorNode.getLevel()); // level is number of formal arguments
+		Code.put(constructorNode.getLocalSymbols().size());
+		
+		// exit from constructor is the same as every method
+		Code.put(Code.exit);
+		Code.put(Code.return_);
+				
+	}
+	
+	private void createEnterIntoDefinedConstructor() {
+		
+		
+		// constructor has the same name as the class (and there is no other methods with the same name, due to semantic analyzer)
+		// its object can be found using that fact
+			
+		Obj constructorNode = null;
+		for(Obj currentClassMemberNode: currentClassNode.getType().getMembers()) {
+			if(currentClassMemberNode.getName().equals(currentClassNode.getName())) {
+				constructorNode = currentClassMemberNode;
+				break;
+			}
+		}
+
+		virtualMethodNodesList.add(constructorNode);				
+		constructorNode.setAdr(Code.pc);
+		
+		// entering in every method begins with the instruction
+		// enter (parameters) (parameters + local variables)
+		// so this is the case with the constructor 
+		Code.put(Code.enter);
+		Code.put(constructorNode.getLevel()); // level is number of formal arguments
+		Code.put(constructorNode.getLocalSymbols().size());
+		
+	}
+	
+	@Override
+	public void visit(ConstructorDecl ConstructorDecl) {
+		// exit from constructor is the same as every method
+		Code.put(Code.exit);
+		Code.put(Code.return_);
+	}
 	
 	@Override
 	public void visit(InnerClassBodyDummyStart innerClassBodyDummyStart) {
 
     	if(innerClassBodyDummyStart.getParent() instanceof ClassBodyNoConstructorNoMethod) {
     		// class has no body:
-        	// -dummy constructor created
+        	// -create dummy constructor
     		
     		System.out.println("DUMMY CONSTRUCTOR - no body");
+    		createEnterIntoDefinedConstructor();
 
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyBrackets) {
     		// class has empty body:
         	// -create dummy constructor
     		
     		System.out.println("DUMMY CONSTRUCTOR - empty body");
+    		createEnterIntoDefinedConstructor();
 
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyConstructor) {
     		// class has only constructor:
-        	// -actual constructor created
+        	// -create actual constructor
     		
     		System.out.println("REAL CONSTRUCTOR - has construcot");
+    		createEnterIntoDefinedConstructor();
     		
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyMethods) {
     		// class has only methods:
-        	// -dummy constructor created
+        	// -create dummy constructor
 
     		System.out.println("DUMMY CONSTRUCTOR - NO constructor ");
+    		createDummyConstructor();
     		
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyFull) {
     		// class has both constructor and methods:
-        	// -actual constructor created
+        	// -create actual constructor
     		
     		System.out.println("REAL CONSTRUCTOR - has ALL");
-    		
+    		createEnterIntoDefinedConstructor();
     	} else {
     		// error - innerClassBodyDummyStart cannot be anything else
     	}

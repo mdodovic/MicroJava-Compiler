@@ -772,8 +772,12 @@ public class CodeGenerator extends VisitorAdaptor {
 					
 		Code.put(Code.invokevirtual); // invokevirtual functionName -1
 		
+		// constructor has the same name as the class
+		// class can be assigned with the object of inherited class and its constructor has to be called
+		// hence dynamic type (type in new operator) is used instead of static type (declared object type)
+		
 		for(int i = 0; i < factorClassNewOperator.getType().getTypeName().length(); i++) {
-			// functionName is broken into characters
+			// constructorName is broken into characters
 			Code.put4(factorClassNewOperator.getType().getTypeName().charAt(i));
 		}
 		Code.put4(-1);

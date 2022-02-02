@@ -43,6 +43,26 @@ class B extends A
 	}
 }
 
+class C extends A
+{
+	 int c;
+
+	{	
+		C() {
+			super();
+		  	c = -5;	
+		  	print('<'); print('C'); print('>'); print(c); print(eol);
+		}
+		 
+		void foo(int x) { 
+			super(11);
+			c = -a + c - x; 
+			print('f'); print('o'); print('o'); print('<'); print('C'); print('>'); print(' '); print('a'); print('='); print(a); print(' '); print('c'); print('='); print(c); print(eol); 
+		}
+
+	}
+}
+
 {
 
 	void p(A objA)
@@ -51,19 +71,28 @@ class B extends A
 		print(eol);		
 	}
 
-	void main() A objA; B objB; {	
+	void main() A objA; {	
 		
 		objA = new A;
 		objA.foo(2);
 		objA.bar();
 		
 		p(objA);
+		print(eol);
+
+		objA = new B;
+		objA.foo(7);
+		objA.bar();
 		
-		objB = new B;
-		objB.foo(7);
-		objB.bar();
+		p(objA);
+		print(eol);
+
+		objA = new C;
+		objA.foo(8);
+		objA.bar();
 		
-		p(objB);
+		p(objA);
+		print(eol);
 					
 	}
 }

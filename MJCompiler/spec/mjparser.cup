@@ -201,7 +201,7 @@ nonterminal Mulop; /* contains "*", "/" and "%" */
 /* Dummy productions has just purpose to be first visited in Abstract Syntax Tree */
 nonterminal DoWhileDummyStart; /* this will represent the beginning of the do-while construction */
 nonterminal InnerClassBodyDummyStart; /* this will represent the end of class variables declarations and the beginning of constructor+method declarations. */
-
+nonterminal IfDummyStart; /* this will represent the beginning of the if-statement (just before the first instruction of the condition) */
 
 /* precedences */
 
@@ -441,10 +441,12 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement
 
 DoWhileDummyStart ::= (DoWhileDummyStart) /* epsilon */;
 
-IfCondition ::= (IfPart) IF LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET
+IfCondition ::= (IfPart) IF IfDummyStart LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET
 				|
-				(ErrorInCondition) IF LEFT_ROUND_BRACKET error:l {: parser.report_error("Izvrsen oporavak do ) u liniji " + lleft, null); :} RIGHT_ROUND_BRACKET
+				(ErrorInCondition) IF IfDummyStart LEFT_ROUND_BRACKET error:l {: parser.report_error("Izvrsen oporavak do ) u liniji " + lleft, null); :} RIGHT_ROUND_BRACKET
 				;
+
+IfDummyStart ::= (IfDummyStart) /* epsilon */;
 
 /* if-else conditions */
 

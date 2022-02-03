@@ -1,35 +1,41 @@
 program ABC
 
 {
-
-	void main() int x, y, n; {	
+	bool verify() {
+		return false;
+	}
+	void main() int a, b; int max; bool bc1, bc2, bc3; int x, y;{	
+	
+		x = 2;
 		
-		x = 1;
-				
-		n = -11;
-//		do { 
-			n++;
-			print(n);
-			print(eol);
-//		} while (n <= x);
+		bc1 = false;
+		bc2 = true;
+		bc3 = true;
 		
-// 		if(x==1) 
-//			y = 2;
-//		else 
-//			y = 3;
-//		print(y);					
-//		
-//		if(x > 0 && y < 2) 
-//			x = 2;
-//		print(x);					
-//		
-//		if(x >= 0 || y <= 2) 
-//			x = 3;
-//		print(x);					
-//		
-//		if(x != 0 && y > 2 || x == 1) 
-//			x = 4;
-//		print(x);					
+		if(verify() == true && bc2 && bc3 || bc1 && bc2)  
+			print(1);
+		else
+			print(0);		
 
+
+ 		if(x == 1) 
+			y = 2;
+		else 
+			y = 3;
+		print(y);					
+		
+		if(x > 0 && y < 2) 
+			x = 11;
+		print(x);					
+		
+		if(x >= 0 || y <= 2) 
+			x = 3;
+		print(x);					
+		
+		if(x != 0 && y > 2 || x == 1) 
+			x = 4;
+		print(x);					
+
+	
 	}
 }

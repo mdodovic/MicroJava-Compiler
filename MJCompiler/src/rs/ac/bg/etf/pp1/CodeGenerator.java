@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import rs.ac.bg.etf.pp1.ast.AndOpFactCondition;
 import rs.ac.bg.etf.pp1.ast.ClassBodyBrackets;
 import rs.ac.bg.etf.pp1.ast.ClassBodyConstructor;
 import rs.ac.bg.etf.pp1.ast.ClassBodyFull;
@@ -22,6 +23,7 @@ import rs.ac.bg.etf.pp1.ast.DesignatorPostDecrement;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostIncrement;
 import rs.ac.bg.etf.pp1.ast.DesignatorStatement;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
+import rs.ac.bg.etf.pp1.ast.EqualOp;
 import rs.ac.bg.etf.pp1.ast.ExprListAddOpTerm;
 import rs.ac.bg.etf.pp1.ast.FactorArrayNewOperator;
 import rs.ac.bg.etf.pp1.ast.FactorBoolConst;
@@ -33,15 +35,29 @@ import rs.ac.bg.etf.pp1.ast.FactorVariable;
 import rs.ac.bg.etf.pp1.ast.FirstActualParameter;
 import rs.ac.bg.etf.pp1.ast.FunctionCallName;
 import rs.ac.bg.etf.pp1.ast.FurtherActualParameters;
+import rs.ac.bg.etf.pp1.ast.GreaterEqualOp;
+import rs.ac.bg.etf.pp1.ast.GreaterOp;
+import rs.ac.bg.etf.pp1.ast.IfDummyConditionEnd;
+import rs.ac.bg.etf.pp1.ast.IfDummyConditionStart;
 import rs.ac.bg.etf.pp1.ast.IndirectArrayNameDesignator;
 import rs.ac.bg.etf.pp1.ast.InnerClassBodyDummyStart;
+import rs.ac.bg.etf.pp1.ast.LessEqualOp;
+import rs.ac.bg.etf.pp1.ast.LessOp;
 import rs.ac.bg.etf.pp1.ast.MethodTypeName;
 import rs.ac.bg.etf.pp1.ast.MulOpFactorList;
 import rs.ac.bg.etf.pp1.ast.MultiplyOp;
+import rs.ac.bg.etf.pp1.ast.NonIfElseBlockDummyStart;
+import rs.ac.bg.etf.pp1.ast.NotEqualOp;
+import rs.ac.bg.etf.pp1.ast.OrBlockDummyEnd;
 import rs.ac.bg.etf.pp1.ast.PlusOp;
+import rs.ac.bg.etf.pp1.ast.RelOpExprCondition;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
+import rs.ac.bg.etf.pp1.ast.SingleExprCondition;
+import rs.ac.bg.etf.pp1.ast.SingleFactCondition;
 import rs.ac.bg.etf.pp1.ast.SingleNegativeTerm;
 import rs.ac.bg.etf.pp1.ast.SingleStatementMatch;
+import rs.ac.bg.etf.pp1.ast.StatementIf;
+import rs.ac.bg.etf.pp1.ast.StatementIfElse;
 import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
 import rs.ac.bg.etf.pp1.ast.StatementPrintWithWidth;
 import rs.ac.bg.etf.pp1.ast.StatementRead;
@@ -933,6 +949,174 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 		// and put the result back to the exprStack		
 	}
+
+	
+	/* if */
+	
+	// terminology:
+	// "non-if" - first instruction after if-else block
+	// "than" - statements in if-else if the condition is true
+	// "else" - statements in if-else if the condition is false
+	
+	// if-else structures can be nested so stack structure is used to access the current depth
+	// there is a problem in mapping jump destination addresses in in-advance-referencing 
+	// hence the top of the following stacks will contain place where addresses patching has to be fixed
+	
+	// condition is formed from OR-blocks: if the OR-block is true "than" statements would have to be executed, on the other hand "else"/"non-if" statements would have to be executed
+	// places for patch with address of the "else"/"non-if" statements is stored in the following stack	
+	private Stack<List<Integer>> destinationAddressPatchingFromORConditionBlockStack= new Stack<List<Integer>>(); 
+	
+	// OR-block is formed from AND-blocks: if AND-block is false whole OR-block is false
+	// places for patch with address when to jump if single term from AND-block is false is stored in the following stack
+	private Stack<List<Integer>> destinationAddressPatchingFromANDConditionBlockStack = new Stack<List<Integer>>(); 
+
+	private Stack<List<Integer>> destinationAddressPatchingFromThenBlockStack = new Stack<List<Integer>>(); 
+	
+	@Override
+	public void visit(IfDummyConditionStart IfDummyConditionStart) {
+		// open new if-else scope by pushing new list of addresses for patching on stack
+		destinationAddressPatchingFromORConditionBlockStack.push(new ArrayList<Integer>());
+		destinationAddressPatchingFromANDConditionBlockStack.push(new ArrayList<Integer>());
+		destinationAddressPatchingFromThenBlockStack.push(new ArrayList<Integer>());
+	}
+	
+	@Override
+	public void visit(SingleExprCondition singleExprCondition) {
+		
+		// exprStack looks like:
+		// boolean_value
+		// this value can be either true (1) or false (0) 
+		// to check if the value is true or false it can be compared with true and jump based on this comparison
+		
+		Code.loadConst(1); // true is represented as 1 on exprStack
+		Code.putFalseJump(Code.eq, 0); // comparison on equality: if the value on the stack is true further conditions in this AND block will be tested
+		// however if this value is false, current AND block is automatically false 
+		// so condition processing has to be continued with next OR block or the complete condition is false so THAN statements will not be processed
+		// address of this new processing is currently unknown so it needs to be saved for patching
+		
+		destinationAddressPatchingFromANDConditionBlockStack.peek().add(Code.pc - 2); // saved address for patching
+				
+	}
+	
+	@Override
+	public void visit(RelOpExprCondition relOpExprCondition) {
+		
+		// exprStack looks like:
+		// integer_value
+		// integer_value
+		
+		// this is part of AND-block so inverse condition should be checked and jumped to the 
+System.out.println("s");
+		if(relOpExprCondition.getRelop() instanceof EqualOp) {
+			Code.putFalseJump(Code.eq, 0); 			
+		} else if(relOpExprCondition.getRelop() instanceof NotEqualOp) {
+			Code.putFalseJump(Code.ne, 0); 			
+		} else if(relOpExprCondition.getRelop() instanceof LessOp) {
+			Code.putFalseJump(Code.lt, 0); 			
+		} else if(relOpExprCondition.getRelop() instanceof GreaterOp) {
+			Code.putFalseJump(Code.gt, 0); 			
+		} else if(relOpExprCondition.getRelop() instanceof GreaterEqualOp) {
+			Code.putFalseJump(Code.ge, 0); 			
+		} else if(relOpExprCondition.getRelop() instanceof LessEqualOp) {
+			Code.putFalseJump(Code.le, 0); 			
+		}
+					
+		// if the inverse condition is false (actual condition is true) further conditions in this AND block will be tested		
+		// however if the inverse condition is true current AND block is automatically false 
+		// so condition processing has to be continued with next OR block or the complete condition is false so THAN statements will not be processed
+		// address of this new processing is currently unknown so it needs to be saved for patching
+		
+		destinationAddressPatchingFromANDConditionBlockStack.peek().add(Code.pc - 2); // saved address for patching
+				
+	}
+	
+	
+	@Override
+	public void visit(IfDummyConditionEnd ifDummyConditionEnd) {
+		// this is the end of the last OR-block
+
+		// "then" block follows this, last, OR-block so there is no need for any immediately jump 
+		// since "then" block follows this, its address is known here so addresses from unconditionally jumps at the end of the non-last OR-blocks shoul be patched here
+		
+		for(int placeForPatch: destinationAddressPatchingFromORConditionBlockStack.peek()) {
+			Code.fixup(placeForPatch);
+		}
+		
+		destinationAddressPatchingFromORConditionBlockStack.peek().clear(); // all addresses has been patched so nothing should left
+
+		// false-conditions from AND-blocks from this OR-block will jump to the "else"/"non-if" address so there is nothing to patch here from AND-block
+		
+	}
+	
+	@Override
+	public void visit(OrBlockDummyEnd orBlockDummyEnd) {
+		// this is the end of OR-block (and this is not the last OR-block)
+
+		// there should be jumped to the "then" unconditionally 
+
+		Code.putJump(0); 		
+		destinationAddressPatchingFromORConditionBlockStack.peek().add(Code.pc - 2); // saved address for patching
+		
+		// and address for the next OR-block is immediately after this unconditional jump
+		
+		for(int placeForPatch: destinationAddressPatchingFromANDConditionBlockStack.peek()) {
+			Code.fixup(placeForPatch);
+		}
+		
+		destinationAddressPatchingFromANDConditionBlockStack.peek().clear(); // all addresses has been patched so nothing should left
+		
+	}
+
+	@Override
+	public void visit(NonIfElseBlockDummyStart nonIfElseBlockDummyStart) {
+		// this is the end of all statements from the "then" block
+
+		// if there is "else" block, because this is "then" block, whole "else" block has to be skipped with unconditional jump
+		if(nonIfElseBlockDummyStart.getParent() instanceof StatementIfElse) {
+			Code.putJump(0); 		
+			destinationAddressPatchingFromThenBlockStack.peek().add(Code.pc - 2); // saved address for patching
+		}
+		
+		// there is "else" or "non-if" block, and no matter which block is following, it should be jumped at the beginning of it if any AND-block from the last OR-block is false		
+
+		for(int placeForPatch: destinationAddressPatchingFromANDConditionBlockStack.peek()) {
+			Code.fixup(placeForPatch);
+		}
+		
+		destinationAddressPatchingFromANDConditionBlockStack.peek().clear(); // all addresses has been patched so nothing should left
+				
+	}
+	
+	@Override
+	public void visit(StatementIf statementIf) {
+		
+		// close if context
+		
+		destinationAddressPatchingFromANDConditionBlockStack.pop();
+		destinationAddressPatchingFromORConditionBlockStack.pop();
+		destinationAddressPatchingFromThenBlockStack.pop();
+			
+	}
+	
+	@Override
+	public void visit(StatementIfElse statementIfElse) {
+
+		// close if-else context
+
+		for(int placeForPatch: destinationAddressPatchingFromThenBlockStack.peek()) {
+			Code.fixup(placeForPatch);
+		}
+		
+		destinationAddressPatchingFromThenBlockStack.peek().clear(); // all addresses has been patched so nothing should left
+		destinationAddressPatchingFromThenBlockStack.pop();
+
+		destinationAddressPatchingFromANDConditionBlockStack.pop();
+		destinationAddressPatchingFromORConditionBlockStack.pop();
+
+	}
+	
+	/* do-while loop */
+	
 	
 }
 

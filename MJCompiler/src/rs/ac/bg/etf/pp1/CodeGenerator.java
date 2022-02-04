@@ -103,20 +103,17 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		int staticDataAreaTop = SemanticAnalyzer.getProgramVariablesNumber(); 
 		
-		System.out.println("VIRTUAL TABLE CREATION: &" + staticDataAreaTop);
+//		System.out.println("VIRTUAL TABLE CREATION: &" + staticDataAreaTop);
 
 		for(Obj classNode: classNodesList) {
 			
 			mapClassVirtualFunctionsTableAddresses.put(classNode.getName(), staticDataAreaTop);
-			System.out.println("Class " + classNode.getName() + " &" + staticDataAreaTop);
+//			System.out.println("Class " + classNode.getName() + " &" + staticDataAreaTop);
 			for (Obj classMemberNode: classNode.getType().getMembers()) {
 
 				if(classMemberNode.getKind() == Obj.Meth) {
 					
-//if(classMemberNode.getName() != classNode.getName()) {			
-// TODO: remove when add consturctor body
-					
-					System.out.println(classMemberNode.getName() + " &" + classMemberNode.getAdr());
+//					System.out.println(classMemberNode.getName() + " &" + classMemberNode.getAdr());
 					
 					for(int i = 0; i < classMemberNode.getName().length(); i++) {
 						// functionName is broken into characters
@@ -141,11 +138,8 @@ public class CodeGenerator extends VisitorAdaptor {
 					Code.put(Code.putstatic);
 					Code.put2(staticDataAreaTop);
 					staticDataAreaTop++;
-					
-//}
-					
+										
 				}
-				
 			
 			}
 			
@@ -184,10 +178,10 @@ public class CodeGenerator extends VisitorAdaptor {
 		// address of the method is the current pc (address of the first instruction in method)
 		methodTypeName.obj.setAdr(Code.pc);
 		
-		System.out.println("PC METODE: " + Code.pc);
+//		System.out.println("PC METODE: " + Code.pc);
 		if(currentClassNode != null) {
 			// this method belongs to the class context: it is virtual
-			System.out.println("Virtual method name: " + methodTypeName.obj.getName());
+//			System.out.println("Virtual method name: " + methodTypeName.obj.getName());
 			virtualMethodNodesList.add(methodTypeName.obj);
 		}
 		
@@ -271,7 +265,7 @@ public class CodeGenerator extends VisitorAdaptor {
 	public void visit(FactorFunctionCall factorFunctionCall) {
 
 		Obj methodNode = factorFunctionCall.getFunctionCallName().obj;
-		System.out.println("Assgin fun call: " + factorFunctionCall.getFunctionCallName().obj.getName());
+//		System.out.println("Assgin fun call: " + factorFunctionCall.getFunctionCallName().obj.getName());
 
 		if("len".equals(methodNode.getName())) {
 			callLenMethod();
@@ -289,7 +283,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		if(checkIfMethodIsVirtual(factorFunctionCall.getFunctionCallName().obj)) {
 
-			System.out.println("Virtual call - FACTOR!");
+//			System.out.println("Virtual call - FACTOR!");
 
 			// virtual method call is different from ordinary method call
 			// call stack has to be:
@@ -317,7 +311,7 @@ public class CodeGenerator extends VisitorAdaptor {
 				Code.put(Code.call); 
 				Code.put2(offset); // pc relative: pc = pc + offset = pc + &method - pc = &method
 
-				System.out.println("SUPER- method");
+//				System.out.println("SUPER- method");
 			
 			} else {
 				// regular virtual function call
@@ -350,7 +344,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		// This is just function call and returned value will have never been used if it is non-void (Tab.noType)
 
 		Obj methodNode = designatorFunctionCall.getFunctionCallName().obj;
-		System.out.println("fun call not assign: " + designatorFunctionCall.getFunctionCallName().obj.getName());
+//		System.out.println("fun call not assign: " + designatorFunctionCall.getFunctionCallName().obj.getName());
 		
 		if("len".equals(methodNode.getName())) {
 			callLenMethod();
@@ -358,7 +352,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		}
 
 		if(checkIfMethodIsVirtual(designatorFunctionCall.getFunctionCallName().obj)) {
-			System.out.println("Virtual call - DESIGNATOR!");
+//			System.out.println("Virtual call - DESIGNATOR!");
 			
 			// virtual method call is different from ordinary method call
 			// call stack has to be:
@@ -386,7 +380,7 @@ public class CodeGenerator extends VisitorAdaptor {
 				Code.put(Code.call); 
 				Code.put2(offset); // pc relative: pc = pc + offset = pc + &method - pc = &method
 
-				System.out.println("SUPER- method");
+//				System.out.println("SUPER- method");
 			
 			} else {
 				// regular virtual function call
@@ -434,7 +428,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		if(checkIfMethodIsVirtual(functionNodesInInnerCallStack.peek())) {
 			// the argument has already been set on the exprStack and it looks like:
 			// &class &class firstArgument
-			System.out.println("First Actual Parameter");
+//			System.out.println("First Actual Parameter");
 			// this argument should be pushed into the stack before second &class
 			Code.put(Code.dup_x1); // exprStack: &class firstArgument &class firstArgument
 			Code.put(Code.pop);	// exprStack: &class firstArgument &class
@@ -448,7 +442,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		if(checkIfMethodIsVirtual(functionNodesInInnerCallStack.peek())) {
 			// the argument has already been set on the exprStack and it looks like:
 			// &class arguments &class currentArgument
-			System.out.println("Further Actual Parameter");
+//			System.out.println("Further Actual Parameter");
 			// this argument should be pushed into the stack before second &class
 			Code.put(Code.dup_x1); // exprStack: &class arguments currentArgument &class currentArgument
 			Code.put(Code.pop);	// exprStack: &class arguments currentArgument &class	
@@ -457,12 +451,12 @@ public class CodeGenerator extends VisitorAdaptor {
 	}
 	
 	
-	/*  */
+	/* single statement - finishing single line */
 	
 	@Override
 	public void visit(SingleStatementMatch SingleStatementMatch) {
-		System.out.println("FINISH LINE " + SingleStatementMatch.getLine());
-		System.out.println();
+//		System.out.println("FINISH LINE " + SingleStatementMatch.getLine());
+//		System.out.println();
 	}
 	
 	/* print */
@@ -599,35 +593,35 @@ public class CodeGenerator extends VisitorAdaptor {
     		// class has no body:
         	// -create dummy constructor
     		
-    		System.out.println("DUMMY CONSTRUCTOR - no body");
+//    		System.out.println("DUMMY CONSTRUCTOR - no body");
     		createEnterIntoDefinedConstructor();
 
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyBrackets) {
     		// class has empty body:
         	// -create dummy constructor
     		
-    		System.out.println("DUMMY CONSTRUCTOR - empty body");
+//    		System.out.println("DUMMY CONSTRUCTOR - empty body");
     		createEnterIntoDefinedConstructor();
 
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyConstructor) {
     		// class has only constructor:
         	// -create actual constructor
     		
-    		System.out.println("REAL CONSTRUCTOR - has construcot");
+//    		System.out.println("REAL CONSTRUCTOR - has construcot");
     		createEnterIntoDefinedConstructor();
     		
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyMethods) {
     		// class has only methods:
         	// -create dummy constructor
 
-    		System.out.println("DUMMY CONSTRUCTOR - NO constructor ");
+//    		System.out.println("DUMMY CONSTRUCTOR - NO constructor ");
     		createDummyConstructor();
     		
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyFull) {
     		// class has both constructor and methods:
         	// -create actual constructor
     		
-    		System.out.println("REAL CONSTRUCTOR - has ALL");
+//    		System.out.println("REAL CONSTRUCTOR - has ALL");
     		createEnterIntoDefinedConstructor();
     	} else {
     		// error - innerClassBodyDummyStart cannot be anything else
@@ -698,8 +692,8 @@ public class CodeGenerator extends VisitorAdaptor {
 			if(simpleDesignator.getParent() instanceof FunctionCallName) {
 				Code.put(Code.load_n + 0); // this
 				
-				System.out.println("##");
-				System.out.println("Virtual function call");
+//				System.out.println("##");
+//				System.out.println("Virtual function call");
 				
 			}
 			
@@ -811,7 +805,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		// variable for storage
 		// value for storage
 		Code.store(designatorAssignOperation.getDesignator().obj);
-        System.out.println("ASSIGN");
+//        System.out.println("ASSIGN");
 		
 	}
 	

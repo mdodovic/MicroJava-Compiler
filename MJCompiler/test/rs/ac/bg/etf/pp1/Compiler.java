@@ -33,7 +33,6 @@ public class Compiler {
 			String mjFileName = "program";
 			
 			File sourceCode = new File("test/" + mjFileName + ".mj");
-//			File sourceCode = new File("test/class_extends.mj");
 			log.info("Compiling source file: " + sourceCode.getAbsolutePath());
 			
 			br = new BufferedReader(new FileReader(sourceCode));
@@ -46,44 +45,41 @@ public class Compiler {
 	        Tab.init();
 	        
 	        Program prog = (Program)(s.value); 
-			// ispis sintaksnog stabla
-			log.info(prog.toString(""));
-			log.info("===================================");
 
-			// ispis prepoznatih programskih konstrukcija
-			//RuleVisitor v = new RuleVisitor();
+	        if(!p.errorDetected) {
+
+				log.info(prog.toString(""));
+				log.info("===================================");
 			
-			SemanticAnalyzer v = new SemanticAnalyzer();
-			prog.traverseBottomUp(v); 
-	      
-			//log.info(" Print count calls = " + v.printCallCount);
 
-			//log.info(" Deklarisanih promenljivih ima = " + v.varDeclCount);
-			
-			log.info("===================================");
-	        //Tab.dump();
-	        
-			v.tsdump();
-			
-	        if(!p.errorDetected && v.passed()) {
-				log.info("Parsiranje uspesno zavrseno!");
-
-
-				File objFile = new File("test/" + mjFileName + ".obj");
-				if(objFile.exists()) objFile.delete();
+				SemanticAnalyzer v = new SemanticAnalyzer();
+				prog.traverseBottomUp(v); 
+		      
+				log.info("===================================");
+		        
+				v.tsdump();
 				
-				CodeGenerator codeGenerator = new CodeGenerator();
-				prog.traverseBottomUp(codeGenerator);
-				
-				Code.dataSize = SemanticAnalyzer.getProgramVariablesNumber();
-				Code.mainPc = codeGenerator.getFirstInstruction();
-				Code.write(new FileOutputStream(objFile));
-	        	
-				
-	        }else{
-				log.error("Parsiranje NIJE uspesno zavrseno!");
+		        if(!p.errorDetected && v.passed()) {
+					log.info("Parsiranje uspesno zavrseno!");
+	
+	
+					File objFile = new File("test/" + mjFileName + ".obj");
+					if(objFile.exists()) objFile.delete();
+					
+					CodeGenerator codeGenerator = new CodeGenerator();
+					prog.traverseBottomUp(codeGenerator);
+					
+					Code.dataSize = SemanticAnalyzer.getProgramVariablesNumber();
+					Code.mainPc = codeGenerator.getFirstInstruction();
+					Code.write(new FileOutputStream(objFile));
+		        	
+					log.info("Generisanje koda uspesno zavrseno!");				
+					
+		        }else{
+					log.error("Parsiranje NIJE uspesno zavrseno!");
+				}
+	
 			}
-
 			
 		} 
 		finally {

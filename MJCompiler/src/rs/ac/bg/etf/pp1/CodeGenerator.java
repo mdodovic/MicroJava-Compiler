@@ -58,6 +58,7 @@ import rs.ac.bg.etf.pp1.ast.SingleExprCondition;
 import rs.ac.bg.etf.pp1.ast.SingleFactCondition;
 import rs.ac.bg.etf.pp1.ast.SingleNegativeTerm;
 import rs.ac.bg.etf.pp1.ast.SingleStatementMatch;
+import rs.ac.bg.etf.pp1.ast.StatementContinue;
 import rs.ac.bg.etf.pp1.ast.StatementDoWhile;
 import rs.ac.bg.etf.pp1.ast.StatementIf;
 import rs.ac.bg.etf.pp1.ast.StatementIfElse;
@@ -955,6 +956,7 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	
 	/* if */
+	/* do-while loop */
 	
 	// terminology:
 	// "non-if" - first instruction after if-else block
@@ -1159,15 +1161,27 @@ public class CodeGenerator extends VisitorAdaptor {
 	
 	@Override
 	public void visit(StatementDoWhile StatementDoWhile) {
+
+		// close do-while context
+		
 		destinationAddressPatchingFromANDConditionBlockStack.pop();
 		destinationAddressPatchingFromORConditionBlockStack.pop();
 		startDoWhileBlockAddressForPatchingFromStack.pop();
 	}
 	
 	
-	/* do-while loop */
+	/* break */
+
+	/* continue */
 	
-	
+	@Override
+	public void visit(StatementContinue StatementContinue) {
+		
+		// this represents unconditionally jump to the first instruction in the (deepest) do-while statement
+		
+		Code.putJump(this.startDoWhileBlockAddressForPatchingFromStack.peek());
+
+	}
 }
 
 

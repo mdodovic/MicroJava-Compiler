@@ -24,6 +24,7 @@ import rs.ac.bg.etf.pp1.ast.DesignatorPostIncrement;
 import rs.ac.bg.etf.pp1.ast.DesignatorStatement;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
 import rs.ac.bg.etf.pp1.ast.DoWhileDummyConditionEnd;
+import rs.ac.bg.etf.pp1.ast.DoWhileDummyConditionStart;
 import rs.ac.bg.etf.pp1.ast.DoWhileDummyStart;
 import rs.ac.bg.etf.pp1.ast.EqualOp;
 import rs.ac.bg.etf.pp1.ast.ExprListAddOpTerm;
@@ -982,8 +983,14 @@ public class CodeGenerator extends VisitorAdaptor {
 	// do-while start instruction (for the purpose of returning back to the beginning of the do-while
 	private Stack<Integer> startDoWhileBlockAddressForPatchingStack = new Stack<Integer>(); 
 
-	// the last instruction in the "then" block is unconditionally jump which will skip whole else part
+	// break in do-while will immediately stop its execution and jump to the very first instruction after whole do-while statement
+	// this will save addresses for patch when this address is found
 	private Stack<List<Integer>> endDoWhileBlockAddressPatchingFromBreakStatementStack = new Stack<List<Integer>>(); 	
+	
+	// continue in do-while will immediately jump to the condition check (very first instruction of the condition check)
+	// this will save addresses for patch when this address is found
+	private Stack<List<Integer>> startDoWhileConditionBlockAddressPatchingFromContinueStatementStack = new Stack<List<Integer>>(); 	
+
 	
 	@Override
 	public void visit(DoWhileDummyStart DoWhileDummyStart) {
@@ -993,7 +1000,22 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		// add "do" address
 		startDoWhileBlockAddressForPatchingStack.push(Code.pc);
+
 		endDoWhileBlockAddressPatchingFromBreakStatementStack.push(new ArrayList<Integer>());
+		startDoWhileConditionBlockAddressPatchingFromContinueStatementStack.push(new ArrayList<Integer>());
+		
+	}
+	
+	@Override
+	public void visit(DoWhileDummyConditionStart DoWhileDummyConditionStart) {
+		
+		// fix all jumps from continue to the conditions check
+		
+		for(int placeForPatch: startDoWhileConditionBlockAddressPatchingFromContinueStatementStack.peek()) {
+			Code.fixup(placeForPatch);
+		}
+		
+		startDoWhileConditionBlockAddressPatchingFromContinueStatementStack.peek().clear(); // all addresses has been patched so nothing should left
 		
 		
 	}
@@ -1185,6 +1207,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		destinationAddressPatchingFromORConditionBlockStack.pop();
 		startDoWhileBlockAddressForPatchingStack.pop();
 		endDoWhileBlockAddressPatchingFromBreakStatementStack.pop();
+		startDoWhileConditionBlockAddressPatchingFromContinueStatementStack.pop();
 	}
 	
 	
@@ -1205,10 +1228,11 @@ public class CodeGenerator extends VisitorAdaptor {
 	@Override
 	public void visit(StatementContinue StatementContinue) {
 		
-		// continue represents unconditionally jump to the first instruction in the (deepest) do-while statement
-		
-		Code.putJump(this.startDoWhileBlockAddressForPatchingStack.peek());
+		// continue represents unconditionally jump to the first instruction of the condition in the (deepest) do-while statement
 
+		Code.putJump(0); 		
+		startDoWhileConditionBlockAddressPatchingFromContinueStatementStack.peek().add(Code.pc - 2); // saved address for patching	
+	
 	}
 }
 

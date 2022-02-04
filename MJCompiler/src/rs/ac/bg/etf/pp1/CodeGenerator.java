@@ -594,14 +594,14 @@ public class CodeGenerator extends VisitorAdaptor {
         	// -create dummy constructor
     		
 //    		System.out.println("DUMMY CONSTRUCTOR - no body");
-    		createEnterIntoDefinedConstructor();
+    		createDummyConstructor();
 
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyBrackets) {
     		// class has empty body:
         	// -create dummy constructor
     		
 //    		System.out.println("DUMMY CONSTRUCTOR - empty body");
-    		createEnterIntoDefinedConstructor();
+    		createDummyConstructor();
 
     	} else if(innerClassBodyDummyStart.getParent() instanceof ClassBodyConstructor) {
     		// class has only constructor:

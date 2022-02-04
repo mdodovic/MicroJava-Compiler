@@ -818,6 +818,17 @@ public class CodeGenerator extends VisitorAdaptor {
 
 	/* factor: new class operator */
 	
+
+	private boolean checkIfCreatedObjectIsClass(String classOrRecordName) {
+		for(Obj classNode: classNodesList) {
+			if(classNode.getName().equals(classOrRecordName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	
 	@Override
 	public void visit(FactorClassNewOperator factorClassNewOperator) {
 
@@ -832,41 +843,49 @@ public class CodeGenerator extends VisitorAdaptor {
 		// &vft is always at the position 0 in the class object, so &vft will be stored using putfield 2
 
 		Code.put(Code.dup); // nevertheless putfield 2 will consume &class (which is meant to be for store operation in the assignment) so this address has to be copied
-
-		Code.loadConst(mapClassVirtualFunctionsTableAddresses.get(factorClassNewOperator.getType().getTypeName())); // &vft
+		
+		if(mapClassVirtualFunctionsTableAddresses.get(factorClassNewOperator.getType().getTypeName()) == null) {
+			Code.loadConst(0); // &vft			
+		} else {
+			Code.loadConst(mapClassVirtualFunctionsTableAddresses.get(factorClassNewOperator.getType().getTypeName())); //&vtf
+		}
+		
+		
 
 		Code.put(Code.putfield);
         Code.put2(0); // field at the position 0 (&vtf) in the class will be filled with &vtf
         
-        // after the class creation and before the assignment to the object reference
-        // appropriate constructor has to be called
-        // there is only &class on the exprStack (due to Code.put(Code.dup) that has been added to preserve one &class for the store operation)
-        
-		Code.put(Code.dup); // nevertheless calling the constructor (which will act as virutal function) will consume another &class so this address has to be copied
-		
-		// process of virtual method calling requires exprStack to be:
-		// &class (represents hidden argument this)
-		// arguments - which will be empty since constructor has no parameters
-		// &class (represents class which virtual functions table has to be accessed)
-		
-		Code.put(Code.dup); // second &class from calling exprStack can be added as simple copy (because of missing parameters)
-		
-		Code.put(Code.getfield); // getfiled consume &class and return &tvf
-		Code.put2(0); // &tvf is always at the position 0 in class
-					
-		Code.put(Code.invokevirtual); // invokevirtual functionName -1
-		
-		// constructor has the same name as the class
-		// class can be assigned with the object of inherited class and its constructor has to be called
-		// hence dynamic type (type in new operator) is used instead of static type (declared object type)
-		
-		for(int i = 0; i < factorClassNewOperator.getType().getTypeName().length(); i++) {
-			// constructorName is broken into characters
-			Code.put4(factorClassNewOperator.getType().getTypeName().charAt(i));
-		}
-		Code.put4(-1);
+        if(checkIfCreatedObjectIsClass(factorClassNewOperator.getType().getTypeName()) == true) {
+        	
+	        // after the class creation and before the assignment to the object reference
+	        // appropriate constructor has to be called
+	        // there is only &class on the exprStack (due to Code.put(Code.dup) that has been added to preserve one &class for the store operation)
+	        
+			Code.put(Code.dup); // nevertheless calling the constructor (which will act as virutal function) will consume another &class so this address has to be copied
+			
+			// process of virtual method calling requires exprStack to be:
+			// &class (represents hidden argument this)
+			// arguments - which will be empty since constructor has no parameters
+			// &class (represents class which virtual functions table has to be accessed)
+			
+			Code.put(Code.dup); // second &class from calling exprStack can be added as simple copy (because of missing parameters)
+			
+			Code.put(Code.getfield); // getfiled consume &class and return &tvf
+			Code.put2(0); // &tvf is always at the position 0 in class
+						
+			Code.put(Code.invokevirtual); // invokevirtual functionName -1
+			
+			// constructor has the same name as the class
+			// class can be assigned with the object of inherited class and its constructor has to be called
+			// hence dynamic type (type in new operator) is used instead of static type (declared object type)
+			
+			for(int i = 0; i < factorClassNewOperator.getType().getTypeName().length(); i++) {
+				// constructorName is broken into characters
+				Code.put4(factorClassNewOperator.getType().getTypeName().charAt(i));
+			}
+			Code.put4(-1);
 
-        
+        }
 	}
 	
 	/* factor: new array operator */

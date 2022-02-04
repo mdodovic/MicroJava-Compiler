@@ -200,6 +200,8 @@ nonterminal Mulop; /* contains "*", "/" and "%" */
 
 /* Dummy productions has just purpose to be first visited in Abstract Syntax Tree */
 nonterminal DoWhileDummyStart; /* this will represent the beginning of the do-while construction */
+nonterminal DoWhileDummyConditionEnd; /* this will represent the end of the conditions (very first instruction after the instructions blongs to the do-while condition) */
+
 nonterminal InnerClassBodyDummyStart; /* this will represent the end of class variables declarations and the beginning of constructor+method declarations. */
 nonterminal IfDummyConditionStart; /* this will represent the beginning of the conditions (very first instruction of the condition) */
 nonterminal IfDummyConditionEnd; /* this will represent the end of the conditions (very first instruction of the "then" block) */
@@ -423,7 +425,7 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement
 					|
 					(StatementIfElse) IfCondition Statement NonIfElseBlockDummyStart ELSE Statement
 					|
-					(StatementDoWhile) DO DoWhileDummyStart Statement WHILE LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET SEMI
+					(StatementDoWhile) DO DoWhileDummyStart Statement WHILE LEFT_ROUND_BRACKET Condition DoWhileDummyConditionEnd RIGHT_ROUND_BRACKET SEMI
 					|
 					(StatementBreak) BREAK SEMI
 					|
@@ -444,6 +446,8 @@ SingleStatement ::= (StatementDesignator) DesignatorStatement
 
 DoWhileDummyStart ::= (DoWhileDummyStart) /* epsilon */;
 
+DoWhileDummyConditionEnd ::= (DoWhileDummyConditionEnd) /* epsilon */;
+
 IfCondition ::= (IfPart) IF IfDummyConditionStart LEFT_ROUND_BRACKET Condition RIGHT_ROUND_BRACKET IfDummyConditionEnd
 				|
 				(ErrorInCondition) IF IfDummyConditionStart LEFT_ROUND_BRACKET error:l {: parser.report_error("Izvrsen oporavak do ) u liniji " + lleft, null); :} RIGHT_ROUND_BRACKET IfDummyConditionEnd
@@ -453,7 +457,7 @@ IfDummyConditionStart ::= (IfDummyConditionStart) /* epsilon */;
 
 IfDummyConditionEnd ::= (IfDummyConditionEnd) /* epsilon */;
 
- NonIfElseBlockDummyStart ::= ( NonIfElseBlockDummyStart) /* epsilon */;
+NonIfElseBlockDummyStart ::= (NonIfElseBlockDummyStart) /* epsilon */;
 
 /* if-else conditions */
 

@@ -90,7 +90,6 @@ import rs.etf.pp1.symboltable.Tab;
 import rs.etf.pp1.symboltable.concepts.Obj;
 import rs.etf.pp1.symboltable.concepts.Scope;
 import rs.etf.pp1.symboltable.concepts.Struct;
-import rs.etf.pp1.symboltable.structure.SymbolDataStructure;
 import rs.etf.pp1.symboltable.visitors.DumpSymbolTableVisitor;
 import rs.etf.pp1.symboltable.visitors.SymbolTableVisitor;
 
@@ -162,9 +161,11 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 	private RelOpEnum relationalOperation = null;
 
 	enum AddOpEnum { PLUS, MINUS }
+	@SuppressWarnings("unused")
 	private AddOpEnum addLikeOperation = null;
 
 	enum MulOpEnum { MULTIPLY, DIVIDE, MODUO }
+	@SuppressWarnings("unused")
 	private MulOpEnum mulLikeOperation = null;
 
 	/* Global utility functions */
@@ -205,7 +206,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 		}
 	}
 
-    private String addLikeOperationDecoding(AddOpEnum addLikeOp) {
+    @SuppressWarnings("unused")
+	private String addLikeOperationDecoding(AddOpEnum addLikeOp) {
 		switch (addLikeOp) {
 			case PLUS: return "+";
 			case MINUS: return "-";
@@ -213,7 +215,8 @@ public class SemanticAnalyzer extends VisitorAdaptor{
 		}
 	}
 
-    private String mulLikeOperationDecoding(MulOpEnum mulLikeOp) {
+    @SuppressWarnings("unused")
+	private String mulLikeOperationDecoding(MulOpEnum mulLikeOp) {
 		switch (mulLikeOp) {
 			case MULTIPLY: return "*";
 			case DIVIDE: return "/";

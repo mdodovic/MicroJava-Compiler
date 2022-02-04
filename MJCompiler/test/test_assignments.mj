@@ -19,6 +19,8 @@ int g;
 		niz = new int[N + 1];
 		niz[0] = niz[x + y - 4];
 		niz[1]++;			
+		print(niz[0]);
+		print(niz[1]);
 	}
 
 }

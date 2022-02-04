@@ -23,6 +23,8 @@ import rs.ac.bg.etf.pp1.ast.DesignatorPostDecrement;
 import rs.ac.bg.etf.pp1.ast.DesignatorPostIncrement;
 import rs.ac.bg.etf.pp1.ast.DesignatorStatement;
 import rs.ac.bg.etf.pp1.ast.DivideOp;
+import rs.ac.bg.etf.pp1.ast.DoWhileDummyConditionEnd;
+import rs.ac.bg.etf.pp1.ast.DoWhileDummyStart;
 import rs.ac.bg.etf.pp1.ast.EqualOp;
 import rs.ac.bg.etf.pp1.ast.ExprListAddOpTerm;
 import rs.ac.bg.etf.pp1.ast.FactorArrayNewOperator;
@@ -56,6 +58,7 @@ import rs.ac.bg.etf.pp1.ast.SingleExprCondition;
 import rs.ac.bg.etf.pp1.ast.SingleFactCondition;
 import rs.ac.bg.etf.pp1.ast.SingleNegativeTerm;
 import rs.ac.bg.etf.pp1.ast.SingleStatementMatch;
+import rs.ac.bg.etf.pp1.ast.StatementDoWhile;
 import rs.ac.bg.etf.pp1.ast.StatementIf;
 import rs.ac.bg.etf.pp1.ast.StatementIfElse;
 import rs.ac.bg.etf.pp1.ast.StatementPrintNoWidth;
@@ -971,6 +974,19 @@ public class CodeGenerator extends VisitorAdaptor {
 	private Stack<List<Integer>> destinationAddressPatchingFromANDConditionBlockStack = new Stack<List<Integer>>(); 
 
 	private Stack<List<Integer>> destinationAddressPatchingFromThenBlockStack = new Stack<List<Integer>>(); 
+
+	private Stack<Integer> startDoWhileBlockAddressForPatchingFromStack = new Stack<Integer>(); 
+
+	@Override
+	public void visit(DoWhileDummyStart DoWhileDummyStart) {
+		// open new do-while scope by pushing new list of addresses for patching on stack
+		destinationAddressPatchingFromORConditionBlockStack.push(new ArrayList<Integer>());
+		destinationAddressPatchingFromANDConditionBlockStack.push(new ArrayList<Integer>());
+		
+		// add "do" address
+		startDoWhileBlockAddressForPatchingFromStack.push(Code.pc);
+		
+	}
 	
 	@Override
 	public void visit(IfDummyConditionStart IfDummyConditionStart) {
@@ -1006,7 +1022,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		// integer_value
 		
 		// this is part of AND-block so inverse condition should be checked and jumped to the 
-System.out.println("s");
+
 		if(relOpExprCondition.getRelop() instanceof EqualOp) {
 			Code.putFalseJump(Code.eq, 0); 			
 		} else if(relOpExprCondition.getRelop() instanceof NotEqualOp) {
@@ -1030,6 +1046,32 @@ System.out.println("s");
 				
 	}
 	
+	@Override
+	public void visit(DoWhileDummyConditionEnd DoWhileDummyConditionEnd) {
+		// this is the end of the last OR-block
+		
+		// hence this represents the point after all conditions
+		// because of the representation of do-while, here all true OR-blocks has to jump in order to unconditionally jump to the beginning of the do-while
+		
+		for(int placeForPatch: destinationAddressPatchingFromORConditionBlockStack.peek()) {
+			Code.fixup(placeForPatch);
+		}
+		
+		destinationAddressPatchingFromORConditionBlockStack.peek().clear(); // all addresses has been patched so nothing should left
+		
+		// if the overall condition is true, it should be jumped at the beginning of the do-while (saved address)
+		
+		Code.putJump(this.startDoWhileBlockAddressForPatchingFromStack.peek());
+		
+		// after this unconditional jump (1B-opcode + 2B-address) this is the address after do-while where all false AND-blocks from the last OR-block has to jump
+		
+		for(int placeForPatch: destinationAddressPatchingFromANDConditionBlockStack.peek()) {
+			Code.fixup(placeForPatch);
+		}
+		
+		destinationAddressPatchingFromANDConditionBlockStack.peek().clear(); // all addresses has been patched so nothing should left
+
+	}
 	
 	@Override
 	public void visit(IfDummyConditionEnd ifDummyConditionEnd) {
@@ -1114,6 +1156,14 @@ System.out.println("s");
 		destinationAddressPatchingFromORConditionBlockStack.pop();
 
 	}
+	
+	@Override
+	public void visit(StatementDoWhile StatementDoWhile) {
+		destinationAddressPatchingFromANDConditionBlockStack.pop();
+		destinationAddressPatchingFromORConditionBlockStack.pop();
+		startDoWhileBlockAddressForPatchingFromStack.pop();
+	}
+	
 	
 	/* do-while loop */
 	

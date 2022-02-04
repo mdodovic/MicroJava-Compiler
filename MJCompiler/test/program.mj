@@ -7,60 +7,30 @@ program ABC
 
 	void main() int x, y, n; int inv_max; {	
 
-		if(verify() && x == 0) {
-			x = 1;
-			print('t');
+
+// 		if(x == 1) 
+//			y = 2;
+//		else 
+//			y = 3;
+//		print('y');
+//		print(y);					
+//		print(eol);
+		
+		x = 3;
+		
+		n = -11;
+		do { 
+			print(n);
+			
+		//	if(n == -2) {
+		//		print('n'); print('e'); print('g');
+		//		continue;
+		//	}
 			print(eol);
-		} else
-			x = -1;
-
- 		if(x == 1) 
-			y = 2;
-		else 
-			y = 3;
-		print('y');
-		print(y);					
-		print(eol);
-
-		if(x > 0 && y < 2) 
-			x = 2;
-		print('x');
-		print(x);					
-		print(eol);
-	
-		if(x >= 0 || y <= 2) 
-			x = 3;
-		print('x');
-		print(x);					
-		print(eol);
+			n++;
+		} while (n <= x);
 		
-		if(x != 0 && y >= 2 || x == 1) 
-			x = 4;
-		print('x');
-		print(x);					
+		print(n);
 		print(eol);
-	
-		if(-x > y) {
-			inv_max = -x;
-			print('>');
-		} else {
-			if(x == y) {
-				inv_max = -1;
-				print('=');
-			} else {
-				inv_max = -y;
-				print('<');
-			}
-		}
-		print(eol);
-		print('-'); print('m'); print('a'); print('x'); print(inv_max);
-		
-//		n = -11;
-//		do { 
-//			print(n);
-//			print(eol);
-//			n++;
-//		} while (n <= x);
-
 	}
 }

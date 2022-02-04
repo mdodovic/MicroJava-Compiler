@@ -277,6 +277,15 @@ public class CodeGenerator extends VisitorAdaptor {
 			callLenMethod();
 			return;
 		}
+
+		if("ord".equals(methodNode.getName())) {
+			return;
+		}
+
+		if("chr".equals(methodNode.getName())) {
+			return;
+		}
+
 		
 		if(checkIfMethodIsVirtual(factorFunctionCall.getFunctionCallName().obj)) {
 

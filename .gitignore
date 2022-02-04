@@ -35,3 +35,4 @@ MJCompiler/src/rs/ac/bg/etf/pp1/Yylex.java~
 MJCompiler/src/rs/ac/bg/etf/pp1/sym.java
 MJCompiler/src/rs/ac/bg/etf/pp1/MJParser.java
 MJCompiler/src/rs/ac/bg/etf/pp1/ast/
+MJCompiler/test/*.obj

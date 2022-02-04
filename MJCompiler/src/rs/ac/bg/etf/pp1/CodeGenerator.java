@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import rs.ac.bg.etf.pp1.ast.AndOpFactCondition;
 import rs.ac.bg.etf.pp1.ast.ClassBodyBrackets;
 import rs.ac.bg.etf.pp1.ast.ClassBodyConstructor;
 import rs.ac.bg.etf.pp1.ast.ClassBodyFull;
@@ -56,7 +55,6 @@ import rs.ac.bg.etf.pp1.ast.PlusOp;
 import rs.ac.bg.etf.pp1.ast.RelOpExprCondition;
 import rs.ac.bg.etf.pp1.ast.SimpleDesignator;
 import rs.ac.bg.etf.pp1.ast.SingleExprCondition;
-import rs.ac.bg.etf.pp1.ast.SingleFactCondition;
 import rs.ac.bg.etf.pp1.ast.SingleNegativeTerm;
 import rs.ac.bg.etf.pp1.ast.SingleStatementMatch;
 import rs.ac.bg.etf.pp1.ast.StatementBreak;

@@ -7,17 +7,57 @@ program ABC
 
 	void main() int x, y, n; int inv_max; {	
 
+		if(verify() && x == 0) {
+			x = 1;
+			print('t');
+			print(eol);
+		} else
+			x = -1;
 
-// 		if(x == 1) 
-//			y = 2;
-//		else 
-//			y = 3;
-//		print('y');
-//		print(y);					
-//		print(eol);
+ 		if(x == 1) 
+			y = 2;
+		else 
+			y = 3;
+		print('y');
+		print(y);					
+		print(eol);
+
+		if(x > 0 && y < 2) 
+			x = 2;
+		print('x');
+		print(x);					
+		print(eol);
+	
+		if(x >= 0 || y <= 2) 
+			x = 3;
+		print('x');
+		print(x);					
+		print(eol);
 		
-		x = 3;
+		if(x != 0 && y >= 2 || x == 1) 
+			x = 4;
+		print('x');
+		print(x);					
+		print(eol);
+	
+		if(-x > y) {
+			inv_max = -x;
+			print('>');
+		} else {
+			if(x == y) {
+				inv_max = -1;
+				print('=');
+			} else {
+				inv_max = -y;
+				print('<');
+			}
+		}
+		print(eol);
+		print('-'); print('m'); print('a'); print('x'); print(inv_max);
 		
+		print(eol);
+		print(x);
+		print(eol);				
 		n = -11;
 		do { 
 			n++;
@@ -32,6 +72,10 @@ program ABC
 				}
 			}
 					
+			if(x - 1 + n - 3 == 0) {
+				print('x');
+				break;
+			}
 			if(n == -2) {
 				print(' '); print('n'); print('e'); print('g');
 				print(eol);
@@ -39,9 +83,13 @@ program ABC
 			}
 			print(n);
 			print(eol);
+			
+			
 		} while (n <= x);
 		
 		print(n);
 		print(eol);
+
+
 	}
 }

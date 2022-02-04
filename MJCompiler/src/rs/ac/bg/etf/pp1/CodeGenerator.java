@@ -58,6 +58,7 @@ import rs.ac.bg.etf.pp1.ast.SingleExprCondition;
 import rs.ac.bg.etf.pp1.ast.SingleFactCondition;
 import rs.ac.bg.etf.pp1.ast.SingleNegativeTerm;
 import rs.ac.bg.etf.pp1.ast.SingleStatementMatch;
+import rs.ac.bg.etf.pp1.ast.StatementBreak;
 import rs.ac.bg.etf.pp1.ast.StatementContinue;
 import rs.ac.bg.etf.pp1.ast.StatementDoWhile;
 import rs.ac.bg.etf.pp1.ast.StatementIf;
@@ -974,11 +975,16 @@ public class CodeGenerator extends VisitorAdaptor {
 	// OR-block is formed from AND-blocks: if AND-block is false whole OR-block is false
 	// places for patch with address when to jump if single term from AND-block is false is stored in the following stack
 	private Stack<List<Integer>> destinationAddressPatchingFromANDConditionBlockStack = new Stack<List<Integer>>(); 
-
+	
+	// the last instruction in the "then" block is unconditionally jump which will skip whole else part
 	private Stack<List<Integer>> destinationAddressPatchingFromThenBlockStack = new Stack<List<Integer>>(); 
+	
+	// do-while start instruction (for the purpose of returning back to the beginning of the do-while
+	private Stack<Integer> startDoWhileBlockAddressForPatchingStack = new Stack<Integer>(); 
 
-	private Stack<Integer> startDoWhileBlockAddressForPatchingFromStack = new Stack<Integer>(); 
-
+	// the last instruction in the "then" block is unconditionally jump which will skip whole else part
+	private Stack<List<Integer>> endDoWhileBlockAddressPatchingFromBreakStatementStack = new Stack<List<Integer>>(); 	
+	
 	@Override
 	public void visit(DoWhileDummyStart DoWhileDummyStart) {
 		// open new do-while scope by pushing new list of addresses for patching on stack
@@ -986,7 +992,9 @@ public class CodeGenerator extends VisitorAdaptor {
 		destinationAddressPatchingFromANDConditionBlockStack.push(new ArrayList<Integer>());
 		
 		// add "do" address
-		startDoWhileBlockAddressForPatchingFromStack.push(Code.pc);
+		startDoWhileBlockAddressForPatchingStack.push(Code.pc);
+		endDoWhileBlockAddressPatchingFromBreakStatementStack.push(new ArrayList<Integer>());
+		
 		
 	}
 	
@@ -1063,7 +1071,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		// if the overall condition is true, it should be jumped at the beginning of the do-while (saved address)
 		
-		Code.putJump(this.startDoWhileBlockAddressForPatchingFromStack.peek());
+		Code.putJump(this.startDoWhileBlockAddressForPatchingStack.peek());
 		
 		// after this unconditional jump (1B-opcode + 2B-address) this is the address after do-while where all false AND-blocks from the last OR-block has to jump
 		
@@ -1073,6 +1081,14 @@ public class CodeGenerator extends VisitorAdaptor {
 		
 		destinationAddressPatchingFromANDConditionBlockStack.peek().clear(); // all addresses has been patched so nothing should left
 
+		
+		// fix break destination addresses
+		for(int placeForPatch: endDoWhileBlockAddressPatchingFromBreakStatementStack.peek()) {
+			Code.fixup(placeForPatch);
+		}
+		
+		endDoWhileBlockAddressPatchingFromBreakStatementStack.peek().clear(); // all addresses has been patched so nothing should left
+				
 	}
 	
 	@Override
@@ -1164,22 +1180,34 @@ public class CodeGenerator extends VisitorAdaptor {
 
 		// close do-while context
 		
+		
 		destinationAddressPatchingFromANDConditionBlockStack.pop();
 		destinationAddressPatchingFromORConditionBlockStack.pop();
-		startDoWhileBlockAddressForPatchingFromStack.pop();
+		startDoWhileBlockAddressForPatchingStack.pop();
+		endDoWhileBlockAddressPatchingFromBreakStatementStack.pop();
 	}
 	
 	
 	/* break */
 
+	@Override
+	public void visit(StatementBreak StatementBreak) {
+
+		// break represents unconditionally jump to the first instruction after the (deepest) do-while statement  
+		
+		Code.putJump(0); 		
+		endDoWhileBlockAddressPatchingFromBreakStatementStack.peek().add(Code.pc - 2); // saved address for patching	
+	
+	}
+	
 	/* continue */
 	
 	@Override
 	public void visit(StatementContinue StatementContinue) {
 		
-		// this represents unconditionally jump to the first instruction in the (deepest) do-while statement
+		// continue represents unconditionally jump to the first instruction in the (deepest) do-while statement
 		
-		Code.putJump(this.startDoWhileBlockAddressForPatchingFromStack.peek());
+		Code.putJump(this.startDoWhileBlockAddressForPatchingStack.peek());
 
 	}
 }

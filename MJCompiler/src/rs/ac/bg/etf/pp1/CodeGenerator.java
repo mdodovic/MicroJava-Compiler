@@ -897,7 +897,7 @@ public class CodeGenerator extends VisitorAdaptor {
 		// number of array elements has already been set on the exprStact (it is calculated earlier)
 		Code.put(Code.newarray);
 		
-		if(factorArrayNewOperator.struct == Tab.charType) {
+		if(factorArrayNewOperator.struct.getElemType() == Tab.charType) {
 			// char-array
 			Code.put(0);
 		} else {

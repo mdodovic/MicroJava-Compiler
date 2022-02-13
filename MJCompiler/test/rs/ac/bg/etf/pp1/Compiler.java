@@ -45,11 +45,11 @@ public class Compiler {
 	        
 	        Program prog = (Program)(s.value); 
 
-	        if(!p.errorDetected) {
 
-				log.info(prog.toString(""));
-				log.info("===================================");
+			log.info(prog.toString("")); // print AST-tree
+			log.info("===================================");
 			
+			if(!p.errorDetected) {
 
 				SemanticAnalyzer v = new SemanticAnalyzer();
 				prog.traverseBottomUp(v); 

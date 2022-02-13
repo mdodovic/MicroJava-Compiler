@@ -1,0 +1,26 @@
+program SyntaxErrorRecovery
+
+int x y;
+
+
+class A extends B; {
+
+	int xx yy;
+	
+}
+
+
+{
+	int f(int a int c) {
+		return 0;
+	}
+	
+	void main() 
+		int z;
+	{
+		if (z > ;)
+			z = ;
+		
+	}
+
+}

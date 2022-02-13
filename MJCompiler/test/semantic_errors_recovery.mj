@@ -1,0 +1,142 @@
+program SemanticErrorRecovery
+
+Integer x;
+
+const int cinilac1 = 4, cinilac1 = 3, cinilac2 = true;
+
+record T1 {
+	int a;
+}
+
+record T1 {
+	int b;
+}
+
+class A1 {
+	int a;
+}
+
+class A1 {
+	int b;
+}
+
+class A2 extends Integer {
+
+}
+
+class A3 extends T1 {
+
+}
+
+
+class B1 {
+	
+	{
+		B2() {
+		
+		}
+		
+	}
+}
+
+class B2 {
+	
+	{
+		B2() {
+			return 4;
+		}
+	}
+
+}
+
+class C {
+	{
+		int foo(int z) int a; {
+			return a;
+		}
+		
+		void bar(int a, int b, int c) {
+		
+		}
+		
+		void super_f(int a) {
+		
+		}
+	}
+}
+
+class C2 extends C{
+	{
+		int foo(int z1, int z2) int a; {
+			return a;
+		}
+		void bar(int a, B2 b, int c) {
+		
+		}
+		void super_f(int b) {
+			
+		}
+		
+	}
+}
+
+
+{
+	int f(int x) {
+		return -x;
+	}
+	
+	int f() {
+	
+	}
+	void g(char c1, char c1) {
+		return c1;
+	}
+
+	void main() 
+		f function_instance; int a[]; char c; C instC; C arrC[];
+	{
+	
+		a = new int['c'];
+		c = new int;
+		c = new C2;	
+		
+		a[0] = f(1,2,3);
+		a[1] = C2(1,2,3);
+		
+		
+		c.super_f(1, true);
+		
+		instC.super_f(1, true);
+		
+		read(instC);
+		
+		a[1] = 1 + true;
+		a[1] = false + true;
+		a[1] = -c;
+		
+		super();
+		
+		instC.z = 6;
+		
+		instC++;
+		arrC++;
+		f = f;
+		
+		break;
+		continue;
+		
+		print(arrC);
+		
+		if(1) {
+		}
+		
+		if(arrC <= inscC){
+		}
+		
+		if(true > 1) {
+		
+		}
+	}
+
+}

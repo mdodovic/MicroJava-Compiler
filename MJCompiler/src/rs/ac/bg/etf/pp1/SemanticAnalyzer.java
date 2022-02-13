@@ -782,7 +782,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     private boolean checkConstructorNameConstraint(String constructorName, SyntaxNode info) {
 
     	if(!constructorName.equals(currentClassName)) {
-    		report_error(constructorName+ " nije istog imena kao klasa " + currentClassName + " u kojoj je definisan!", info);   
+    		report_error("Konstruktor " + constructorName + " nije istog imena kao klasa " + currentClassName + " u kojoj je definisan!", info);   
         	return false;
     	}
 		
@@ -1398,50 +1398,7 @@ public class SemanticAnalyzer extends VisitorAdaptor{
     public void visit(Term term) {
         // single factor should only pass its type
     	term.struct = term.getFactorList().struct;
-    }
-/*    
-    @Override
-    public void visit(SingleTerm singleTerm) {
-    	// send type (TermType) to the Expr
-    	singleTerm.struct = singleTerm.getTerm().struct;
-    }
-    
-    @Override
-    public void visit(AddOpTermList addOpTermList) {
-    	if(!addOpTermList.getTerm().struct.compatibleWith(addOpTermList.getTermList().struct)) {
-    	    // ! Specification constraint: Expr and Term types have to be compatible
-    		report_error("Tip svih sabiraka moraju biti kompatibilni (" + structDescription(addOpTermList.getTerm().struct) + "," + structDescription(addOpTermList.getTermList().struct) + ")", addOpTermList);        	
-    		addOpTermList.struct = Tab.noType;
-    		return;
-    	}
-    	if(addOpTermList.getTerm().struct != Tab.intType || addOpTermList.getTermList().struct != Tab.intType) {
-    	    // ! Specification constraint: Expr and Term have to be the int type
-    		report_error("Tip svih sabiraka treba da bude int", addOpTermList);        	
-    		addOpTermList.struct = Tab.noType;
-    		return;
-    	}
-    	// send cumulative type (intType) to the Expr
-    	addOpTermList.struct = Tab.intType;
-    }
-    
-    @Override
-    public void visit(PositiveExpr positiveExpr) {
-        // expression without "-" should only pass its type
-    	positiveExpr.struct = positiveExpr.getTermList().struct;
-    }
-    
-    @Override
-    public void visit(NegativeExpr negativeExpr) {
-    	if(negativeExpr.getTerm().struct != Tab.intType) {
-    	    // ! Specification constraint: Expr has to be the int type
-    		report_error("Tip negiranog izraza treba da bude int", negativeExpr);        	
-    		negativeExpr.struct = Tab.noType;
-    		return;
-    	}
-    	// send cumulative type (intType) to the Expr
-    	negativeExpr.struct = Tab.intType;    	
-    }
-*/    
+    } 
     
     @Override
     public void visit(SinglePositiveTerm singlePositiveTerm) {

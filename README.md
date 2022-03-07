@@ -5,11 +5,9 @@
 **MicroJava** is a *high-level programming language*, *similar*, but *simpler* than **Java**.
 Similarly to Java, MicroJava source files are compiled to **bytecode**, which is then executed by a **virtual machine** (**MicroJava Virtual Machine**). MicroJava VM is a simple *interpretative emulator*.
 
-![Compilation process](img/compilation.png)
+![Compilation process](MicroJava compile process.png)
 
-Full project specification can be found [here](https://1drv.ms/b/s!AuZ7wmWsDfythjkXnkK3T5gJ7NIy) and [here](https://1drv.ms/b/s!AuZ7wmWsDfythjgxu8VErKo9wBa7) (Serbian language only).
-Note that I have used custom directory structure (not the one defined in the specification).
-
+Full project specification can be found [here](https://github.com/mdodovic/MicroJava-Compiler/blob/master/Compiler_specification.pdf), while MicroJava language can be found [here](https://github.com/mdodovic/MicroJava-Compiler/blob/master/MicroJava_specification.pdf)
 ## Main language features
 
 * A MicoJava program is a single text file (conventionally, the extension `.mj` is used).
